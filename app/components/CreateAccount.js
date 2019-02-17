@@ -1,25 +1,24 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-export default class RegForm extends React.Component {
+export default class CreateAccount extends React.Component {
   render() {
     return (
       <View style={styles.regform}>
+      <Text style={styles.header}>Welcome to ChargeMe.</Text>
 
-            <Text style={styles.header}>Welcome to ChargeMe.</Text>
+      <Text style={styles.header}>Registration</Text>
+      <TextInput style={styles.textinput} placeholder="Your name"
+      underlineColorAndroid={'transparent'} />
 
-            <Text style={styles.header}>Login</Text>
-            <TextInput style={styles.textinput} placeholder="Your name"
-            underlineColorAndroid={'transparent'} />
+      <TextInput style={styles.textinput} placeholder="Your email"
+      underlineColorAndroid={'transparent'} />
 
-            <TextInput style={styles.textinput} placeholder="Your email"
-            underlineColorAndroid={'transparent'} />
+      <TextInput style={styles.textinput} placeholder="Your email"
+      underlineColorAndroid={'transparent'} />
 
-            <TextInput style={styles.textinput} placeholder="Your email"
-            underlineColorAndroid={'transparent'} />
-
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.btntext}>Log in</Text>
-            </TouchableOpacity>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.btntext}>Sign up</Text>
+      </TouchableOpacity>
 
 
 
