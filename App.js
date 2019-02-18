@@ -41,7 +41,7 @@ const CustomDrawerComponent= (props) => (
 )
 
 const AppDrawerNavigator = createDrawerNavigator({
-  Home:HomeScreen,
+  Home:RegForm,
   CreateAccount: CreateAccount,
   BillSplit: BillSplit,
   ReceiptScanner: ReceiptScanner,
@@ -62,17 +62,10 @@ const AppDrawerNavigator = createDrawerNavigator({
 
 
 const styles = StyleSheet.create({
-  header:{
-    fontSize:24,
-    color: "#000",
-    paddingBottom: 10,
-    marginBottom:40,
-    borderBottomColor: '#199187',
-    borderBottomWidth: 1,
-  },
+
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     justifyContent: 'center',
     paddingLeft:60,
     paddingRight: 60,
