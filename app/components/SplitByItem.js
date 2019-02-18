@@ -3,6 +3,11 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-nativ
 import {Header,Left,Right,Icon} from 'native-base'
 
 export default class SplitByItem extends React.Component {
+  static navigationOptions ={
+    drawerIcon: (tintColor) =>(
+      <Icon name="sitemap" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
+    )
+  }
   render() {
     return (
       <View style={styles.container}>

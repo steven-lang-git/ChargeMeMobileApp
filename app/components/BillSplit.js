@@ -2,6 +2,11 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 export default class BillSplit extends React.Component {
+  static navigationOptions ={
+    drawerIcon: (tintColor) =>(
+      <Icon name="money" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
+    )
+  }
   render() {
     return (
       <View style={styles.container}>
