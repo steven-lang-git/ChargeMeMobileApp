@@ -1,9 +1,19 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import {Header,Left,Right,Icon} from 'native-base'
+
 export default class CreateAccount extends React.Component {
   render() {
     return (
       <View style={styles.regform}>
+      <Header>
+        <Left>
+          <Icon name="bars" type="FontAwesome" onPress={()=>this.props.navigation.openDrawer()}/>
+        </Left>
+      </Header>
+
+      <View style={{flex:1, alignItems: 'center', justifyContent: 'center', paddingLeft:60, paddingRight: 60}}>
+
       <Text style={styles.header}>Welcome to ChargeMe.</Text>
 
       <Text style={styles.header}>Registration</Text>
@@ -19,6 +29,7 @@ export default class CreateAccount extends React.Component {
       <TouchableOpacity style={styles.button}>
         <Text style={styles.btntext}>Sign up</Text>
       </TouchableOpacity>
+      </View>
 
 
 
@@ -31,10 +42,10 @@ export default class CreateAccount extends React.Component {
 const styles = StyleSheet.create({
 regform: {
   flex: 1,
-  backgroundColor: '#fff',
-  justifyContent: 'center',
-  paddingLeft:60,
-  paddingRight: 60,
+  // backgroundColor: '#fff',
+  // justifyContent: 'center',
+  // paddingLeft:60,
+  // paddingRight: 60,
 },
 header:{
   fontSize:24,
