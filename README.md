@@ -26,10 +26,10 @@ $ npm install react-native-vector-icons --save
 ```
 4. Install expo on your iOS/Android device or use an Android emulator like GenyMotion or iOS Simulator in Xcode
 -   if in Xcode:
-    - right click the Xcode icon
-    - hover over "Open Developer Tool"
-    - left click "Simulator"
-    - allow iOS simulator to boot up
+- right click the Xcode icon
+- hover over "Open Developer Tool"
+- left click "Simulator"
+- allow iOS simulator to boot up
 5. cd into the project directory and run the following command in the folder:
 ```
 $ expo run
@@ -41,6 +41,16 @@ $ expo run
 
 [Expo Documentation](https://docs.expo.io/versions/latest/introduction/installation/)
 
+#### Emulate on iOS 
+8. cd into the project directory and run the following command in the folder:
+```
+$ expo run
+```
+9. make sure you have the Expo Client App
+10. Make sure the QR code is on Tunnel or LAN 
+-   Tunnel seems to run faster for some iOS devices
+11. Scan QR code through QR code scanner or iOS camera
+12. Open application through Expo Client
 
 ## Troubleshooting
 ### Error Running (OSX):
@@ -53,4 +63,4 @@ $ expo start
 
 Go to:
 > Settings -> Security & Privacy -> Privacy -> Automation -> Privacy tab 
-    check the "System Events" checkbox
+check the "System Events" checkbox
