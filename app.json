@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Welcome to ChargeMe",
+    "name": "ChargeMe",
     "slug": "chApp",
     "privacy": "public",
     "sdkVersion": "32.0.0",
@@ -10,7 +10,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/appiconmaker.co_ios/Icon-1024.png",
+    "icon": "./assets/AppIcons/Assets.xcassets/AppIcon.appiconset/1024.png",
     "splash": {
       "image": "./assets/splish.png",
       "resizeMode": "contain",
