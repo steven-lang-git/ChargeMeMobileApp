@@ -41,7 +41,7 @@ const CustomDrawerComponent= (props) => (
 )
 
 const AppDrawerNavigator = createDrawerNavigator({
-  Home:RegForm,
+  Home:HomeScreen,
   CreateAccount: CreateAccount,
   BillSplit: BillSplit,
   ReceiptScanner: ReceiptScanner,
