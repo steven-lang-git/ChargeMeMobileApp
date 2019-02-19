@@ -31,7 +31,7 @@ export default class CreateAccount extends React.Component {
       <TextInput style={styles.textinput} placeholder="Your email"
       underlineColorAndroid={'transparent'} />
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress ={() => this.props.navigation.navigate('Login')}>
         <Text style={styles.btntext}>Sign up</Text>
       </TouchableOpacity>
       </View>
