@@ -32,7 +32,7 @@ export default class App extends React.Component {
 const CustomDrawerComponent= (props) => (
   <SafeAreaView style={{flex:1}}>
     <View style={{height:150,backgroundColor:'white', alignItems: 'center', justifyContent: 'center'}}>
-      <Image source={require('./assets/money.png')} style={{ height: 120, width: 120, borderRadius: 60 }}/>
+      <Image source={require('./assets/AppIcons/Assets.xcassets/AppIcon.appiconset/1024.png')} style={{ height: 120, width: 120, borderRadius: 60 }}/>
     </View>
     <ScrollView>
     <DrawerItems {...props}/>
