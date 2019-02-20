@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button,Dimensions, Image, ImageBackground,TouchableOpacity,TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground,TouchableOpacity,TouchableHighlight,Keyboard } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 import { StackNavigator, createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import RegForm from './RegForm';
@@ -13,62 +13,71 @@ export default class HomeScreen extends React.Component {
     )
   }
 
-  handleClick = () => {
-      alert('Button clicked!');
-  }
-  buttonPressed(page){
-    this.props.navigator.replace({
-      id: page,
-    })
-  }
   render() {
     const {navigate} =this.props.navigation;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
+            <ImageBackground source={require('../../assets/coin.jpg')} style={styles.imageContainer}>
+            <View style={styles.overlay} />
             <Header style={{backgroundColor: 'transparent', borderBottomWidth:0,}}>
               <Left>
                 <Icon name="bars" type="FontAwesome" onPress={()=>this.props.navigation.openDrawer()}/>
               </Left>
             </Header>
-            <ImageBackground source={require('../../assets/coin.jpg')} style={styles.imageContainer}>
-            <View style={styles.overlay} />
+              <StatusBar barStyle="light-content" />
+              <KeyboardAvoidingView style={styles.container}>
+                <TouchableWithoutFeedback style={styles.container} onPress={Keyboard.dismiss}>
+                <View style={styles.logoContainer}>
+                      <View style={styles.logoContainer}>
+                        <Image style={styles.logo} source={require('../../assets/logo_transparent.png')}>
+                        </Image>
+                      </View>
+                      <View style={styles.infoContainer}>
+                        <TextInput style={styles.input}
+                          placeholder="Enter username/email"
+                          placeholderTextColor="rgba(255,255,255,0.8)"
+                          keyboardType='email-address'
+                          returnKeyType='next'
+                          autoCorrect={false}
+                          onSubmitEditing={()=> this.refs.txtPassword.focus()}
+                        />
+                        <TextInput style={styles.input}
+                          placeholder="Enter password"
+                          placeHolderTextColor='rgba(255,255,255,0.8)'
+                          returnKeyType='go'
+                          secureTextEntry
+                          autoCorrect={false}
+                          ref={"txtPassword"}
+                        />
 
-            <View style={{textAlign: 'center', fontSize:30, padding:40, position:'absolute', width: width,}}>
+                        <TouchableOpacity style={styles.button}
+                        onPress={()=>this.props.navigation.navigate('Login')}>
+                        <Text style={styles.btntext}>SIGN IN</Text>
+                        </TouchableOpacity>
 
-            <Image source={require('../../assets/logo_transparent.png')} style={{justifyContent:'center', alignItems:'center',width:width, height:200, position:'absolute', bottom: 150}}>
-            </Image>
-
-
-            <TouchableOpacity style={styles.button} onPress={()=>this.props.navigation.navigate('Login')}>
-              <Text style={styles.btntext}>Sign in</Text>
-            </TouchableOpacity>
-
-              <Text style={{color:'white', textAlign:'center', paddingTop:30,}}
-              onPress={ ()=> navigate('SignUp')}>Create an Account
-              </Text>
-            </View>
-            </ImageBackground>
-
-
-
-        </View>
+                        <Button style={styles.button}
+                        title="Create an Account"
+                        onPress={() => this.props.navigation.navigate('CreateAccount')}/>
+                      </View>
+                  </View>
+                </TouchableWithoutFeedback>
+              </KeyboardAvoidingView>
+              </ImageBackground>
+            </SafeAreaView>
 
 
     );
   }
 }
 
-
-const NavigationApp= StackNavigator ({
-  Login: {screen: RegForm},
-  SignUp: {screen: CreateAccount},
-});
-
 const styles = StyleSheet.create({
   container:{
     flex: 1,
+    flexDirection: 'column',
 
-
+  },
+  header:{
+    position:'absolute',
   },
   imageContainer: {
       width: null,
@@ -82,17 +91,43 @@ const styles = StyleSheet.create({
       ...StyleSheet.absoluteFillObject,
       backgroundColor: 'rgba(69,85,117,0.7)',
     },
-
-
+logo: {
+  width: 256,
+  height:112,
+  bottom:100,
+},
+logoContainer:{
+  alignItems: 'center',
+  justifyContent: 'center',
+  flex: 1,
+  width: width,
+  padding:20,
+},
+infoContainer: {
+  position:'absolute',
+  left:0,
+  right: 0,
+  bottom: 150,
+  height: 200,
+  padding: 20,
+},
+input: {
+  height:40,
+  backgroundColor: 'rgba(255,255,255,0.2)',
+  color:'#fff',
+  marginBottom:20,
+  paddingHorizontal:10
+},
   button: {
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: 'black',
-    marginTop: 30,
+    paddingVertical: 15,
+    backgroundColor: '#34c6de',
+
   },
   btntext:{
+    textAlign: 'center',
+    color: 'rgb(32,53,70)',
+    fontWeight: 'bold',
     color: 'white',
-    fontSize: 24,
+    fontSize: 18,
   }
 });
