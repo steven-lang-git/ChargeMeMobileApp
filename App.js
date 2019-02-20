@@ -14,17 +14,14 @@ import CurrentTransactions from './app/components/CurrentTransactions';
 import Search from './app/components/Search';
 import NotificationSettings from './app/components/NotificationSettings';
 
-
 const{width} = Dimensions.get('window')
 export default class App extends React.Component {
   render() {
     return (
 
       <AppDrawerNavigator />
-      // <View style={styles.container}>
-      //   <Text style={styles.header}>Welcome to ChargeMe.</Text>
-      //   <RegForm/>
-      // </View>
+      //<AppNavigator />
+
     );
   }
 }
@@ -41,22 +38,23 @@ const CustomDrawerComponent= (props) => (
 )
 
 const AppDrawerNavigator = createDrawerNavigator({
-  Home:HomeScreen,
-  CreateAccount: CreateAccount,
-  BillSplit: BillSplit,
-  ReceiptScanner: ReceiptScanner,
-  FriendsList: FriendsList,
-  SplitByItem: SplitByItem,
-  SplitEvenly: SplitEvenly,
-  PastTransactions: PastTransactions,
-  CurrentTransactions: CurrentTransactions,
-  Search: Search,
-  Settings:NotificationSettings
+  Home:{screen: HomeScreen},
+  CreateAccount: {screen: CreateAccount},
+  Login: {screen: RegForm},
+  BillSplit: {screen: BillSplit},
+  ReceiptScanner:{screen:  ReceiptScanner},
+  FriendsList: {screen: FriendsList},
+  SplitByItem: {screen: SplitByItem},
+  SplitEvenly: {screen: SplitEvenly},
+  PastTransactions: {screen:  PastTransactions},
+  CurrentTransactions: {screen: CurrentTransactions},
+  Search: {screen: Search},
+  Settings: {screen: NotificationSettings},
 }, {
   contentComponent: CustomDrawerComponent,
   drawerWidth: width,
   contentOptions: {
-  activeTintColor: 'green'
+  activeTintColor: '#64daed'
   }
 })
 
