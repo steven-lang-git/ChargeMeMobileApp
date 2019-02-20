@@ -16,10 +16,73 @@ import NotificationSettings from './app/components/NotificationSettings';
 
 const{width} = Dimensions.get('window')
 export default class App extends React.Component {
+  constructor(props) {
+      super(props)
+      this.state = {
+        possibleFriends: [
+          'Angela',
+          'Steven',
+          'Nikki',
+          'Jasmin',
+        ],
+        currentFriends: [
+          'John',
+          'Jason',
+        ],
+      }
+    }
+
+  addFriend = (index) => {
+    const {
+      currentFriends,
+      possibleFriends,
+    } = this.state
+
+    // Pull friend out of possibleFriends
+    const addedFriend = possibleFriends.splice(index, 1)
+
+    // And put friend in currentFriends
+    currentFriends.push(addedFriend)
+
+    // Finally, update our app state
+    this.setState({
+      currentFriends,
+      possibleFriends,
+    })
+  }
+
+  removeFriend = (index) => {
+
+    const {
+      currentFriends,
+      possibleFriends,
+    } = this.state
+
+    // Pull friend out of currentFriends
+    const removedFriend = currentFriends.splice(index, 1)
+
+    // And put friend in currentFriends
+    possibleFriends.push(removedFriend)
+
+    // Finally, update our app state
+    this.setState({
+      currentFriends,
+      possibleFriends,
+    })
+  }
+
+
   render() {
     return (
 
-      <AppDrawerNavigator />
+      <AppDrawerNavigator
+      screenProps={ {
+               currentFriends: this.state.currentFriends,
+               possibleFriends: this.state.possibleFriends,
+               addFriend: this.addFriend,
+               removeFriend: this.removeFriend,
+             } }
+       />
       //<AppNavigator />
 
     );
@@ -55,7 +118,7 @@ const AppDrawerNavigator = createDrawerNavigator({
   drawerWidth: width,
   contentOptions: {
   activeTintColor: '#64daed'
-  }
+}
 })
 
 
