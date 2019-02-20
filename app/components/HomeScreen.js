@@ -41,9 +41,10 @@ export default class HomeScreen extends React.Component {
                           autoCorrect={false}
                           onSubmitEditing={()=> this.refs.txtPassword.focus()}
                         />
+
                         <TextInput style={styles.input}
                           placeholder="Enter password"
-                          placeHolderTextColor='rgba(255,255,255,0.8)'
+                          placeholderTextColor="rgba(255,255,255,0.8)"
                           returnKeyType='go'
                           secureTextEntry
                           autoCorrect={false}
@@ -55,9 +56,7 @@ export default class HomeScreen extends React.Component {
                         <Text style={styles.btntext}>SIGN IN</Text>
                         </TouchableOpacity>
 
-                        <Button style={styles.button}
-                        title="Create an Account"
-                        onPress={() => this.props.navigation.navigate('CreateAccount')}/>
+                        <Text style={styles.title} onPress={() => this.props.navigation.navigate('CreateAccount')}> Create an Account </Text>
                       </View>
                   </View>
                 </TouchableWithoutFeedback>
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
 logo: {
   width: 256,
   height:112,
-  bottom:100,
+  bottom:170,
 },
 logoContainer:{
   alignItems: 'center',
@@ -107,7 +106,7 @@ infoContainer: {
   position:'absolute',
   left:0,
   right: 0,
-  bottom: 150,
+  bottom: 200,
   height: 200,
   padding: 20,
 },
@@ -117,6 +116,13 @@ input: {
   color:'#fff',
   marginBottom:20,
   paddingHorizontal:10
+},
+title:{
+  color: '#fff',
+  fontSize: 14,
+  textAlign:'center',
+  marginTop: 20,
+  opacity: 0.9
 },
   button: {
     paddingVertical: 15,
