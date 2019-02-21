@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
 export default class CreateAccount extends React.Component {
@@ -8,37 +8,75 @@ export default class CreateAccount extends React.Component {
       <Icon name="male" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
     )
   }
-  render() {
-    return (
+  render(){
+
+    return(
+
       <View style={styles.regform}>
-      <Header>
-        <Left>
-          <Icon name="bars" type="FontAwesome" onPress={()=>this.props.navigation.openDrawer()}/>
-        </Left>
-      </Header>
+        <Header>
+          <Left>
+            <Icon name="bars" type="FontAwesome" onPress={()=>this.props.navigation.openDrawer()}/>
+          </Left>
+        </Header>
 
-      <View style={{flex:1, alignItems: 'center', justifyContent: 'center', paddingLeft:60, paddingRight: 60}}>
+        <View style={{flex:1, alignItems: 'center', justifyContent: 'center', paddingLeft:60, paddingRight: 60}}>
+          <ScrollView>
 
-      <Text style={styles.header}>Welcome to ChargeMe.</Text>
+            <Text style={styles.header}>Welcome to ChargeMe</Text>
+            <Text style={styles.header}>Create New Account</Text>
 
-      <Text style={styles.header}>Registration</Text>
-      <TextInput style={styles.textinput} placeholder="Your name"
-      underlineColorAndroid={'transparent'} />
+            <Text> Username </Text>
+            <TextInput style={styles.textinput} placeholder="Username"
+            underlineColorAndroid={'transparent'} />
 
-      <TextInput style={styles.textinput} placeholder="Your email"
-      underlineColorAndroid={'transparent'} />
+            <Text> First Name </Text>
+            <TextInput style={styles.textinput} placeholder="First Name"
+            underlineColorAndroid={'transparent'} />
 
-      <TextInput style={styles.textinput} placeholder="Your email"
-      underlineColorAndroid={'transparent'} />
+            <Text> Last Name </Text>
+            <TextInput style={styles.textinput} placeholder="Last Name"
+            underlineColorAndroid={'transparent'} />
 
-      <TouchableOpacity style={styles.button} onPress ={() => this.props.navigation.navigate('Login')}>
-        <Text style={styles.btntext}>Sign up</Text>
-      </TouchableOpacity>
+            <Text> Email </Text>
+            <TextInput style={styles.textinput} placeholder="Email"
+            underlineColorAndroid={'transparent'} />
+
+            <Text> Phone Number </Text>
+            <TextInput style={styles.textinput} placeholder="(###)###-####"
+            underlineColorAndroid={'transparent'} />
+
+            <Text> Birthday </Text>
+            <TextInput style={styles.textinput} placeholder="mm/dd/yyy"
+            underlineColorAndroid={'transparent'} />
+
+            <Text> Street </Text>
+            <TextInput style={styles.textinput} placeholder="Street"
+            underlineColorAndroid={'transparent'} />
+
+            <Text> City </Text>
+            <TextInput style={styles.textinput} placeholder="City"
+            underlineColorAndroid={'transparent'} />
+
+            <Text> State </Text>
+            <TextInput style={styles.textinput} placeholder="State"
+            underlineColorAndroid={'transparent'} />
+
+            <Text> ZipCode </Text>
+            <TextInput style={styles.textinput} placeholder="ZipCode"
+            underlineColorAndroid={'transparent'} />
+
+            <Text> Password </Text>
+            <TextInput style={styles.textinput} placeholder="Password"
+            underlineColorAndroid={'transparent'} />
+
+            <TouchableOpacity style={styles.button} onPress ={() => this.props.navigation.navigate('Login')}>
+              <Text style={styles.btntext}>Sign up</Text>
+            </TouchableOpacity>
+
+          </ScrollView>
+        </View>
       </View>
 
-
-
-      </View>
     );
   }
 }
