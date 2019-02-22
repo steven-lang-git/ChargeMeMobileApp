@@ -19,54 +19,65 @@ export default class CreateAccount extends React.Component {
           </Left>
         </Header>
 
-        <View style={{flex:1, alignItems: 'center', justifyContent: 'center', paddingLeft:60, paddingRight: 60}}>
+        <View style={{flex:1, alignItems: 'center', justifyContent: 'center', paddingLeft:10, paddingRight: 10}}>
           <ScrollView>
 
             <Text style={styles.header}>Welcome to ChargeMe</Text>
             <Text style={styles.header}>Create New Account</Text>
 
             <Text> Username </Text>
-            <TextInput style={styles.textinput} placeholder="Username"
+            <TextInput style={{ height: 30, width: "95%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            placeholder="Username"
             underlineColorAndroid={'transparent'} />
 
             <Text> First Name </Text>
-            <TextInput style={styles.textinput} placeholder="First Name"
+            <TextInput style={{ height: 30, width: "95%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            placeholder="First Name"
             underlineColorAndroid={'transparent'} />
 
             <Text> Last Name </Text>
-            <TextInput style={styles.textinput} placeholder="Last Name"
+            <TextInput style={{ height: 30, width: "95%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            placeholder="Last Name"
             underlineColorAndroid={'transparent'} />
 
             <Text> Email </Text>
-            <TextInput style={styles.textinput} placeholder="Email"
+            <TextInput style={{ height: 30, width: "95%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            placeholder="Email"
             underlineColorAndroid={'transparent'} />
 
             <Text> Phone Number </Text>
-            <TextInput style={styles.textinput} placeholder="(###)###-####"
+            <TextInput style={{ height: 30, width: "95%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            placeholder="(###)###-####"
             underlineColorAndroid={'transparent'} />
 
             <Text> Birthday </Text>
-            <TextInput style={styles.textinput} placeholder="mm/dd/yyy"
+            <TextInput style={{ height: 30, width: "95%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            placeholder="mm/dd/yyy"
             underlineColorAndroid={'transparent'} />
 
             <Text> Street </Text>
-            <TextInput style={styles.textinput} placeholder="Street"
+            <TextInput style={{ height: 30, width: "95%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            placeholder="Street"
             underlineColorAndroid={'transparent'} />
 
             <Text> City </Text>
-            <TextInput style={styles.textinput} placeholder="City"
+            <TextInput style={{ height: 30, width: "95%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            placeholder="City"
             underlineColorAndroid={'transparent'} />
 
             <Text> State </Text>
-            <TextInput style={styles.textinput} placeholder="State"
+            <TextInput style={{ height: 30, width: "95%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            placeholder="State"
             underlineColorAndroid={'transparent'} />
 
             <Text> ZipCode </Text>
-            <TextInput style={styles.textinput} placeholder="ZipCode"
+            <TextInput style={{ height: 30, width: "95%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            placeholder="ZipCode"
             underlineColorAndroid={'transparent'} />
 
             <Text> Password </Text>
-            <TextInput style={styles.textinput} placeholder="Password"
+            <TextInput style={{ height: 30, width: "95%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            placeholder="Password"
             underlineColorAndroid={'transparent'} />
 
             <TouchableOpacity style={styles.button} onPress ={() => this.props.navigation.navigate('Login')}>
