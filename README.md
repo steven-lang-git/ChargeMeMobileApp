@@ -33,6 +33,7 @@ i.
   - hover over "Open Developer Tool"
   - left click "Simulator"
   - allow iOS simulator to boot up
+  
 ii. cd into the project directory and run the following command in the folder:
 ```
 $ expo run
@@ -52,6 +53,7 @@ $ expo run
 ii. Download the Expo Client App
 iii. Set the QR code is on Tunnel or LAN 
 -   Tunnel seems to run faster for some iOS devices
+
 iv. Scan QR code through QR code scanner or iOS camera
 v. Open application through Expo Client
 
