@@ -1,7 +1,7 @@
 import React from 'react';
 import * as firebase from 'firebase';
-import { StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground,TouchableOpacity,TouchableHighlight,Keyboard } from 'react-native';
-import {Header,Left,Right,Icon} from 'native-base'
+import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground,TouchableOpacity,TouchableHighlight,Keyboard } from 'react-native';
+import {Header,Left,Right,Icon} from 'native-base';
 import { StackNavigator, createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 //import RegForm from './RegForm';
 import CreateAccount from './CreateAccount';
@@ -9,6 +9,7 @@ import PastTransactions from './PastTransactions';
 
 const{width} = Dimensions.get('window')
 
+//initializing firebase, this only needs to be done once within our app
 firebase.initializeApp({
     apiKey: "AIzaSyCjuVd8HrMNvgmtflV1s7XpJGMQbpzuX8w",
     authDomain: "chargeme-e6936.firebaseapp.com",
@@ -43,7 +44,7 @@ export default class HomeScreen extends React.Component {
     })
     .catch(() =>{
       //if there is an error during authentication
-      this.setState({error: 'Authentication Failed', loading: false});
+      this.setState({error: 'Invalid email/password combination', loading: false});
     })
   }
 
@@ -51,7 +52,11 @@ export default class HomeScreen extends React.Component {
   renderButtonOrLoading(){
     //if we are in a state of loading show loading message
     if(this.state.loading){
-      return <Text style={{color: 'white'}}> Loading... </Text>
+      return (
+        <View style={[styles.container, styles.horizontal]}>
+          <ActivityIndicator size="small" color="#34c6de" />
+        </View>
+      )
     }
     //if not in state of loading show login button (button is bound to
     //onLoginPress function)
@@ -91,7 +96,7 @@ export default class HomeScreen extends React.Component {
                       </View>
                       <View style={styles.infoContainer}>
                         <TextInput style={styles.input}
-                          placeholder="Enter username/email"
+                          placeholder="Enter email"
                           placeholderTextColor="rgba(255,255,255,0.8)"
                           onChangeText={(email) => this.setState({email})}
                           keyboardType='email-address'
