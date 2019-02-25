@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions, Image, TextInput, TouchableOpacity } from 'react-native';
 import {createDrawerNavigator, DrawerItems} from 'react-navigation';
-import RegForm from './app/components/RegForm';
+//import RegForm from './app/components/RegForm';
 import HomeScreen from './app/components/HomeScreen'
 import CreateAccount from './app/components/CreateAccount';
 import BillSplit from './app/components/BillSplit';
@@ -13,6 +13,17 @@ import PastTransactions from './app/components/PastTransactions';
 import CurrentTransactions from './app/components/CurrentTransactions';
 import Search from './app/components/Search';
 import NotificationSettings from './app/components/NotificationSettings';
+
+
+//var admin = require('firebase-admin');
+
+//var serviceAccount = require('Macintosh HD⁩/Users/⁨angelaflores⁩/⁨Documents⁩/chargeme-e6936-firebase-adminsdk-5tpy3-09c244d956.json')
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   databaseURL: 'https://chargeme-e6936.firebaseio.com'
+
+// });
 
 const{width} = Dimensions.get('window')
 export default class App extends React.Component {
@@ -40,7 +51,7 @@ const CustomDrawerComponent= (props) => (
 const AppDrawerNavigator = createDrawerNavigator({
   Home:{screen: HomeScreen},
   CreateAccount: {screen: CreateAccount},
-  Login: {screen: RegForm},
+  //Login: {screen: RegForm},
   BillSplit: {screen: BillSplit},
   ReceiptScanner:{screen:  ReceiptScanner},
   FriendsList: {screen: FriendsList},
