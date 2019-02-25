@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import {ActivityIndicator, AppRegistry,StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base';
 import * as firebase from 'firebase';
 
@@ -39,7 +39,7 @@ export default class CreateAccount extends React.Component {
     })
     .catch(() =>{
       //if there is an error during authentication
-      this.setState({error: 'Account Creation Failed', loading: false});
+      this.setState({error: 'There is already an account with that email', loading: false});
     })
   }
 
@@ -47,7 +47,11 @@ export default class CreateAccount extends React.Component {
   renderButtonOrLoading(){
     //if we are in a state of loading show loading message
     if(this.state.loading){
-      return <Text style={{color: 'white'}}> Loading... </Text>
+      return (
+        <View style={[styles.container, styles.horizontal]}>
+          <ActivityIndicator size="small" color="#34c6de" />
+        </View>
+      )
     }
     //if not in state of loading show sign up button (button is bound to
     //onSignUpPress function)
