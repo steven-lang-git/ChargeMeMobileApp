@@ -44,17 +44,17 @@ export default class HomeScreen extends React.Component {
     })
     .catch(() =>{
       //if there is an error during authentication
-      this.setState({error: 'Invalid email/password combination', loading: false});
+      this.setState({error: 'Invalid email or password', loading: false});
     })
   }
 
-  //function to decide whether to display login button or loading sign
+  //function to decide whether to display login button or loading spin
   renderButtonOrLoading(){
-    //if we are in a state of loading show loading message
+    //if we are in a state of loading show loading spin
     if(this.state.loading){
       return (
         <View style={[styles.container, styles.horizontal]}>
-          <ActivityIndicator size="small" color="#34c6de" />
+          <ActivityIndicator size="large" color="#34c6de" />
         </View>
       )
     }
@@ -65,6 +65,8 @@ export default class HomeScreen extends React.Component {
         onPress={this.onLoginPress.bind(this)}>
         <Text style={styles.btntext}>SIGN IN</Text>
       </TouchableOpacity>
+
+      <Text style={styles.title} onPress={() => this.props.navigation.navigate('CreateAccount')}> Create an Account </Text>
     </View>
   }
 
@@ -79,7 +81,7 @@ export default class HomeScreen extends React.Component {
     const {navigate} =this.props.navigation;
     return (
       <SafeAreaView style={styles.container}>
-            <ImageBackground source={require('../../assets/coin.jpg')} style={styles.imageContainer}>
+            <ImageBackground source={require('../assets/coin.jpg')} style={styles.imageContainer}>
             <View style={styles.overlay} />
             <Header style={{backgroundColor: 'transparent', borderBottomWidth:0,}}>
               <Left>
@@ -91,7 +93,7 @@ export default class HomeScreen extends React.Component {
                 <TouchableWithoutFeedback style={styles.container} onPress={Keyboard.dismiss}>
                 <View style={styles.logoContainer}>
                       <View style={styles.logoContainer}>
-                        <Image style={styles.logo} source={require('../../assets/logo_transparent.png')}>
+                        <Image style={styles.logo} source={require('../assets/logo_transparent.png')}>
                         </Image>
                       </View>
                       <View style={styles.infoContainer}>
@@ -118,7 +120,7 @@ export default class HomeScreen extends React.Component {
 
                         {this.renderButtonOrLoading()}
 
-                        <Text style={styles.title} onPress={() => this.props.navigation.navigate('CreateAccount')}> Create an Account </Text>
+
                       </View>
                   </View>
                 </TouchableWithoutFeedback>
@@ -147,11 +149,11 @@ const styles = StyleSheet.create({
       resizeMode:'cover',
       justifyContent: 'center',
       flex:1,
-    },
-    overlay: {
+  },
+  overlay: {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: 'rgba(69,85,117,0.7)',
-    },
+  },
 logo: {
   width: 256,
   height:112,

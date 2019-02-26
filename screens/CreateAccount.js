@@ -43,13 +43,13 @@ export default class CreateAccount extends React.Component {
     })
   }
 
-  //function to decide whether to display login button or loading sign
+  //function to decide whether to display login button or loading spin
   renderButtonOrLoading(){
-    //if we are in a state of loading show loading message
+    //if we are in a state of loading show loading spin
     if(this.state.loading){
       return (
         <View style={[styles.container, styles.horizontal]}>
-          <ActivityIndicator size="small" color="#34c6de" />
+          <ActivityIndicator size="large" color="#34c6de" />
         </View>
       )
     }
