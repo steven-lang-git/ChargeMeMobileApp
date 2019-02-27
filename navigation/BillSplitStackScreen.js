@@ -5,7 +5,8 @@ import SplitByItem from '../screens/SplitByItem';
 import SplitEvenly from '../screens/SplitEvenly';
 
 const BillSplitStack = createStackNavigator({
-    BillSplit: { screen: BillSplit},
+
+    BillSplit: { screen: BillSplit, navigationOptions: {header: null}},
     SplitByItem: { screen: SplitByItem},
     SplitEvenly: { screen: SplitEvenly},
   },
@@ -13,5 +14,6 @@ const BillSplitStack = createStackNavigator({
        initialRouteName: 'BillSplit',
   }
 );
+
 
 export default BillSplitStack;
