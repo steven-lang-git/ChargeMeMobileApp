@@ -6,10 +6,10 @@ import CreateAccount from '../screens/CreateAccount';
 import UserDrawerScreen from './UserDrawerScreen';
 
 const LoginStack = createStackNavigator({
-    Loading: {screen: Loading},
-    HomeScreen: {screen: HomeScreen},
-    CreateAccount: {screen: CreateAccount},
-    UserDrawerScreen: {screen: UserDrawerScreen},
+    Loading: {screen: Loading, navigationOptions: {gesturesEnabled: false,}},
+    HomeScreen: {screen: HomeScreen, navigationOptions: {gesturesEnabled: false,}},
+    CreateAccount: {screen: CreateAccount, navigationOptions: {gesturesEnabled: false,}},
+    UserDrawerScreen: {screen: UserDrawerScreen, navigationOptions: {gesturesEnabled: false,}},
   },
   {
     initialRouteName: 'Loading',

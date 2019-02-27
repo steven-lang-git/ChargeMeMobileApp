@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions, Image, TextInput, TouchableOpacity } from 'react-native';
 import {createDrawerNavigator, DrawerItems} from 'react-navigation';
+import {Icon} from 'native-base'
 import HomeScreen from '../screens/HomeScreen'
 import CreateAccount from '../screens/CreateAccount';
 import PastTransactions from '../screens/PastTransactions';
@@ -25,22 +26,16 @@ const CustomDrawerComponent= (props) => (
 const AppDrawerNavigator = createDrawerNavigator({
     // Home:{screen: HomeScreen},
     // CreateAccount: {screen: CreateAccount},
-    PastTransactions: {screen:  PastTransactions, navigationOptions: () =>
-            ({
-                title: 'Past Transactions'
-            }) },
-    CurrentTransactions: {screen: CurrentTransactions, navigationOptions: () =>
-            ({
-                title: 'Current Transactions'
-            }) },
-    Settings: {screen: NotificationSettings, navigationOptions: () => 
-            ({
-                title: 'Settings'
-            }) },
+    PastTransactions: {screen:  PastTransactions, navigationOptions: {title: 'Past Transactions'}},
+    CurrentTransactions: {screen: CurrentTransactions, navigationOptions: {title: 'Current Transactions'}},
+    Settings: {screen: NotificationSettings, navigationOptions: {title: 'Settings'}},
     BillSplitStackScreen: {screen: BillSplitStackScreen, navigationOptions: () =>
-            ({
-                title: 'Bill Split'
-            }) },
+              ({
+                  title: 'Bill Split',
+                  drawerIcon: (tintColor) =>(
+                    <Icon name="money" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>),
+              })
+               },
   },
   {
     initialRouteName: 'PastTransactions',
