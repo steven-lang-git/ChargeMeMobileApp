@@ -4,17 +4,67 @@ import { Header, Left, Right, Icon, ListItem, List } from 'native-base'
 const { width } = Dimensions.get('window')
 
 export default class FriendsList extends React.Component {
-  static navigationOptions = {
-    drawerIcon: (tintColor) => (
-      <Icon name="users" type="FontAwesome" style={{ fontSize: 24, color: tintColor }} />
-    )
+
+  constructor(props) {
+      super(props)
+      this.state = {
+        possibleFriends: [
+          'Angela',
+          'Steven',
+          'Nikki',
+          'Jasmin',
+        ],
+        currentFriends: [
+          'John',
+          'Jason',
+        ],
+      }
+    }
+
+  addFriend = (index) => {
+    const {
+      currentFriends,
+      possibleFriends,
+    } = this.state
+
+    // Pull friend out of possibleFriends
+    const addedFriend = possibleFriends.splice(index, 1)
+
+    // And put friend in currentFriends
+    currentFriends.push(addedFriend)
+
+    // Finally, update our app state
+    this.setState({
+      currentFriends: currentFriends,
+      possibleFriends: possibleFriends,
+    })
   }
 
+  removeFriend = (index) => {
+
+    const {
+      currentFriends,
+      possibleFriends,
+    } = this.state
+
+    // Pull friend out of currentFriends
+    const removedFriend = currentFriends.splice(index, 1)
+
+    // And put friend in possibleFriends
+    possibleFriends.push(removedFriend)
+
+    // Finally, update our app state
+    this.setState({
+      currentFriends: currentFriends,
+      possibleFriends: possibleFriends,
+    })
+  }
 
   render() {
     return (
+
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../../assets/friends.jpeg')} style={styles.imageContainer}>
+        <ImageBackground source={require('../assets/friends.jpeg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
           <Header style={{ backgroundColor: 'transparent', borderBottomWidth: 0, }}>
             <Left>
@@ -22,7 +72,7 @@ export default class FriendsList extends React.Component {
             </Left>
           </Header>
           <StatusBar barStyle="light-content" />
-          <Text> We have {this.props.screenProps.currentFriends.length} friends!</Text>
+          <Text> We have {this.state.currentFriends.length} friends!</Text>
 
           <Button color="white"
             title="Back to home"
@@ -43,7 +93,7 @@ export default class FriendsList extends React.Component {
             </View>
             <Text> Currently our friends are:</Text>
             {
-              this.props.screenProps.currentFriends.map((friend, index) => (
+              this.state.currentFriends.map((friend, index) => (
                 <ListItem style={styles.listContainer} >
                   <Left>
                     <Text style={styles.btntext}
@@ -54,12 +104,12 @@ export default class FriendsList extends React.Component {
                     <View style={styles.removeBtn}>
                       <TouchableOpacity style={styles.btntext}
                         onPress={() =>
-                          this.props.screenProps.removeFriend(index)
+                          this.removeFriend(index)
                         } key={friend}
                         >
                       <Text style={styles.btntext}>{`Remove ${friend}`}</Text>
                       </TouchableOpacity>
-              
+
                     </View>
                   </Right>
 
@@ -71,12 +121,12 @@ export default class FriendsList extends React.Component {
             <KeyboardAvoidingView style={styles.container}>
             <Text>Add friends here!</Text>
             {
-              this.props.screenProps.possibleFriends.map((fr, index) => (
+              this.state.possibleFriends.map((fr, index) => (
                 <Button color='white'
                   key={fr}
                   title={`Add ${fr}`}
                   onPress={() =>
-                    this.props.screenProps.addFriend(index)
+                    this.addFriend(index)
                   }
                 />
               )
