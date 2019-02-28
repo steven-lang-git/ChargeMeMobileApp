@@ -3,16 +3,6 @@ import {ActivityIndicator, AppRegistry,StyleSheet, Text, View, TextInput, Toucha
 import {Header,Left,Right,Icon} from 'native-base';
 import * as firebase from 'firebase';
 
-// //initializing firebase
-// firebase.initializeApp({
-//     apiKey: "AIzaSyCjuVd8HrMNvgmtflV1s7XpJGMQbpzuX8w",
-//     authDomain: "chargeme-e6936.firebaseapp.com",
-//     databaseURL: "https://chargeme-e6936.firebaseio.com",
-//     projectId: "chargeme-e6936",
-//     storageBucket: "chargeme-e6936.appspot.com",
-//     messagingSenderId: "148195634104"
-//   }
-// );
 
 export default class CreateAccount extends React.Component {
   // constructor with state of email, password,username, firstName, lastName, phoneNumber,birthday, street, city,
@@ -63,21 +53,11 @@ export default class CreateAccount extends React.Component {
     </View>
   }
 
-  static navigationOptions ={
-    drawerIcon: (tintColor) =>(
-      <Icon name="male" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
-    )
-  }
   render(){
 
     return(
 
       <View style={styles.regform}>
-        <Header>
-          <Left>
-            <Icon name="bars" type="FontAwesome" onPress={()=>this.props.navigation.openDrawer()}/>
-          </Left>
-        </Header>
 
         <View style={{flex:1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#7c889e'}}>
           <ScrollView>
