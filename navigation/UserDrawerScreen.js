@@ -7,7 +7,9 @@ import CreateAccount from '../screens/CreateAccount';
 import PastTransactions from '../screens/PastTransactions';
 import CurrentTransactions from '../screens/CurrentTransactions';
 import NotificationSettings from '../screens/NotificationSettings';
+import Logout from '../screens/Logout';
 import BillSplitStackScreen from '../navigation/BillSplitStackScreen';
+
 
 
 const{width} = Dimensions.get('window')
@@ -29,13 +31,14 @@ const AppDrawerNavigator = createDrawerNavigator({
     PastTransactions: {screen:  PastTransactions, navigationOptions: {title: 'Past Transactions'}},
     CurrentTransactions: {screen: CurrentTransactions, navigationOptions: {title: 'Current Transactions'}},
     Settings: {screen: NotificationSettings, navigationOptions: {title: 'Settings'}},
-    BillSplitStackScreen: {screen: BillSplitStackScreen, navigationOptions: () =>
-              ({
+    BillSplitStackScreen: {screen: BillSplitStackScreen, navigationOptions:
+              {
                   title: 'Bill Split',
                   drawerIcon: (tintColor) =>(
                     <Icon name="money" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>),
-              })
-               },
+              }
+    },
+    Logout: {screen: Logout, navigationOptions: {title: 'Log Out'}},
   },
   {
     initialRouteName: 'PastTransactions',

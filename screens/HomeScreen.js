@@ -1,9 +1,8 @@
 import React from 'react';
 import * as firebase from 'firebase';
-import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground,TouchableOpacity,TouchableHighlight,Keyboard } from 'react-native';
+import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard} from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base';
-import { StackNavigator, createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
-//import RegForm from './RegForm';
+import {StackNavigator, createAppContainer, createStackNavigator, StackActions, NavigationActions} from 'react-navigation';
 import CreateAccount from './CreateAccount';
 import PastTransactions from './PastTransactions';
 
@@ -70,24 +69,12 @@ export default class HomeScreen extends React.Component {
     </View>
   }
 
-
-   static navigationOptions ={
-     drawerIcon: (tintColor) =>(
-       <Icon name="home" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
-     )
-  }
-
   render() {
     const {navigate} =this.props.navigation;
     return (
       <SafeAreaView style={styles.container}>
             <ImageBackground source={require('../assets/coin.jpg')} style={styles.imageContainer}>
             <View style={styles.overlay} />
-            <Header style={{backgroundColor: 'transparent', borderBottomWidth:0,}}>
-              <Left>
-                <Icon name="bars" type="FontAwesome" onPress={()=>this.props.navigation.openDrawer()}/>
-              </Left>
-            </Header>
               <StatusBar barStyle="light-content" />
               <KeyboardAvoidingView style={styles.container}>
                 <TouchableWithoutFeedback style={styles.container} onPress={Keyboard.dismiss}>
