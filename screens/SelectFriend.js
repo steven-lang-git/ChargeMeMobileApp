@@ -3,7 +3,7 @@ import { ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithou
 import { Header, Left, Right, Icon, ListItem, List } from 'native-base'
 const { width } = Dimensions.get('window')
 
-export default class FriendsList extends React.Component {
+export default class SelectFriend extends React.Component {
 
   constructor(props) {
       super(props)
@@ -95,7 +95,7 @@ export default class FriendsList extends React.Component {
 
               />
             </View>
-            <Text> Currently our friends are:</Text>
+            <Text>Current Friends Selected for your Bill:</Text>
             {
               this.state.currentFriends.map((friend, index) => (
                 <ListItem style={styles.listContainer} >
@@ -109,11 +109,9 @@ export default class FriendsList extends React.Component {
                       <TouchableOpacity style={styles.btntext}
                         onPress={() =>
                           this.removeFriend(index)
-                        } key={friend}
-                        >
-                      <Text style={styles.btntext}>{`Remove ${friend}`}</Text>
-                      </TouchableOpacity>
-
+                        }>   
+                        <Text style={styles.btntext}>Remove</Text>
+                       </TouchableOpacity>
                     </View>
                   </Right>
 
@@ -123,7 +121,7 @@ export default class FriendsList extends React.Component {
           )
         }
             <KeyboardAvoidingView style={styles.container}>
-            <Text>Add friends here!</Text>
+            <Text>Add Friends to your Bill!</Text>
             {
               this.state.possibleFriends.map((fr, index) => (
                 <Button color='white'
