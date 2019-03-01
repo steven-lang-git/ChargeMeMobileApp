@@ -13,7 +13,7 @@ export default class SplitEvenly extends React.Component {
       <View style={styles.container}>
       <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
       <Text> split evenly</Text>
-      <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('FriendsList')}>
+      <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('SelectFriend')}>
         <Text style={styles.btntext}>Friends List</Text>
       </TouchableOpacity>
       </View>
