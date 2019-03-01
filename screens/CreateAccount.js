@@ -50,6 +50,9 @@ export default class CreateAccount extends React.Component {
       <TouchableOpacity style={styles.button} onPress ={this.onSignUpPress.bind(this)}>
         <Text style={styles.btntext}>SIGN UP</Text>
       </TouchableOpacity>
+
+      <Text style={styles.title} onPress={() => this.props.navigation.navigate('HomeScreen')}> Already have an Account? </Text>
+
     </View>
   }
 
@@ -151,7 +154,7 @@ export default class CreateAccount extends React.Component {
 
             <Text style={{paddingLeft: 75}}> Password </Text>
             <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
-            placeholder="******"
+            placeholder="*******"
             onChangeText={(password) => this.setState({password})}
             underlineColorAndroid={'transparent'}
             backgroundColor = 'ghostwhite'
@@ -195,8 +198,15 @@ button: {
   backgroundColor: '#000',
   width: '60%',
   marginTop: 20,
-  marginBottom: 40,
   alignSelf: 'center',
+},
+title:{
+  color: '#fff',
+  fontSize: 14,
+  textAlign:'center',
+  marginTop: 20,
+  marginBottom: 40,
+  opacity: 0.9
 },
 btntext:{
   color: '#fff',
