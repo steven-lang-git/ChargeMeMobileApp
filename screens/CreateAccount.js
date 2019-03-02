@@ -172,7 +172,7 @@ export default class CreateAccount extends React.Component {
             backgroundColor = 'ghostwhite'
             alignSelf = 'center'/>
 
-            <Text style={{paddingLeft: 75}}> Password </Text>
+            <Text style={{paddingLeft: 75}}> Password (minimum length 6 characters) </Text>
             <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
             placeholder="*******"
             onChangeText={(password) => this.setState({password})}
