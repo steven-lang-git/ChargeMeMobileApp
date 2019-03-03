@@ -9,6 +9,7 @@ import CurrentTransactions from '../screens/CurrentTransactions';
 import NotificationSettings from '../screens/NotificationSettings';
 import Logout from '../screens/Logout';
 import BillSplitStackScreen from '../navigation/BillSplitStackScreen';
+import FriendsList from '../screens/FriendsList';
 
 
 
@@ -38,7 +39,9 @@ const AppDrawerNavigator = createDrawerNavigator({
                     <Icon name="money" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>),
               }
     },
-    Logout: {screen: Logout, navigationOptions: {title: 'Log Out', }},
+
+    FriendsList: {screen: FriendsList, navigationOptions:{title: 'Friends List'}},
+    Logout: {screen: Logout, navigationOptions: {title: 'Log Out'}},
   },
   {
     initialRouteName: 'PastTransactions',
