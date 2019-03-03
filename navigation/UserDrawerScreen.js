@@ -39,13 +39,14 @@ const AppDrawerNavigator = createDrawerNavigator({
                     <Icon name="money" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>),
               }
     },
+
     FriendsList: {screen: FriendsList, navigationOptions:{title: 'Friends List'}},
     Logout: {screen: Logout, navigationOptions: {title: 'Log Out'}},
   },
   {
     initialRouteName: 'PastTransactions',
     contentComponent: CustomDrawerComponent,
-    drawerWidth: width,
+    //drawerWidth: width,
     contentOptions: {
     activeTintColor: '#64daed'
   }
