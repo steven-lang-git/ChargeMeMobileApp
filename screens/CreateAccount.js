@@ -1,16 +1,24 @@
 import React from 'react';
-import {ActivityIndicator, AppRegistry,StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard, DatePickerIOS, ScrollView} from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base';
 import * as firebase from 'firebase';
 
+const{width} = Dimensions.get('window')
 
 export default class CreateAccount extends React.Component {
   // constructor with state of email, password,username, firstName, lastName, phoneNumber,birthday, street, city,
   // state, zipCode, error, loading properties to support account creation
   constructor(props){
     super(props);
-    this.state = {username:'', firstName: '', lastName: '', email: '', phone: '', birthday: '',
+    this.state = {username:'', firstName: '', lastName: '', email: '', phone: '', birthday: new Date() ,
       street: '', city: '', state: '', zipCode: '',password:'', error:'', loading: false};
+
+    this.setDate = this.setDate.bind(this);
+  }
+
+  //function to handle changing birthday date DatePickerIOS
+  setDate(newDate){
+    this.setState({birthday: newDate})
   }
 
   //function to handle clicking sign up button
@@ -50,7 +58,7 @@ export default class CreateAccount extends React.Component {
       //if there is an error during account creation
 
       this.setState({error: 'There is already an account with that email', loading: false});
-      
+
       if(this.state.password.length < 6){
         this.setState({error: 'Password must be at least 6 characters', loading: false});
       }
@@ -58,11 +66,6 @@ export default class CreateAccount extends React.Component {
       if (this.state.email == '' || this.state.password == ''){
         this.setState({error: 'Must enter an email and password', loading: false});
       }
-
-
-
-
-
     })
   }
 
@@ -92,158 +95,183 @@ export default class CreateAccount extends React.Component {
   render(){
 
     return(
+      <SafeAreaView style={styles.container}>
+            <ImageBackground source={require('../assets/coin.jpg')} style={styles.imageContainer}>
+            <View style={styles.overlay} />
+              <StatusBar barStyle="light-content" />
+              <KeyboardAvoidingView style={styles.container}>
+                <TouchableWithoutFeedback style={styles.container} onPress={Keyboard.dismiss}>
+                <View style={styles.logoContainer}>
+                      <View style={styles.logoContainer}>
+                        <Image style={styles.logo} source={require('../assets/logo_transparent.png')}>
+                        </Image>
+                      </View>
+                      <View style={styles.infoContainer}>
 
-      <View style={styles.regform}>
+                      <ScrollView contentContainerStyle={{
+                          flexGrow: 1,
+                          justifyContent: 'space-between'
+                      }}>
 
-        <View style={{flex:1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#7c889e'}}>
-          <ScrollView>
+                      <View style = {styles.inputBoxContainer}>
 
-            <Text style={styles.header, {paddingTop: 40, fontSize: 40, textAlign: 'center'}}>
-            Welcome to ChargeMe</Text>
+                      <Text style={styles.inputTitle}>Username</Text>
+                      <TextInput style={styles.input}
+                      placeholder="'john123'"
+                      placeholderTextColor="rgba(255,255,255,0.8)"
+                      onChangeText={(username) => this.setState({username})}
+                      />
 
-            <Text style={styles.header, {paddingTop: 20, paddingBottom: 40, fontSize: 25, textAlign: 'center'}}>
-            Create New Account</Text>
+                      <Text style={styles.inputTitle}>Email</Text>
+                      <TextInput style={styles.input}
+                      placeholder="john123@email.com"
+                      placeholderTextColor="rgba(255,255,255,0.8)"
+                      onChangeText={(email) => this.setState({email})}
+                      />
+
+                      <Text style={styles.inputTitle}>Password (at least 6 characters)</Text>
+                      <TextInput style={styles.input}
+                      placeholder="*******"
+                      placeholderTextColor="rgba(255,255,255,0.8)"
+                      autoCorrect= {false}
+                      secureTextEntry
+                      onChangeText={(password) => this.setState({password})}
+                      />
+
+                      <Text style={styles.inputTitle}>First Name</Text>
+                      <TextInput style={styles.input}
+                      placeholder="John"
+                      placeholderTextColor="rgba(255,255,255,0.8)"
+                      onChangeText={(firstName) => this.setState({firstName})}
+                      />
+
+                      <Text style={styles.inputTitle}>Last Name</Text>
+                      <TextInput style={styles.input}
+                      placeholder="Doe"
+                      placeholderTextColor="rgba(255,255,255,0.8)"
+                      onChangeText={(lastName) => this.setState({lastName})}
+                      />
+
+                      <Text style={styles.inputTitle}>Phone Number</Text>
+                      <TextInput style={styles.input}
+                      placeholder="(###)###-####"
+                      placeholderTextColor="rgba(255,255,255,0.8)"
+                      onChangeText={(phone) => this.setState({phone})}
+                      />
+
+                      <Text style={styles.inputTitle}>Birthday</Text>
+
+                      </View>
+
+                      <View style = {styles.datePickerContainer}>
+                      <DatePickerIOS
+                      date={this.state.birthday}
+                      onDateChange={this.setDate}
+                      mode = 'date'
+                      />
+                      </View>
+                      <View style = {styles.signUpContainer}>
+                        <Text style={styles.errorMessage}>{this.state.error}</Text>
+
+                        {this.renderButtonOrLoading()}
+                      </View>
+
+                      </ScrollView>
+                      </View>
+                  </View>
+                </TouchableWithoutFeedback>
+              </KeyboardAvoidingView>
+              </ImageBackground>
+            </SafeAreaView>
 
 
-            <Text style={{paddingLeft: 75}}> Username </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10}}
-            placeholder="'john123'"
-            onChangeText={(username) => this.setState({username})}
-            underlineColorAndroid={'transparent'}
-            backgroundColor = 'ghostwhite'
-            alignSelf = 'center'/>
-
-            <Text style={{paddingLeft: 75}}> First Name </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
-            placeholder="John"
-            onChangeText={(firstName) => this.setState({firstName})}
-            underlineColorAndroid={'transparent'}
-            backgroundColor = 'ghostwhite'
-            alignSelf = 'center'/>
-
-            <Text style={{paddingLeft: 75}}> Last Name </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
-            placeholder="Doe"
-            onChangeText={(lastName) => this.setState({lastName})}
-            underlineColorAndroid={'transparent'}
-            backgroundColor = 'ghostwhite'
-            alignSelf = 'center'/>
-
-            <Text style={{paddingLeft: 75}}> Email </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10}}
-            placeholder="john123@email.com"
-            onChangeText={(email) => this.setState({email})}
-            underlineColorAndroid={'transparent'}
-            backgroundColor = 'ghostwhite'
-            alignSelf = 'center'/>
-
-            <Text style={{paddingLeft: 75}}> Phone Number </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
-            placeholder="(###)###-####"
-            onChangeText={(phone) => this.setState({phone})}
-            underlineColorAndroid={'transparent'}
-            backgroundColor = 'ghostwhite'
-            alignSelf = 'center'/>
-
-            <Text style={{paddingLeft: 75}}> Birthday </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
-            placeholder="mm/dd/yyy"
-            onChangeText={(birthday) => this.setState({birthday})}
-            underlineColorAndroid={'transparent'}
-            backgroundColor = 'ghostwhite'
-            alignSelf = 'center'/>
-
-            <Text style={{paddingLeft: 75}}> Street </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
-            placeholder="'123 east lane'"
-            onChangeText={(street) => this.setState({street})}
-            underlineColorAndroid={'transparent'}
-            backgroundColor = 'ghostwhite'
-            alignSelf = 'center'/>
-
-            <Text style={{paddingLeft: 75}}> City </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
-            placeholder="Johnville"
-            onChangeText={(city) => this.setState({city})}
-            underlineColorAndroid={'transparent'}
-            backgroundColor = 'ghostwhite'
-            alignSelf = 'center'/>
-
-            <Text style={{paddingLeft: 75}}> State </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
-            placeholder="ex. CA"
-            onChangeText={(state) => this.setState({state})}
-            underlineColorAndroid={'transparent'}
-            backgroundColor = 'ghostwhite'
-            alignSelf = 'center'/>
-
-            <Text style={{paddingLeft: 75}}> ZipCode </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
-            placeholder="#####"
-            onChangeText={(zipCode) => this.setState({zipCode})}
-            underlineColorAndroid={'transparent'}
-            backgroundColor = 'ghostwhite'
-            alignSelf = 'center'/>
-
-            <Text style={{paddingLeft: 75}}> Password (minimum length 6 characters) </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
-            placeholder="*******"
-            onChangeText={(password) => this.setState({password})}
-            underlineColorAndroid={'transparent'}
-            backgroundColor = 'ghostwhite'
-            alignSelf = 'center'/>
-
-            <Text style={{color: 'red'}}>{this.state.error}</Text>
-
-            {this.renderButtonOrLoading()}
-
-          </ScrollView>
-        </View>
-      </View>
     );
   }
 }
 
 
 const styles = StyleSheet.create({
-regform: {
+  container:{
+    flex: 1,
+    flexDirection: 'column',
+
+  },
+  errorMessage:{
+    color: 'red',
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  inputBoxContainer:{
+    flex:8,
+  },
+  signUpContainer: {
+    flex:1,
+  },
+  datePickerContainer: {
+    flex:1,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+  },
+  header:{
+    position:'absolute',
+  },
+  imageContainer: {
+      resizeMode:'cover',
+      flex:1,
+  },
+  overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(69,85,117,0.7)',
+  },
+logo: {
   flex: 1,
+  resizeMode: 'contain',
+  // width: 256,
+  // height:112,
+  // bottom:300,
 },
-header:{
-  fontSize:24,
-  color: "#000",
-  paddingBottom: 10,
-  marginBottom:40,
-  borderBottomColor: '#199187',
-  borderBottomWidth: 1,
-},
-textinput: {
-  alignSelf: 'stretch',
+logoContainer:{
   alignItems: 'center',
-  height: 40,
-  marginBottom: 30,
-  color: "#000",
+  justifyContent: 'center',
+  flex: 1,
+  width: width,
+  //padding:20,
 },
-button: {
-  alignSelf: 'stretch',
-  alignItems: 'center',
-  padding: 20,
-  backgroundColor: '#000',
-  width: '60%',
-  marginTop: 20,
-  alignSelf: 'center',
+infoContainer: {
+  flex: 4,
+  width: width,
+  padding:20,
+},
+input: {
+  height:40,
+  backgroundColor: 'rgba(255,255,255,0.2)',
+  color:'#fff',
+  marginBottom:20,
+  paddingHorizontal:10
 },
 title:{
   color: '#fff',
-  fontSize: 14,
+  fontSize: 15,
   textAlign:'center',
   marginTop: 20,
-  marginBottom: 40,
   opacity: 0.9
 },
-btntext:{
-  color: '#fff',
+inputTitle: {
+  color: '#34c6de',
+  fontSize: 16,
   fontWeight: 'bold',
+  marginBottom: 5,
+},
+button: {
+  paddingVertical: 15,
+  backgroundColor: '#34c6de',
+
+},
+btntext:{
+  textAlign: 'center',
+  color: 'rgb(32,53,70)',
+  fontWeight: 'bold',
+  color: 'white',
+  fontSize: 18,
 }
 
 });
