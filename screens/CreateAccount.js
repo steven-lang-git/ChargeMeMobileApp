@@ -47,8 +47,22 @@ export default class CreateAccount extends React.Component {
       this.props.navigation.navigate('PastTransactions');
     })
     .catch(() =>{
-      //if there is an error during authentication
+      //if there is an error during account creation
+
       this.setState({error: 'There is already an account with that email', loading: false});
+      
+      if(this.state.password.length < 6){
+        this.setState({error: 'Password must be at least 6 characters', loading: false});
+      }
+
+      if (this.state.email == '' || this.state.password == ''){
+        this.setState({error: 'Must enter an email and password', loading: false});
+      }
+
+
+
+
+
     })
   }
 
