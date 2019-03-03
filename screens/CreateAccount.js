@@ -1,7 +1,8 @@
 import React from 'react';
-import {ActivityIndicator, AppRegistry,StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import {ActivityIndicator, Dimensions, AppRegistry,StyleSheet, Text, View, TextInput, ImageBackground,TouchableOpacity, ScrollView } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base';
 import * as firebase from 'firebase';
+const { width } = Dimensions.get('window')
 
 
 export default class CreateAccount extends React.Component {
@@ -80,99 +81,100 @@ export default class CreateAccount extends React.Component {
     return(
 
       <View style={styles.regform}>
-
-        <View style={{flex:1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#7c889e'}}>
+        <View style={{flex:1, alignItems: 'center', justifyContent: 'center', padding: 50}}>
+        <ImageBackground source={require('../assets/createAccount.jpg')} style={styles.imageContainer}>
+        <View style={styles.overlay} />
           <ScrollView>
 
-            <Text style={styles.header, {paddingTop: 40, fontSize: 40, textAlign: 'center'}}>
+            <Text style={styles.header, {paddingTop: 40, fontSize: 30, textAlign: 'center' , color: 'white'}}>
             Welcome to ChargeMe</Text>
 
-            <Text style={styles.header, {paddingTop: 20, paddingBottom: 40, fontSize: 25, textAlign: 'center'}}>
+            <Text style={styles.header, {paddingTop: 20, paddingBottom: 40, fontSize: 15, textAlign: 'center' , color: 'white'}}>
             Create New Account</Text>
 
 
-            <Text style={{paddingLeft: 75}}> Username </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10}}
+            <Text style={{paddingLeft: 150 , color: 'white'}}> Username </Text>
+            <TextInput style={{ height: 30, width: "60%", borderColor: 'white', borderWidth: 1,  marginBottom: 10}}
             placeholder="'john123'"
             onChangeText={(username) => this.setState({username})}
             underlineColorAndroid={'transparent'}
             backgroundColor = 'ghostwhite'
             alignSelf = 'center'/>
 
-            <Text style={{paddingLeft: 75}}> First Name </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            <Text style={{paddingLeft: 150 , color: 'white'}}> First Name </Text>
+            <TextInput style={{ height: 30, width: "60%", borderColor: 'white', borderWidth: 1,  marginBottom: 10 }}
             placeholder="John"
             onChangeText={(firstName) => this.setState({firstName})}
             underlineColorAndroid={'transparent'}
             backgroundColor = 'ghostwhite'
             alignSelf = 'center'/>
 
-            <Text style={{paddingLeft: 75}}> Last Name </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            <Text style={{paddingLeft: 150 , color: 'white'}}> Last Name </Text>
+            <TextInput style={{ height: 30, width: "60%", borderColor: 'white', borderWidth: 1,  marginBottom: 10 }}
             placeholder="Doe"
             onChangeText={(lastName) => this.setState({lastName})}
             underlineColorAndroid={'transparent'}
             backgroundColor = 'ghostwhite'
             alignSelf = 'center'/>
 
-            <Text style={{paddingLeft: 75}}> Email </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10}}
+            <Text style={{paddingLeft: 150 , color: 'white'}}> Email </Text>
+            <TextInput style={{ height: 30, width: "60%", borderColor: 'white', borderWidth: 1,  marginBottom: 10}}
             placeholder="john123@email.com"
             onChangeText={(email) => this.setState({email})}
             underlineColorAndroid={'transparent'}
             backgroundColor = 'ghostwhite'
             alignSelf = 'center'/>
 
-            <Text style={{paddingLeft: 75}}> Phone Number </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            <Text style={{paddingLeft: 150 , color: 'white'}}> Phone Number </Text>
+            <TextInput style={{ height: 30, width: "60%", borderColor: 'white', borderWidth: 1,  marginBottom: 10 }}
             placeholder="(###)###-####"
             onChangeText={(phone) => this.setState({phone})}
             underlineColorAndroid={'transparent'}
             backgroundColor = 'ghostwhite'
             alignSelf = 'center'/>
 
-            <Text style={{paddingLeft: 75}}> Birthday </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            <Text style={{paddingLeft: 150 , color: 'white'}}> Birthday </Text>
+            <TextInput style={{ height: 30, width: "60%", borderColor: 'white', borderWidth: 1,  marginBottom: 10 }}
             placeholder="mm/dd/yyy"
             onChangeText={(birthday) => this.setState({birthday})}
             underlineColorAndroid={'transparent'}
             backgroundColor = 'ghostwhite'
             alignSelf = 'center'/>
 
-            <Text style={{paddingLeft: 75}}> Street </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            <Text style={{paddingLeft: 150 , color: 'white'}}> Street </Text>
+            <TextInput style={{ height: 30, width: "60%", borderColor: 'white', borderWidth: 1,  marginBottom: 10 }}
             placeholder="'123 east lane'"
             onChangeText={(street) => this.setState({street})}
             underlineColorAndroid={'transparent'}
             backgroundColor = 'ghostwhite'
             alignSelf = 'center'/>
 
-            <Text style={{paddingLeft: 75}}> City </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            <Text style={{paddingLeft: 150, color: 'white'}}> City </Text>
+            <TextInput style={{ height: 30, width: "60%", borderColor: 'white', borderWidth: 1,  marginBottom: 10 }}
             placeholder="Johnville"
             onChangeText={(city) => this.setState({city})}
             underlineColorAndroid={'transparent'}
             backgroundColor = 'ghostwhite'
             alignSelf = 'center'/>
 
-            <Text style={{paddingLeft: 75}}> State </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            <Text style={{paddingLeft: 150, color: 'white'}}> State </Text>
+            <TextInput style={{ height: 30, width: "60%", borderColor: 'white', borderWidth: 1,  marginBottom: 10 }}
             placeholder="ex. CA"
             onChangeText={(state) => this.setState({state})}
             underlineColorAndroid={'transparent'}
             backgroundColor = 'ghostwhite'
             alignSelf = 'center'/>
 
-            <Text style={{paddingLeft: 75}}> ZipCode </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            <Text style={{paddingLeft: 150, color: 'white'}}> ZipCode </Text>
+            <TextInput style={{ height: 30, width: "60%", borderColor: 'white', borderWidth: 1,  marginBottom: 10 }}
             placeholder="#####"
             onChangeText={(zipCode) => this.setState({zipCode})}
             underlineColorAndroid={'transparent'}
             backgroundColor = 'ghostwhite'
             alignSelf = 'center'/>
 
-            <Text style={{paddingLeft: 75}}> Password (minimum length 6 characters) </Text>
-            <TextInput style={{ height: 30, width: "60%", borderColor: 'black', borderWidth: 1,  marginBottom: 10 }}
+            <Text style={{paddingLeft: 150, color: 'white'}}> Password (minimum length 6 characters) </Text>
+            <TextInput style={{ height: 30, width: "60%", borderColor: 'white', borderWidth: 1,  marginBottom: 10 }}
             placeholder="*******"
             onChangeText={(password) => this.setState({password})}
             underlineColorAndroid={'transparent'}
@@ -184,6 +186,7 @@ export default class CreateAccount extends React.Component {
             {this.renderButtonOrLoading()}
 
           </ScrollView>
+          </ImageBackground>
         </View>
       </View>
     );
@@ -194,6 +197,18 @@ export default class CreateAccount extends React.Component {
 const styles = StyleSheet.create({
 regform: {
   flex: 1,
+},
+imageContainer: {
+  width: null,
+  height: null,
+  aspectRatio: 1,
+  resizeMode: 'cover',
+  justifyContent: 'center',
+
+},
+overlay: {
+  ...StyleSheet.absoluteFillObject,
+  backgroundColor: 'rgba(69,85,117,0.7)',
 },
 header:{
   fontSize:24,

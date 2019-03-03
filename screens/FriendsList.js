@@ -5,28 +5,28 @@ const { width } = Dimensions.get('window')
 
 export default class FriendsList extends React.Component {
 
-  // constructor(props) {
-  //     super(props)
-  //     this.state = {
-  //       possibleFriends: [
-  //         'Angela',
-  //         'Steven',
-  //         'Nikki',
-  //         'Jasmin',
-  //       ],
-  //       currentFriends: [
-  //         'John',
-  //         'Jason',
-  //       ],
-  //     }
-  //   }
-  constructor(props){
-    super(props);
-    this.state = {username:'', firstName: '', lastName: '', email: '', phone: '', birthday: '',
-      street: '', city: '', state: '', zipCode: '',password:'', error:'', loading: false};
-  }
+  constructor(props) {
+      super(props)
+      this.state = {
+        possibleFriends: [
+          'Angela',
+          'Steven',
+          'Nikki',
+          'Jasmin',
+        ],
+        currentFriends: [
+          'John',
+          'Jason',
+        ],
+      }
+    }
+  // constructor(props){
+  //   super(props);
+  //   this.state = {username:'', firstName: '', lastName: '', email: '', phone: '', birthday: '',
+  //     street: '', city: '', state: '', zipCode: '',password:'', error:'', loading: false};
+  // }
 
-  
+
 
   addFriend = (index) => {
     const {
