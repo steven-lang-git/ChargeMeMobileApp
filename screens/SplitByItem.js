@@ -14,7 +14,7 @@ export default class SplitByItem extends React.Component {
       <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
 
       <Text> Split By Item</Text>
-      <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('FriendsList')}>
+      <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('SelectFriend')}>
         <Text style={styles.btntext}>FriendsList</Text>
       </TouchableOpacity>
 
