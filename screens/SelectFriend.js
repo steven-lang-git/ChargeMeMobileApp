@@ -68,7 +68,7 @@ export default class SelectFriend extends React.Component {
     return (
 
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../assets/friends.jpeg')} style={styles.imageContainer}>
+        <ImageBackground source={require('../assets/selectFriend.jpeg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
           <Header style={{ backgroundColor: 'transparent', borderBottomWidth: 0, }}>
             <Left>
