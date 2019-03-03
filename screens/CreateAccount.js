@@ -25,6 +25,25 @@ export default class CreateAccount extends React.Component {
       //if we are signed in without any error, navigate to PastTransactions page
       //*** NEED TO ADD CODE TO SAVE USER INPUT***
       this.setState({error:'', loading:false});
+
+      //get user id
+      var userId = firebase.auth().currentUser.uid;
+
+      //write user info
+      firebase.database().ref('users/' + userId).set({
+        username: this.state.username,
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        phone: this.state.phone,
+        birthday: this.state.birthday,
+        street: this.state.street,
+        city: this.state.city,
+        state: this.state.state,
+        zipCode: this.state.zipCode,
+      });
+
+
       this.props.navigation.navigate('PastTransactions');
     })
     .catch(() =>{
