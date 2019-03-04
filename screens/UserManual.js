@@ -2,20 +2,20 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
-export default class NotificationSettings extends React.Component {
+export default class UserManual extends React.Component {
   static navigationOptions ={
     drawerIcon: (tintColor) =>(
       <Icon name="sitemap" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
     )
   }
-  render() {
+  render() { 
     return (
       <View style={styles.container}>
       <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
 
 
 
-        <Text> Notification Settings Page </Text>
+        <Text> User Manual Page </Text>
 
 
 
