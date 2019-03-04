@@ -38,6 +38,24 @@ export default class SettingsScreen extends React.Component {
           </TouchableOpacity>
 
 
+          <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('ChangePassword')}>
+            <Text style={styles.btntext}>CHANGE PASSWORD</Text>
+          </TouchableOpacity>
+
+
+          <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('UserManual')}>
+            <Text style={styles.btntext}>USER MANUAL</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('DeveloperGuide')}>
+            <Text style={styles.btntext}>DEVELOPER GUIDE</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('FAQs')}>
+            <Text style={styles.btntext}>FAQS</Text>
+          </TouchableOpacity>
+
+
         </View>
       </View>
     );
@@ -71,8 +89,8 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#000',
     width: '60%',
-    marginTop: 20,
-    marginBottom: 40,
+    marginTop: 10,
+    marginBottom: 10,
     alignSelf: 'center',
   },
   btntext:{
