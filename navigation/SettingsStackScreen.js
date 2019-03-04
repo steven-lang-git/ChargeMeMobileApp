@@ -10,7 +10,7 @@ const SettingsStack = createStackNavigator({
     SettingsScreen: { screen: SettingsScreen, navigationOptions: {header: null}},
     UserProfile: { screen: UserProfile},
     PaymentMethods: { screen: PaymentMethods},
-    NotificationSettings: {screen:NotificationSettings},
+    NotificationSettings: {screen: NotificationSettings},
   },
   {
        initialRouteName: 'SettingsScreen',

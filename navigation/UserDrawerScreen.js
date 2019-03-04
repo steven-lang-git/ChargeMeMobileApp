@@ -11,7 +11,7 @@ import Logout from '../screens/Logout';
 import BillSplitStackScreen from '../navigation/BillSplitStackScreen';
 import FriendsList from '../screens/FriendsList';
 //import SettingsScreen from '../screens/SettingsScreen';
-import SettingsStackScreen from '..navigation/SettingsStackScreen';
+import SettingsStackScreen from '../navigation/SettingsStackScreen';
 
 
 
