@@ -6,10 +6,12 @@ import HomeScreen from '../screens/HomeScreen'
 import CreateAccount from '../screens/CreateAccount';
 import PastTransactions from '../screens/PastTransactions';
 import CurrentTransactions from '../screens/CurrentTransactions';
-import NotificationSettings from '../screens/NotificationSettings';
+//import NotificationSettings from '../screens/NotificationSettings';
 import Logout from '../screens/Logout';
 import BillSplitStackScreen from '../navigation/BillSplitStackScreen';
 import FriendsList from '../screens/FriendsList';
+//import SettingsScreen from '../screens/SettingsScreen';
+import SettingsStackScreen from '..navigation/SettingsStackScreen';
 
 
 
@@ -31,7 +33,16 @@ const AppDrawerNavigator = createDrawerNavigator({
     // CreateAccount: {screen: CreateAccount},
     PastTransactions: {screen:  PastTransactions, navigationOptions: {title: 'Past Transactions'}},
     CurrentTransactions: {screen: CurrentTransactions, navigationOptions: {title: 'Current Transactions'}},
-    Settings: {screen: NotificationSettings, navigationOptions: {title: 'Settings'}},
+    // Settings: {screen: SettingsScreen, navigationOptions: {title: 'Settings'}},
+
+    SettingsStackScreen: {screen: SettingsStackScreen, navigationOptions:
+              {
+                  title: 'Settings',
+                  drawerIcon: (tintColor) =>(
+                    <Icon name="sliders" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>),
+              }
+    },
+
     BillSplitStackScreen: {screen: BillSplitStackScreen, navigationOptions:
               {
                   title: 'Bill Split',
