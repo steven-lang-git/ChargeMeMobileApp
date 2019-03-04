@@ -17,21 +17,21 @@ import FAQs from '../screens/FAQs';
 const SettingsStack = createStackNavigator({
 
     SettingsScreen: { screen: SettingsScreen, navigationOptions: {header: null}},
-    UserProfile: { screen: UserProfile},
+    UserProfile: { screen: UserProfile, navigationOptions: {title: 'User Profile'}},
 
-    PaymentMethods: { screen: PaymentMethods},
-    Bank: {screen: Bank},
-    CreditCard: {screen: CreditCard},
+    PaymentMethods: { screen: PaymentMethods, navigationOptions: {title: 'Payment Methods'}},
+    Bank: {screen: Bank, navigationOptions: {title: 'Add Bank'}},
+    CreditCard: {screen: CreditCard, navigationOptions: {title: 'Add Credit Card'}},
 
-    NotificationSettings: {screen: NotificationSettings},
-    PushNotifications: {screen: PushNotifications},
-    TextNotifications: {screen: TextNotifications},
-    EmailNotifications: {screen: EmailNotifications},
+    NotificationSettings: {screen: NotificationSettings, navigationOptions: {title: 'Notification Settings'}},
+    PushNotifications: {screen: PushNotifications, navigationOptions: {title: 'Push Notifications'}},
+    TextNotifications: {screen: TextNotifications, navigationOptions: {title: 'Text Notifications'}},
+    EmailNotifications: {screen: EmailNotifications, navigationOptions: {title: 'Email Notifications'}},
 
-    ChangePassword: {screen: ChangePassword},
-    DeveloperGuide: {screen: DeveloperGuide},
-    UserManual: {screen: UserManual},
-    FAQs: {screen: FAQs},
+    ChangePassword: {screen: ChangePassword, navigationOptions: {title: 'Change Password'}},
+    DeveloperGuide: {screen: DeveloperGuide, navigationOptions: {title: 'Developer Guide'}},
+    UserManual: {screen: UserManual, navigationOptions: {title: 'User Manual'}},
+    FAQs: {screen: FAQs, navigationOptions: {title: 'FAQs'}},
   },
   {
        initialRouteName: 'SettingsScreen',
