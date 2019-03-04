@@ -84,6 +84,7 @@ export default class HomeScreen extends React.Component {
                         </Image>
                       </View>
                       <View style={styles.infoContainer}>
+
                         <TextInput style={styles.input}
                           placeholder="Enter email"
                           placeholderTextColor="rgba(255,255,255,0.8)"
