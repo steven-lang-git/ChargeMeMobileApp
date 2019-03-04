@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
-export default class NotificationSettings extends React.Component {
+export default class Bank extends React.Component {
   static navigationOptions ={
     drawerIcon: (tintColor) =>(
       <Icon name="sitemap" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
@@ -15,19 +15,7 @@ export default class NotificationSettings extends React.Component {
 
 
 
-        <Text> Notification Settings Page </Text>
-
-        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('PushNotifications')}>
-          <Text style={styles.btntext}>PUSH NOTIFICATIONS</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('TextNotifications')}>
-          <Text style={styles.btntext}>TEXT NOTIFICATIONS</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('EmailNotifications')}>
-          <Text style={styles.btntext}>EMAIL NOTIFICATIONS</Text>
-        </TouchableOpacity>
+        <Text> Bank Page </Text>
 
 
 
