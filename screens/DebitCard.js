@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
-export default class CreditCard extends React.Component {
+export default class DebitCard extends React.Component {
   static navigationOptions ={
     drawerIcon: (tintColor) =>(
       <Icon name="sitemap" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
@@ -15,7 +15,7 @@ export default class CreditCard extends React.Component {
 
 
 
-        <Text> CreditCard Page </Text>
+        <Text> Debit Card Page </Text>
 
 
 
