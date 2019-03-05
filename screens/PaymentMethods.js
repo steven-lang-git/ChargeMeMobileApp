@@ -23,8 +23,8 @@ export default class PaymentMethods extends React.Component {
           <Text style={styles.btntext}>ADD BANK</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('CreditCard')}>
-          <Text style={styles.btntext}>ADD CREDIT CARD</Text>
+        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('DebitCard')}>
+          <Text style={styles.btntext}>ADD DEBIT CARD</Text>
         </TouchableOpacity>
 
 

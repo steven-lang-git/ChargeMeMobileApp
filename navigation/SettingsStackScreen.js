@@ -8,7 +8,7 @@ import ChangePassword from '../screens/ChangePassword';
 import DeveloperGuide from '../screens/DeveloperGuide';
 import UserManual from '../screens/UserManual';
 import Bank from '../screens/Bank';
-import CreditCard from '../screens/CreditCard';
+import DebitCard from '../screens/DebitCard';
 import PushNotifications from '../screens/PushNotifications';
 import TextNotifications from '../screens/TextNotifications';
 import EmailNotifications from '../screens/EmailNotifications';
@@ -21,7 +21,7 @@ const SettingsStack = createStackNavigator({
 
     PaymentMethods: { screen: PaymentMethods, navigationOptions: {title: 'Payment Methods'}},
     Bank: {screen: Bank, navigationOptions: {title: 'Add Bank'}},
-    CreditCard: {screen: CreditCard, navigationOptions: {title: 'Add Credit Card'}},
+    DebitCard: {screen: DebitCard, navigationOptions: {title: 'Add Debit Card'}},
 
     NotificationSettings: {screen: NotificationSettings, navigationOptions: {title: 'Notification Settings'}},
     PushNotifications: {screen: PushNotifications, navigationOptions: {title: 'Push Notifications'}},
