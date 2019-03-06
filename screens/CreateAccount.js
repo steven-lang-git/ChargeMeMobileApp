@@ -14,7 +14,11 @@ export default class CreateAccount extends React.Component {
       street: '', city: '', state: '', zipCode: '',password:'', error:'', loading: false};
 
     this.setDate = this.setDate.bind(this);
+
+    var error = 'error message';
   }
+
+
 
   //function to handle changing birthday date DatePickerIOS
   setDate(newDate){
@@ -23,50 +27,94 @@ export default class CreateAccount extends React.Component {
 
   //function to handle clicking sign up button
   onSignUpPress(){
-    this.setState({error:'', loading:true});
-    //get email and password from state
-    const{email,password} = this.state;
 
-    //call firebase authentication method using email and password
-    firebase.auth().createUserWithEmailAndPassword(email,password)
+    this.setState({error:''});
+
+    //call allFieldsFilled method
+    this.allFieldsFilled();
+
+    console.log('status fields filled'+ this.state.error);
+
+    if(this.state.error == ''){
+
+      //call makeUsernameUnique function
+      this.makeUsernameUnique()
+
+
+      //get email and password from state
+      const{email,password} = this.state;
+
+      console.log('error:' + this.state.error);
+
+      if(this.state.error == ''){
+
+          this.setState({loading:true});
+          //call firebase authentication method using email and password
+          firebase.auth().createUserWithEmailAndPassword(email,password)
+          .then(() => {
+            //if we are signed in without any error, navigate to PastTransactions page
+            //*** NEED TO ADD CODE TO SAVE USER INPUT***
+            this.setState({error:'', loading:false});
+
+            //get user id
+            var userId = firebase.auth().currentUser.uid;
+
+            //write user info
+            firebase.database().ref('users/' + userId).set({
+              username: this.state.username,
+              firstName: this.state.firstName,
+              lastName: this.state.lastName,
+              email: this.state.email,
+              phone: this.state.phone,
+              birthday: this.state.birthday,
+            });
+
+
+            this.props.navigation.navigate('PastTransactions');
+          })
+          .catch(() =>{
+            //if there is an error during account creation
+
+            this.setState({error: 'There is already an account with that email', loading: false});
+
+            if(this.state.password.length < 6){
+              this.setState({error: 'Password must be at least 6 characters', loading: false});
+            }
+          })
+        }
+      }
+  }
+
+
+//function to check if entered username already exists
+  makeUsernameUnique(){
+
+    //save the username entered
+    var currentUsername = this.state.username;
+    console.log('username: ' + currentUsername);
+
+    //save the root reference to the database
+    var ref = firebase.database().ref();
+
+    //find all users that have the current username
+    ref.child('users').orderByChild('username').equalTo(currentUsername).once('child_added')
     .then(() => {
-      //if we are signed in without any error, navigate to PastTransactions page
-      //*** NEED TO ADD CODE TO SAVE USER INPUT***
-      this.setState({error:'', loading:false});
+      this.setState({error: 'That username is taken'});
+      console.log('async');
+      });
+  }
 
-      //get user id
-      var userId = firebase.auth().currentUser.uid;
-
-      //write user info
-      firebase.database().ref('users/' + userId).set({
-        username: this.state.username,
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        email: this.state.email,
-        phone: this.state.phone,
-        birthday: this.state.birthday,
-        street: this.state.street,
-        city: this.state.city,
-        state: this.state.state,
-        zipCode: this.state.zipCode,
+  //function to check all fields are filled out
+  allFieldsFilled(){
+    if (this.state.email == '' || this.state.password == '' || this.state.username == ''|| this.state.firstName == ''|| this.state.lastName == ''|| this.state.phone == ''){
+      this.setState({error: 'All fields must be filled'}, () => {
+        console.log('inside if statement' + this.state.error);
       });
 
+    }
 
-      this.props.navigation.navigate('PastTransactions');
-    })
-    .catch(() =>{
-      //if there is an error during account creation
+    console.log('status within fields filled'+ this.state.error);
 
-      this.setState({error: 'There is already an account with that email', loading: false});
-
-      if(this.state.password.length < 6){
-        this.setState({error: 'Password must be at least 6 characters', loading: false});
-      }
-
-      if (this.state.email == '' || this.state.password == ''){
-        this.setState({error: 'Must enter an email and password', loading: false});
-      }
-    })
   }
 
   //function to decide whether to display login button or loading spin
@@ -119,13 +167,17 @@ export default class CreateAccount extends React.Component {
                       <TextInput style={styles.input}
                       placeholder="'john123'"
                       placeholderTextColor="rgba(255,255,255,0.8)"
+                      autoCorrect= {false}
+                      returnKeyType='next'
                       onChangeText={(username) => this.setState({username})}
                       />
 
                       <Text style={styles.inputTitle}>Email</Text>
                       <TextInput style={styles.input}
-                      placeholder="john123@email.com"
+                      placeholder="'john123@email.com'"
                       placeholderTextColor="rgba(255,255,255,0.8)"
+                      autoCorrect= {false}
+                      returnKeyType='next'
                       onChangeText={(email) => this.setState({email})}
                       />
 
@@ -135,20 +187,23 @@ export default class CreateAccount extends React.Component {
                       placeholderTextColor="rgba(255,255,255,0.8)"
                       autoCorrect= {false}
                       secureTextEntry
+                      returnKeyType='next'
                       onChangeText={(password) => this.setState({password})}
                       />
 
                       <Text style={styles.inputTitle}>First Name</Text>
                       <TextInput style={styles.input}
-                      placeholder="John"
+                      placeholder="'John'"
                       placeholderTextColor="rgba(255,255,255,0.8)"
+                      returnKeyType='next'
                       onChangeText={(firstName) => this.setState({firstName})}
                       />
 
                       <Text style={styles.inputTitle}>Last Name</Text>
                       <TextInput style={styles.input}
-                      placeholder="Doe"
+                      placeholder="'Doe'"
                       placeholderTextColor="rgba(255,255,255,0.8)"
+                      returnKeyType='next'
                       onChangeText={(lastName) => this.setState({lastName})}
                       />
 
@@ -156,6 +211,7 @@ export default class CreateAccount extends React.Component {
                       <TextInput style={styles.input}
                       placeholder="(###)###-####"
                       placeholderTextColor="rgba(255,255,255,0.8)"
+                      returnKeyType='next'
                       onChangeText={(phone) => this.setState({phone})}
                       />
 
@@ -170,6 +226,7 @@ export default class CreateAccount extends React.Component {
                       mode = 'date'
                       />
                       </View>
+
                       <View style = {styles.signUpContainer}>
                         <Text style={styles.errorMessage}>{this.state.error}</Text>
 
