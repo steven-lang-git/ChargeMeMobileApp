@@ -2,6 +2,8 @@ import React from 'react';
 import { ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button, Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard } from 'react-native';
 import { Header, Left, Right, Icon, ListItem, List } from 'native-base'
 const { width } = Dimensions.get('window')
+import * as firebase from 'firebase';
+
 
 export default class FriendsList extends React.Component {
 
@@ -18,6 +20,7 @@ export default class FriendsList extends React.Component {
           'John',
           'Jason',
         ],
+        firstName:' ',
       }
     }
   // constructor(props){
@@ -70,6 +73,29 @@ export default class FriendsList extends React.Component {
     drawerIcon: (tintColor) =>(
       <Icon name="users" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
     )
+  }
+  componentDidMount()
+  {
+    // var ref= firebase.database().ref();
+    // var exists = null;
+    // ref.child('users').on("child_added", function(snapshot){
+    //   exists = snapshot.key.firstName;
+    //   console.log("exists", exists);
+    // });
+
+    firebase.database().ref().child('users').once('value').then((snapshot)=>{
+      const message_array=[];
+      snapshot.forEach((childSnapShot)=>
+      {
+          message_array.push({
+            value: childSnapShot.val(),
+            name: childSnapShot.val().firstName
+            // testing: childSnapShot.key.child(firstName)
+          })
+
+          console.log("exists",message_array);
+      });
+    });
   }
   render() {
     return (
