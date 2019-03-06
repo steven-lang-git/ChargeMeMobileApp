@@ -2,7 +2,7 @@ import React from 'react';
 import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard, DatePickerIOS, ScrollView} from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base';
 import * as firebase from 'firebase';
-const { width } = Dimensions.get('window')
+
 
 const{width} = Dimensions.get('window')
 

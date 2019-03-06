@@ -5,6 +5,7 @@ import SplitByItem from '../screens/SplitByItem';
 import SplitEvenly from '../screens/SplitEvenly';
 import FriendsList from '../screens/FriendsList';
 import SelectFriend from '../screens/SelectFriend';
+import ReceiptScanner from '../screens/ReceiptScanner';
 
 const BillSplitStack = createStackNavigator({
 
@@ -12,6 +13,7 @@ const BillSplitStack = createStackNavigator({
     SplitByItem: { screen: SplitByItem},
     SplitEvenly: { screen: SplitEvenly},
     SelectFriend: {screen:SelectFriend},
+    ReceiptScanner: {screen:ReceiptScanner},
   },
   {
        initialRouteName: 'BillSplit',
