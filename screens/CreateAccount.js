@@ -3,6 +3,7 @@ import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithout
 import {Header,Left,Right,Icon} from 'native-base';
 import * as firebase from 'firebase';
 
+
 const{width} = Dimensions.get('window')
 
 export default class CreateAccount extends React.Component {
