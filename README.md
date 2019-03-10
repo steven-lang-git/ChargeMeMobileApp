@@ -19,6 +19,9 @@ $ npm install
 $ npm install --save firebase
 $ npm install react-navigation@2.6.2
 $ npm i native-base@2.8.2  
+$ npm install react-native-form-validator --save
+$ npm install react-native-masked-text --save
+$ npm install --save moment react-moment
 ```
 5. Fix errors within react-native-vector-icons
 ```
