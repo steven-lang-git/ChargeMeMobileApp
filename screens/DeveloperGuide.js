@@ -159,7 +159,7 @@ bullets:{
   marginRight: 20
 },
 hyperlink:{
-  color: 'blue',
+  color: '#007AFF',
   fontSize: 22,
   textAlign:'left',
   marginBottom: 20,
