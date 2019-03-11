@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity,ActivityIndicator, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity,ActivityIndicator, Alert,Image, ListView, FlatList,Dimensions } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 import {Camera, Permissions} from 'expo';
+const{width} = Dimensions.get('window')
 
 export default class ReceiptScanner extends React.Component {
   static navigationOptions ={
@@ -12,13 +13,22 @@ export default class ReceiptScanner extends React.Component {
   state = {
     hasCameraPermission: null,
     type: Camera.Constants.Type.back,
+    photo: null,
+    photoId:''
   };
 
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
   }
- 
+  takePicture = async function() {this.camera.takePictureAsync({ skipProcessing: true }).then((data) => {
+    this.setState({
+        //takeImageText: "PICTURE TAKEN",
+        photo: data.uri
+    }, ()=>alert(data.uri))
+  }
+  )
+}
   render() {
     const { hasCameraPermission } = this.state;
     if (hasCameraPermission === null) {
@@ -29,15 +39,17 @@ export default class ReceiptScanner extends React.Component {
       return (
         <View style={{ flex: 1 }}>
           <Camera style={{ flex: 1 }} type={this.state.type}>
-            <View
+          <View
               style={{
                 flex: 1,
                 backgroundColor: 'transparent',
                 flexDirection: 'row',
-              }}>
+                justifyContent: 'center',
+              }}>           
+           
               <TouchableOpacity
                 style={{
-                  flex: 0.1,
+                  flex: 0.5,
                   alignSelf: 'flex-end',
                   alignItems: 'center',
                 }}
@@ -48,11 +60,82 @@ export default class ReceiptScanner extends React.Component {
                       : Camera.Constants.Type.back,
                   });
                 }}>
-                <Text
+                {/* <Text
                   style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
                   {' '}Flip{' '}
-                </Text>
+                </Text> */}
+                <Image style={{width:70, height: 70,marginBottom:10}} source={require('../assets/flip.png')} />
+                
+               
               </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  flex: 0.5,
+                  alignSelf: 'flex-end',
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  this.setState({
+                  
+                  });
+                }}>
+                <Image style={{width:60, height: 60,marginBottom:10}} source={require('../assets/flashonn.png')} />
+                
+               
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  flex: 0.5,
+                  alignSelf: 'flex-end',
+                  alignItems: 'center',
+                }}
+                onPress={()=>this.takePicture()}
+
+                >
+                <Image style={{width:60, height: 60,marginBottom:10}} source={require('../assets/capture.png')} />
+                
+               
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  flex: 0.5,
+                  alignSelf: 'flex-end',
+                  alignItems: 'center',
+                  marginBottom:10,
+                }}
+                onPress={() => {
+                  this.setState({
+                  
+                  });
+                }}>
+                <Image style={{width:60, height: 60}} source={require('../assets/flashau.png')} />
+                
+               
+              </TouchableOpacity>
+
+             
+
+              <TouchableOpacity
+                style={{
+                  flex: 0.5,
+                  alignSelf: 'flex-end',
+                  alignItems: 'center',
+                  marginBottom:10,
+                  marginRight:10
+                }}
+                onPress={() => {
+                  this.setState({
+                  
+                  });
+                }}>
+                <Image style={{width:60, height: 60}} source={require('../assets/flashofff.png')} />
+                
+               
+              </TouchableOpacity>
+              
             </View>
           </Camera>
         </View>
