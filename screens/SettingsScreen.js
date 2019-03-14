@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView, Linking} from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
 export default class SettingsScreen extends React.Component {
