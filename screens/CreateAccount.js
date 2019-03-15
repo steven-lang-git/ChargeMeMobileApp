@@ -5,7 +5,7 @@ import {Header,Left,Right,Icon} from 'native-base';
 import * as firebase from 'firebase';
 import moment from 'moment';
 import ValidationComponent from 'react-native-form-validator';
-import { TextInputMask } from 'react-native-masked-text';
+import {TextInputMask} from 'react-native-masked-text';
 
 
 
@@ -18,7 +18,6 @@ export default class CreateAccount extends ValidationComponent {
     super(props);
     this.state = {username:'', firstName: '', lastName: '', email: '', phone: '', birthday: new Date() ,
       street: '', city: '', state: '', zipCode: '',password:'', usernameError: '', emailError: '', loading: false};
-
     //set datepickIOS default day to today's date
     this.setDate = this.setDate.bind(this);
   }
