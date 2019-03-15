@@ -63,11 +63,11 @@ export default class DeveloperGuide extends React.Component {
             </Text>
 
             <Text style={styles.bullets}>
-              <Strong>1.</Strong> The user must first download the app from the app store on their mobile device {'\n'}
+              <Strong>1.</Strong> The user must first download the app from the app store on their mobile device {'\n\n'}
               <Strong>2.</Strong> Once the app is downloaded, the first thing the user will see after clicking on the app is
-              the Home Screen {'\n'}
-              <Strong>3.</Strong> If the user is a first-time user, click “Create Account” {'\n'}
-              <Strong>4.</Strong> If the user already has an account, type their credentials and click “Login” {'\n'}
+              the Home Screen {'\n\n'}
+              <Strong>3.</Strong> If the user is a first-time user, click “Create Account” {'\n\n'}
+              <Strong>4.</Strong> If the user already has an account, type their credentials and click “Login” {'\n\n'}
               <Strong>5.</Strong> Once logged into their account users may create a new transaction, complete a transaction,
               edit their profile and settings, and much more
             </Text>
@@ -105,8 +105,8 @@ export default class DeveloperGuide extends React.Component {
             <Text style={styles.text}>
               If there are any issues or further questions please check the FAQs section or email us at
             </Text>
-            <Text style={styles.hyperlink} onPress={() => Linking.openURL('mailto:support@ChargeMeApp.me')}>
-                support@ChargeMeApp.me
+            <Text style={styles.hyperlink} onPress={() => Linking.openURL('mailto:ChargeMeHelp@gmail.com')}>
+                ChargeMeHelp@gmail.com
             </Text>
 
 
