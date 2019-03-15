@@ -23,8 +23,16 @@ export default class FAQs extends React.Component {
               How can I reset my password?
             </Text>
             <Text style={styles.answer}>
-              If you do not remember your password or are concerned about the security of your account, you can change your
-              password HERE.
+              <Text>
+                If you do not remember your password or are concerned about the security of your account, you can change
+                your password
+              </Text>
+              <Text style={styles.hyperlink}
+                  onPress={() => this.props.navigation.navigate('ChangePassword')}> {`HERE`}
+              </Text>
+              <Text>
+                .
+              </Text>
             </Text>
 
             <Text style={styles.question}>
@@ -60,18 +68,33 @@ export default class FAQs extends React.Component {
               Can I change where my payment is coming from?
             </Text>
             <Text style={styles.answer}>
-            You can edit your payment method anytime before you complete your payment. When accepting a charge simply choose
-            which payment method you want the charge to be applied to. If you would like to add or delete a payment method
-            simply go to PAYMENT METHODS to edit your payment preferences. Please note, that it is not possible to change the
-            payment method after you have accepted a charge.
+              <Text>
+                You can edit your payment method anytime before you complete your payment. When accepting a charge simply
+                choose which payment method you want the charge to be applied to. If you would like to add or delete a payment
+                methodsimply go to
+              </Text>
+                <Text style={styles.hyperlink}
+                    onPress={() => this.props.navigation.navigate('PaymentMethods')}> {`PAYMENT METHODS `}
+                </Text>
+              <Text>
+                  to edit your payment preferences. Please note, that it is not possible to change the payment method after you
+                 have accepted a charge.
+              </Text>
             </Text>
 
             <Text style={styles.question}>
               Where can I find details about my transaction history?
             </Text>
             <Text style={styles.answer}>
-              You can go to the main menu where you can choose to view PAST TRANSACTIONS or CURRENT TRANSACTIONS to see your
-              transaction history.
+              <Text>You can go to the main menu where you can choose to view </Text>
+              <Text style={styles.hyperlink}
+                  onPress={() => this.props.navigation.navigate('PastTransactions')}> {`PAST TRANSACTIONS`}
+              </Text>
+              <Text> or </Text>
+              <Text style={styles.hyperlink}
+                  onPress={() => this.props.navigation.navigate('CurrentTransactions')}> {`CURRENT TRANSACTIONS`}
+              </Text>
+            <Text> to see your transaction history.</Text>
             </Text>
 
             <Text style={styles.question}>
@@ -121,8 +144,14 @@ export default class FAQs extends React.Component {
               Where can I see my payment methods?
             </Text>
             <Text style={styles.answer}>
-              In the app settings, you can then go to PAYMENT METHODS where you should be able to see a list of bank accounts
-              and debit cards thats you have already added to your ChargeMe account. You can also add or remove a payment method.
+              <Text>In the app settings, you can then go to </Text>
+                <Text style={styles.hyperlink}
+                    onPress={() => this.props.navigation.navigate('PaymentMethods')}> {`PAYMENT METHODS `}
+                </Text>
+              <Text>
+                 where you should be able to see a list of bank accounts and debit cards thats you have already added to your
+                ChargeMe account. You can also add or remove a payment method.
+              </Text>
             </Text>
 
             <Text style={styles.question}>
@@ -212,9 +241,9 @@ export default class FAQs extends React.Component {
               Why does it say my phone number or email is already on file?
             </Text>
             <Text style={styles.answer}>
-            It is possible that you have already made a ChargeMe account in the past. If so, then all you would need to do is
-            sign in. However, if you do not remember your email or password you can simply request to change your login
-            credentials.
+              It is possible that you have already made a ChargeMe account in the past. If so, then all you would need to do is
+              sign in. However, if you do not remember your email or password you can simply request to change your login
+              credentials.
             </Text>
 
 
@@ -226,27 +255,25 @@ export default class FAQs extends React.Component {
               How do I cancel my account?
             </Text>
             <Text style={styles.answer}>
-              You can choose to cancel your ChargeMe account by clicking on “Cancel my ChargeMe Account” at the bottom of your
-              PROFILE section under settings.
+              <Text>
+                You can choose to cancel your ChargeMe account by clicking on “Cancel my ChargeMe Account” at the bottom of your
+              </Text>
+                <Text style={styles.hyperlink}
+                    onPress={() => this.props.navigation.navigate('UserProfile')}> {`PROFILE`}
+                </Text>
+              <Text> section under settings.</Text>
             </Text>
 
             <Text style={styles.question}>
               How do I edit my account settings?
             </Text>
             <Text style={styles.answer}>
-              You can edit your account setting by clicking on
+              <Text>You can edit your account setting by clicking on </Text>
+                <Text style={styles.hyperlink}
+                    onPress={() => this.props.navigation.navigate('SettingsScreen')}> {`SETTINGS`}
+                </Text>
+              <Text> from the navigation bar.</Text>
             </Text>
-              <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('SettingsScreen')}>
-                <Text style={styles.hyperlink}>settings</Text>
-                <Text>settingssssssss</Text>
-              </TouchableOpacity>
-
-
-            <Text style={styles.answer}>
-              SETTINGS from the navigation bar.
-            </Text>
-
-            
 
 
           </ScrollView>
@@ -260,6 +287,7 @@ export default class FAQs extends React.Component {
 const styles = StyleSheet.create({
 container:{
   flex: 1,
+  flexDirection: 'row',
 },
 bold:{
   fontWeight: 'bold'
