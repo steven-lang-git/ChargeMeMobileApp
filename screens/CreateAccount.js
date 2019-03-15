@@ -1,5 +1,6 @@
 import React from 'react';
-import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard, DatePickerIOS, ScrollView} from 'react-native';
+import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard, DatePickerIOS, ScrollView} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {Header,Left,Right,Icon} from 'native-base';
 import * as firebase from 'firebase';
 import moment from 'moment';
@@ -165,10 +166,7 @@ export default class CreateAccount extends ValidationComponent {
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../assets/coin.jpg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
-
           <StatusBar barStyle="light-content" />
-
-          <KeyboardAvoidingView style={styles.container}>
             <TouchableWithoutFeedback style={styles.container} onPress={Keyboard.dismiss}>
               <View style={styles.logoContainer}>
                 <View style={styles.logoContainer}>
@@ -178,10 +176,11 @@ export default class CreateAccount extends ValidationComponent {
 
                 <View style={styles.infoContainer}>
 
-                  <ScrollView contentContainerStyle={{
+                  <KeyboardAwareScrollView contentContainerStyle={{
                     flexGrow: 1,
                     justifyContent: 'space-between'
                   }}>
+
 
                     <View style = {styles.inputBoxContainer}>
 
@@ -284,11 +283,12 @@ export default class CreateAccount extends ValidationComponent {
                     <View style = {styles.signUpContainer}>
                         {this.renderButtonOrLoading()}
                     </View>
-                  </ScrollView>
+
+                  </KeyboardAwareScrollView>
                 </View>
               </View>
             </TouchableWithoutFeedback>
-          </KeyboardAvoidingView>
+
         </ImageBackground>
       </SafeAreaView>
 
