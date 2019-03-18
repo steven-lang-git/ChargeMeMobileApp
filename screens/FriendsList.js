@@ -11,16 +11,14 @@ export default class FriendsList extends React.Component {
       super(props)
       this.state = {
         possibleFriends: [
-          'Angela',
-          'Steven',
-          'Nikki',
-          'Jasmin',
+          
         ],
         currentFriends: [
-          'John',
-          'Jason',
+          
         ],
         firstName:' ',
+        first:'',
+        messageBox: [],
       }
     }
   // constructor(props){
@@ -82,19 +80,41 @@ export default class FriendsList extends React.Component {
     //   exists = snapshot.key.firstName;
     //   console.log("exists", exists);
     // });
+    var uid  = firebase.auth().currentUser.uid;
+    // let usersRef = firebase.database().ref('/users/'+ uid);
+    firebase.database().ref('users/'+uid).once("value", snapshot => {
+      const nameUser = snapshot.val().firstName;
+      this.setState({
+        first: nameUser
+
+      })
+
+    });
 
     firebase.database().ref().child('users').once('value').then((snapshot)=>{
-      const message_array=[];
+      const {
+        possibleFriends
+      } = this.state
+
+      const{
+        first
+      } = this.state
+      console.log("hullo", first);
       snapshot.forEach((childSnapShot)=>
       {
-          message_array.push({
-            value: childSnapShot.val(),
-            name: childSnapShot.val().firstName
+        const name = childSnapShot.val().firstName;
+      
+          possibleFriends.push(
+            // value: childSnapShot.val(),
+            name
             // testing: childSnapShot.key.child(firstName)
-          })
-
-          console.log("exists",message_array);
+          )
+          console.log("exists",possibleFriends);
       });
+        possibleFriends.splice(possibleFriends.indexOf(first),1);
+        this.setState({
+        possibleFriends: possibleFriends,
+      })     
     });
   }
   render() {
