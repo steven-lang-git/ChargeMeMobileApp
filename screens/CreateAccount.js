@@ -32,7 +32,7 @@ export default class CreateAccount extends ValidationComponent {
   onSignUpPress(){
 
     let unMasked = this.phoneNum.getRawValue();
-    console.log("unmasked: "+ unMasked);
+    //console.log("unmasked: "+ unMasked);
 
     //define rules for input fields and check for rule violations
     this.validate({
@@ -189,6 +189,7 @@ export default class CreateAccount extends ValidationComponent {
                       ref = "username"
                       placeholderTextColor="rgba(255,255,255,0.8)"
                       autoCorrect= {false}
+                      autoCapitalize = 'none'
                       returnKeyType='next'
                       onChangeText={(username) => this.setState({username})}
                       onSubmitEditing={()=> this.refs.email.focus()}
@@ -202,6 +203,7 @@ export default class CreateAccount extends ValidationComponent {
                       ref = "email"
                       placeholderTextColor="rgba(255,255,255,0.8)"
                       autoCorrect= {false}
+                      autoCapitalize = 'none'
                       returnKeyType='next'
                       onChangeText={(email) => this.setState({email})}
                       onSubmitEditing={()=> this.refs.password.focus()}
