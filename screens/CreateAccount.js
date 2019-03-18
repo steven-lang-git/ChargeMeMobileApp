@@ -5,7 +5,7 @@ import {Header,Left,Right,Icon} from 'native-base';
 import * as firebase from 'firebase';
 import moment from 'moment';
 import ValidationComponent from 'react-native-form-validator';
-import { TextInputMask } from 'react-native-masked-text';
+import {TextInputMask} from 'react-native-masked-text';
 
 
 
@@ -18,7 +18,6 @@ export default class CreateAccount extends ValidationComponent {
     super(props);
     this.state = {username:'', firstName: '', lastName: '', email: '', phone: '', birthday: new Date() ,
       street: '', city: '', state: '', zipCode: '',password:'', usernameError: '', emailError: '', loading: false};
-
     //set datepickIOS default day to today's date
     this.setDate = this.setDate.bind(this);
   }
@@ -33,7 +32,7 @@ export default class CreateAccount extends ValidationComponent {
   onSignUpPress(){
 
     let unMasked = this.phoneNum.getRawValue();
-    console.log("unmasked: "+ unMasked);
+    //console.log("unmasked: "+ unMasked);
 
     //define rules for input fields and check for rule violations
     this.validate({
@@ -190,6 +189,7 @@ export default class CreateAccount extends ValidationComponent {
                       ref = "username"
                       placeholderTextColor="rgba(255,255,255,0.8)"
                       autoCorrect= {false}
+                      autoCapitalize = 'none'
                       returnKeyType='next'
                       onChangeText={(username) => this.setState({username})}
                       onSubmitEditing={()=> this.refs.email.focus()}
@@ -203,6 +203,7 @@ export default class CreateAccount extends ValidationComponent {
                       ref = "email"
                       placeholderTextColor="rgba(255,255,255,0.8)"
                       autoCorrect= {false}
+                      autoCapitalize = 'none'
                       returnKeyType='next'
                       onChangeText={(email) => this.setState({email})}
                       onSubmitEditing={()=> this.refs.password.focus()}
