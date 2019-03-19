@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Button} from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
 export default class PaymentMethods extends React.Component {
@@ -11,25 +11,29 @@ export default class PaymentMethods extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-      <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{flex:1}}>
+          <ScrollView>
 
+            <Text style={styles.text}>
+              ChargeMe Balance:
+            </Text>
 
+            <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('Bank')}>
+              <Text>
+                <Text style={styles.btntext}>ADD BANK </Text>
+                <Icon name="angle-right" type="FontAwesome" style={styles.icon}/>
+              </Text>
+            </TouchableOpacity>
 
-        <Text> Payment Methods Page </Text>
+            <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('DebitCard')}>
+              <Text>
+                <Text style={styles.btntext}>ADD DEBIT CARD </Text>
+                <Icon name="angle-right" type="FontAwesome" style={styles.icon}/>
+              </Text>
+            </TouchableOpacity>
 
-        <Text> ChargeMe Balance </Text>
-
-        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('Bank')}>
-          <Text style={styles.btntext}>ADD BANK</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('DebitCard')}>
-          <Text style={styles.btntext}>ADD DEBIT CARD</Text>
-        </TouchableOpacity>
-
-
-      </View>
-
+          </ScrollView>
+        </View>
       </View>
     );
   }
@@ -41,33 +45,31 @@ const styles = StyleSheet.create({
     flex: 1,
 
   },
-  header:{
-    fontSize:24,
-    color: "#000",
-    paddingBottom: 10,
-    marginBottom:40,
-    borderBottomColor: '#199187',
-    borderBottomWidth: 1,
-  },
-  textinput: {
+  text: {
+    fontSize: 20,
     alignSelf: 'stretch',
-    alignItems: 'center',
-    height: 40,
-    marginBottom: 30,
-    color: "#000",
+    padding: 20,
+    backgroundColor: '#fff',
+    width: '100%',
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: 'lightgray',
+    marginTop: 20,
   },
   button: {
     alignSelf: 'stretch',
-    alignItems: 'center',
     padding: 20,
-    backgroundColor: '#000',
-    width: '60%',
-    marginTop: 20,
-    marginBottom: 40,
+    backgroundColor: '#fff', 
+    width: '100%',
     alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: 'lightgray',
   },
   btntext:{
-    color: '#fff',
-    fontWeight: 'bold',
-  }
+    fontSize: 20,
+    color: 'black',
+  },
+  icon:{
+    fontSize:28,
+  },
 });
