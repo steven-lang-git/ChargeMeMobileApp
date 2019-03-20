@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, SafeAreaView, ImageBackground } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
 export default class EmailNotifications extends React.Component {
@@ -10,18 +10,22 @@ export default class EmailNotifications extends React.Component {
   }
   render() {
     return (
-      <View style={styles.container}>
-      <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+      <SafeAreaView style={styles.container}>
+        <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+          <View style={styles.overlay} />
+          <View style={styles.container}>
+            <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
 
 
 
-        <Text> Email Notifications Page </Text>
+              <Text> Email Notifications Page </Text>
 
 
 
-      </View>
-
-      </View>
+            </View>
+          </View>
+        </ImageBackground>
+      </SafeAreaView>
     );
   }
 }
@@ -60,5 +64,13 @@ const styles = StyleSheet.create({
   btntext:{
     color: '#fff',
     fontWeight: 'bold',
+  },
+  overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(69,85,117,0.7)',
+  },
+  imageContainer: {
+      resizeMode:'cover',
+      flex:1,
   }
 });

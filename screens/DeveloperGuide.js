@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, LinkingIOS, Linking} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, LinkingIOS, Linking, SafeAreaView, ImageBackground} from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
 export default class DeveloperGuide extends React.Component {
@@ -10,6 +10,12 @@ export default class DeveloperGuide extends React.Component {
   }
   render() {
     return (
+
+      <SafeAreaView style={styles.container}>
+        <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+          <View style={styles.overlay} />
+
+
       <View style={styles.container}>
         <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
           <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
@@ -113,6 +119,9 @@ export default class DeveloperGuide extends React.Component {
           </ScrollView>
         </View>
       </View>
+
+      </ImageBackground>
+  </SafeAreaView>
     );
   }
 }
@@ -126,7 +135,7 @@ bold:{
   fontWeight: 'bold'
 },
 title:{
-  color: 'black',
+  color: 'white',
   fontWeight: 'bold',
   fontSize: 24,
   textAlign:'left',
@@ -136,7 +145,7 @@ title:{
   marginRight: 20
 },
 content:{
-  color: 'black',
+  color: 'white',
   fontSize: 22,
   textAlign:'left',
   marginBottom: 20,
@@ -144,14 +153,14 @@ content:{
   marginRight: 20
 },
 text:{
-  color: 'black',
+  color: 'white',
   fontSize: 22,
   textAlign:'left',
   marginLeft: 20,
   marginRight: 20
 },
 bullets:{
-  color: 'black',
+  color: 'white',
   fontSize: 22,
   textAlign:'left',
   marginBottom: 20,
@@ -159,12 +168,20 @@ bullets:{
   marginRight: 20
 },
 hyperlink:{
-  color: '#007AFF',
+  color: '#34c6de',
   fontSize: 22,
   textAlign:'left',
   marginBottom: 20,
   marginLeft: 20,
   marginRight: 20
+},
+overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(69,85,117,0.7)',
+},
+imageContainer: {
+    resizeMode:'cover',
+    flex:1,
 }
 });
 

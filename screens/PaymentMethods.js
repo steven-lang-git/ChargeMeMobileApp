@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Button} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Button, SafeAreaView, ImageBackground} from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
 export default class PaymentMethods extends React.Component {
@@ -10,6 +10,11 @@ export default class PaymentMethods extends React.Component {
   }
   render() {
     return (
+
+      <SafeAreaView style={styles.container}>
+        <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+          <View style={styles.overlay} />
+
       <View style={styles.container}>
         <View style={{flex:1}}>
           <ScrollView>
@@ -35,6 +40,9 @@ export default class PaymentMethods extends React.Component {
           </ScrollView>
         </View>
       </View>
+
+      </ImageBackground>
+    </SafeAreaView>
     );
   }
 }
@@ -49,27 +57,34 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'stretch',
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255,255,255,0.2)',
     width: '100%',
     alignSelf: 'center',
-    borderWidth: 1,
-    borderColor: 'lightgray',
     marginTop: 20,
+    color: 'white',
   },
   button: {
     alignSelf: 'stretch',
     padding: 20,
-    backgroundColor: '#fff', 
+    backgroundColor: 'rgba(255,255,255,0.2)',
     width: '100%',
     alignSelf: 'center',
-    borderWidth: 1,
-    borderColor: 'lightgray',
+    marginTop: 10,
   },
   btntext:{
     fontSize: 20,
-    color: 'black',
+    color: '#fff',
   },
   icon:{
     fontSize:28,
+    color: 'white',
   },
+  overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(69,85,117,0.7)',
+  },
+  imageContainer: {
+      resizeMode:'cover',
+      flex:1,
+  }
 });
