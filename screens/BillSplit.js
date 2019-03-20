@@ -26,6 +26,12 @@ export default class BillSplit extends React.Component {
         <Text style={styles.btntext}>SPLIT EVENLY</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('ReceiptScanner')}>
+        <Text style={styles.btntext}>SCAN YOUR RECEIPT</Text>
+      </TouchableOpacity>
+
+
+
       </View>
 
       </View>
