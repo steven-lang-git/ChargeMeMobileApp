@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Button, SafeAreaView, ImageBackground} from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
 export default class PaymentMethods extends React.Component {
@@ -10,27 +10,39 @@ export default class PaymentMethods extends React.Component {
   }
   render() {
     return (
+
+      <SafeAreaView style={styles.container}>
+        <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+          <View style={styles.overlay} />
+
       <View style={styles.container}>
-      <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{flex:1}}>
+          <ScrollView>
 
+            <Text style={styles.text}>
+              ChargeMe Balance:
+            </Text>
 
+            <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('Bank')}>
+              <Text>
+                <Text style={styles.btntext}>ADD BANK </Text>
+                <Icon name="angle-right" type="FontAwesome" style={styles.icon}/>
+              </Text>
+            </TouchableOpacity>
 
-        <Text> Payment Methods Page </Text>
+            <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('DebitCard')}>
+              <Text>
+                <Text style={styles.btntext}>ADD DEBIT CARD </Text>
+                <Icon name="angle-right" type="FontAwesome" style={styles.icon}/>
+              </Text>
+            </TouchableOpacity>
 
-        <Text> ChargeMe Balance </Text>
-
-        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('Bank')}>
-          <Text style={styles.btntext}>ADD BANK</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('DebitCard')}>
-          <Text style={styles.btntext}>ADD DEBIT CARD</Text>
-        </TouchableOpacity>
-
-
+          </ScrollView>
+        </View>
       </View>
 
-      </View>
+      </ImageBackground>
+    </SafeAreaView>
     );
   }
 }
@@ -41,33 +53,38 @@ const styles = StyleSheet.create({
     flex: 1,
 
   },
-  header:{
-    fontSize:24,
-    color: "#000",
-    paddingBottom: 10,
-    marginBottom:40,
-    borderBottomColor: '#199187',
-    borderBottomWidth: 1,
-  },
-  textinput: {
+  text: {
+    fontSize: 20,
     alignSelf: 'stretch',
-    alignItems: 'center',
-    height: 40,
-    marginBottom: 30,
-    color: "#000",
+    padding: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    width: '100%',
+    alignSelf: 'center',
+    marginTop: 20,
+    color: 'white',
   },
   button: {
     alignSelf: 'stretch',
-    alignItems: 'center',
     padding: 20,
-    backgroundColor: '#000',
-    width: '60%',
-    marginTop: 20,
-    marginBottom: 40,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    width: '100%',
     alignSelf: 'center',
+    marginTop: 10,
   },
   btntext:{
+    fontSize: 20,
     color: '#fff',
-    fontWeight: 'bold',
+  },
+  icon:{
+    fontSize:28,
+    color: 'white',
+  },
+  overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(69,85,117,0.7)',
+  },
+  imageContainer: {
+      resizeMode:'cover',
+      flex:1,
   }
 });
