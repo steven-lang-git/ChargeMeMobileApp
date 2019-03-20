@@ -1,11 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView, Linking} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView, Linking, SafeAreaView, ImageBackground} from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
 export default class SettingsScreen extends React.Component {
 
   render() {
     return (
+
+      <SafeAreaView style={styles.container}>
+        <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+          <View style={styles.overlay} />
+
       <View style={styles.container}>
 
         <Header>
@@ -80,6 +85,9 @@ export default class SettingsScreen extends React.Component {
           </ScrollView>
         </View>
       </View>
+
+      </ImageBackground>
+    </SafeAreaView>
     );
   }
 }
@@ -92,9 +100,9 @@ const styles = StyleSheet.create({
   heading:{
     fontSize:22,
     fontWeight: 'bold',
-    color: "#000",
+    color: "white",
     paddingTop: 20,
-    paddingBottom: 20,
+    paddingBottom: 10,
     paddingLeft: 10,
   },
   textinput: {
@@ -107,25 +115,33 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: 'stretch',
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255,255,255,0.2)',
     width: '100%',
     alignSelf: 'center',
-    borderWidth: 1,
-    borderColor: 'lightgray',
+    marginTop: 10,
   },
   btntext:{
     fontSize: 20,
-    color: 'black',
+    color: 'white',
   },
   icon:{
     fontSize:28,
+    color: 'white',
   },
   hyperlink:{
-    color: '#000',
+    color: '#34c6de',
     fontSize: 20,
     textAlign:'left',
     marginBottom: 20,
     marginLeft: 20,
     marginRight: 20
+  },
+  overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(69,85,117,0.7)',
+  },
+  imageContainer: {
+      resizeMode:'cover',
+      flex:1,
   }
 });
