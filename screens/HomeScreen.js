@@ -92,6 +92,7 @@ export default class HomeScreen extends React.Component {
                           keyboardType='email-address'
                           returnKeyType='next'
                           autoCorrect={false}
+                          autoCapitalize = 'none'
                           onSubmitEditing={()=> this.refs.txtPassword.focus()}
                         />
 

@@ -16,7 +16,8 @@ export default class PastTransactions extends React.Component {
 
     this.state = {
       message: '',
-      messages: []
+      messages: [],
+      first:''
     }
 
     this.addItem = this.addItem.bind(this);
@@ -52,6 +53,20 @@ export default class PastTransactions extends React.Component {
             }))
           }
         })
+
+      var uid  = firebase.auth().currentUser.uid;
+      // let usersRef = firebase.database().ref('/users/'+ uid);
+      firebase.database().ref('users/'+uid).once("value", snapshot => {
+        const nameUser = snapshot.val().firstName;
+        this.setState({
+          first: nameUser
+
+        })
+
+      });
+      // usersRef.once('value').then(snapshot => {
+      // this.setState({ names: snapshot.val() });}
+      // ); 
     }
     addItem(){
       if(!this.state.message) return; 
@@ -62,6 +77,7 @@ export default class PastTransactions extends React.Component {
     }
   
   render() {
+    const { names } = this.state;
     return (
       <View style={styles.container}>
       <Header>
@@ -73,6 +89,7 @@ export default class PastTransactions extends React.Component {
       <TextInput placeholder = 'enter your message' onChangeText={(text)=> this.setState({message:text})} 
       style={styles.txtInput}/>
       <Button title='Send' onPress={this.addItem}/>
+      <Text style={styles.nameItem}>Welcome back {this.state.first}</Text>
       <Text> past transactions</Text>
       </View>
       <FlatList data={this.state.messages}
@@ -111,6 +128,10 @@ listItemContainer:{
 listItem:{
   fontSize:20,
   padding: 10 
+},
+nameItem:{
+  fontSize: 30,
+
 }
 
 });

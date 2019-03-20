@@ -2,31 +2,32 @@ import React from 'react';
 import { ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button, Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard } from 'react-native';
 import { Header, Left, Right, Icon, ListItem, List } from 'native-base'
 const { width } = Dimensions.get('window')
+import * as firebase from 'firebase';
+
 
 export default class FriendsList extends React.Component {
 
-  // constructor(props) {
-  //     super(props)
-  //     this.state = {
-  //       possibleFriends: [
-  //         'Angela',
-  //         'Steven',
-  //         'Nikki',
-  //         'Jasmin',
-  //       ],
-  //       currentFriends: [
-  //         'John',
-  //         'Jason',
-  //       ],
-  //     }
-  //   }
-  constructor(props){
-    super(props);
-    this.state = {username:'', firstName: '', lastName: '', email: '', phone: '', birthday: '',
-      street: '', city: '', state: '', zipCode: '',password:'', error:'', loading: false};
-  }
+  constructor(props) {
+      super(props)
+      this.state = {
+        possibleFriends: [
+          
+        ],
+        currentFriends: [
+          
+        ],
+        firstName:' ',
+        first:'',
+        messageBox: [],
+      }
+    }
+  // constructor(props){
+  //   super(props);
+  //   this.state = {username:'', firstName: '', lastName: '', email: '', phone: '', birthday: '',
+  //     street: '', city: '', state: '', zipCode: '',password:'', error:'', loading: false};
+  // }
 
-  
+
 
   addFriend = (index) => {
     const {
@@ -71,6 +72,51 @@ export default class FriendsList extends React.Component {
       <Icon name="users" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
     )
   }
+  componentDidMount()
+  {
+    // var ref= firebase.database().ref();
+    // var exists = null;
+    // ref.child('users').on("child_added", function(snapshot){
+    //   exists = snapshot.key.firstName;
+    //   console.log("exists", exists);
+    // });
+    var uid  = firebase.auth().currentUser.uid;
+    // let usersRef = firebase.database().ref('/users/'+ uid);
+    firebase.database().ref('users/'+uid).once("value", snapshot => {
+      const nameUser = snapshot.val().firstName;
+      this.setState({
+        first: nameUser
+
+      })
+
+    });
+
+    firebase.database().ref().child('users').once('value').then((snapshot)=>{
+      const {
+        possibleFriends
+      } = this.state
+
+      const{
+        first
+      } = this.state
+      console.log("hullo", first);
+      snapshot.forEach((childSnapShot)=>
+      {
+        const name = childSnapShot.val().firstName;
+      
+          possibleFriends.push(
+            // value: childSnapShot.val(),
+            name
+            // testing: childSnapShot.key.child(firstName)
+          )
+          console.log("exists",possibleFriends);
+      });
+        possibleFriends.splice(possibleFriends.indexOf(first),1);
+        this.setState({
+        possibleFriends: possibleFriends,
+      })     
+    });
+  }
   render() {
     return (
 
@@ -88,7 +134,7 @@ export default class FriendsList extends React.Component {
           <Button color="white"
             title="Back to home"
             onPress={() =>
-              this.props.navigation.navigate('Home')
+              this.props.navigation.navigate('PastTransactions')
             }
           />
 
