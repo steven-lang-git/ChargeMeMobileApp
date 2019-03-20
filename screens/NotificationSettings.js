@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView} from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
 export default class NotificationSettings extends React.Component {
@@ -11,28 +11,32 @@ export default class NotificationSettings extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-      <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{flex:1}}>
+          <ScrollView>
 
+            <TouchableOpacity style={styles.fButton} onPress={() => this.props.navigation.navigate('PushNotifications')}>
+              <Text>
+                <Text style={styles.btntext}>PUSH NOTIFICATIONS </Text>
+                <Icon name="angle-right" type="FontAwesome" style={styles.icon}/>
+              </Text>
+            </TouchableOpacity>
 
+            <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('TextNotifications')}>
+              <Text>
+                <Text style={styles.btntext}>TEXT NOTIFICATIONS </Text>
+                <Icon name="angle-right" type="FontAwesome" style={styles.icon}/>
+              </Text>
+            </TouchableOpacity>
 
-        <Text> Notification Settings Page </Text>
+            <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('EmailNotifications')}>
+              <Text>
+                <Text style={styles.btntext}>EMAIL NOTIFICATIONS </Text>
+                <Icon name="angle-right" type="FontAwesome" style={styles.icon}/>
+              </Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('PushNotifications')}>
-          <Text style={styles.btntext}>PUSH NOTIFICATIONS</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('TextNotifications')}>
-          <Text style={styles.btntext}>TEXT NOTIFICATIONS</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('EmailNotifications')}>
-          <Text style={styles.btntext}>EMAIL NOTIFICATIONS</Text>
-        </TouchableOpacity>
-
-
-
-      </View>
-
+          </ScrollView>
+        </View>
       </View>
     );
   }
@@ -52,6 +56,14 @@ const styles = StyleSheet.create({
     borderBottomColor: '#199187',
     borderBottomWidth: 1,
   },
+  heading:{
+    fontSize:22,
+    fontWeight: 'bold',
+    color: "#000",
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 10,
+  },
   textinput: {
     alignSelf: 'stretch',
     alignItems: 'center',
@@ -59,18 +71,30 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     color: "#000",
   },
+  fButton: {
+    alignSelf: 'stretch',
+    padding: 20,
+    backgroundColor: '#fff',
+    width: '100%',
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: 'lightgray',
+    marginTop: 20,
+  },
   button: {
     alignSelf: 'stretch',
-    alignItems: 'center',
     padding: 20,
-    backgroundColor: '#000',
-    width: '60%',
-    marginTop: 20,
-    marginBottom: 40,
+    backgroundColor: '#fff',
+    width: '100%',
     alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: 'lightgray',
   },
   btntext:{
-    color: '#fff',
-    fontWeight: 'bold',
-  }
+    fontSize: 20,
+    color: 'black',
+  },
+  icon:{
+    fontSize:28,
+  },
 });
