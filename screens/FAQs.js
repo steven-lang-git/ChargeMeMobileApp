@@ -302,7 +302,7 @@ bold:{
   fontWeight: 'bold'
 },
 section:{
-  color: 'black',
+  color: 'white',
   fontWeight: 'bold',
   fontSize: 26,
   textAlign:'left',
@@ -312,7 +312,7 @@ section:{
   marginRight: 20
 },
 question:{
-  color: 'black',
+  color: 'white',
   fontWeight: 'bold',
   fontSize: 24,
   textAlign:'left',
@@ -322,7 +322,7 @@ question:{
   marginRight: 20
 },
 answer:{
-  color: 'black',
+  color: 'white',
   fontSize: 22,
   textAlign:'left',
   marginBottom: 20,
