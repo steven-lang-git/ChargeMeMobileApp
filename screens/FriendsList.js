@@ -11,18 +11,20 @@ export default class FriendsList extends React.Component {
     super(props)
     this.state = {
       possibleFriends: [
-
       ],
       currentFriends: [
-
       ],
       firstName: ' ',
       first: '',
-      messageBox: [],
     }
 
   }
 
+  save(){
+    firebase.database().ref('friendslist/possibleFriends').set(this.state.possibleFriends);
+    firebase.database().ref('friendslist/currentFriends').set(this.state.currentFriends);
+    console.log('data saved');
+  }
 
 
   addFriend = (index) => {
@@ -88,11 +90,10 @@ export default class FriendsList extends React.Component {
         first
       } = this.state
       snapshot.forEach((childSnapShot) => {
-        const name = childSnapShot.val().firstName;
 
         possibleFriends.push(
           // value: childSnapShot.val(),
-          name
+            name = childSnapShot.val().firstName
           // testing: childSnapShot.key.child(firstName)
         )
         console.log("exists", possibleFriends);
@@ -109,18 +110,46 @@ export default class FriendsList extends React.Component {
       // }
     });
     // firebase.database().ref('users/' + uid).once("value", snapshot => {
-      // const nameUser = snapshot.val().firstName;
-      // const {
-      //   possibleFriends
-      // } = this.state
-      // console.log(snapshot.val());
-      // snapshot.child('friendList').ref.push(possibleFriends);
-      // this.setState({
-      //   first: nameUser
-      // })
+    //   const nameUser = snapshot.val().firstName;
+    //   const {
+    //     possibleFriends
+    //   } = this.state
+    //   console.log(snapshot.val());
+    //   snapshot.child('friendList').ref.push(possibleFriends);
+    //   this.setState({
+    //     first: nameUser
+    //   })
 
     // });
-  }
+ 
+    firebase.database().ref().child("friendslist").once("value",snapshot=>{
+        
+        const{
+          possibleFriends,
+          currentFriends
+        } = this.state
+        if(snapshot.child(uid).exists()){
+          this.setState({
+              possibleFriends: possibleFriends,
+              currentFriends: currentFriends
+            })
+      
+        }
+        else{
+        snapshot.child(uid).ref.push(
+          possibleFriends);
+        snapshot.child(uid).ref.push(
+          currentFriends);
+
+       
+         
+      }
+     
+      });
+
+      // var ref = firebase.database().ref("friendslist")
+      // var query = ref.orderByChild();
+    }
   render() {
     return (
 
@@ -193,6 +222,9 @@ export default class FriendsList extends React.Component {
                 )
                 )
               }
+      <TouchableOpacity style={styles.btntext} onPress={()=>this.save()}>
+        <Text>Save</Text>
+      </TouchableOpacity>                  
             </KeyboardAvoidingView>
           </View>
         </ImageBackground>
