@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, LinkingIOS, Linking} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, LinkingIOS, Linking, SafeAreaView, ImageBackground} from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 
 export default class FAQs extends React.Component {
@@ -10,6 +10,12 @@ export default class FAQs extends React.Component {
   }
   render() {
     return (
+
+      <SafeAreaView style={styles.container}>
+        <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+          <View style={styles.overlay} />
+
+
       <View style={styles.container}>
         <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
           <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
@@ -279,6 +285,9 @@ export default class FAQs extends React.Component {
           </ScrollView>
         </View>
       </View>
+
+      </ImageBackground>
+  </SafeAreaView>
     );
   }
 }
@@ -321,9 +330,17 @@ answer:{
   marginRight: 20
 },
 hyperlink:{
-  color: '#007AFF',
+  color: '#34c6de',
   fontSize: 22,
   textAlign:'left',
+},
+overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(69,85,117,0.7)',
+},
+imageContainer: {
+    resizeMode:'cover',
+    flex:1,
 }
 });
 
