@@ -77,7 +77,7 @@ export default class PastTransactions extends React.Component {
     }
   
   render() {
-    const { names } = this.state;
+    const { names,message } = this.state;
     return (
       <View style={styles.container}>
       <Header>
