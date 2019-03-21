@@ -1,6 +1,7 @@
 import React from 'react';
 import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard} from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as firebase from 'firebase';
 
 const{width} = Dimensions.get('window')
@@ -11,11 +12,12 @@ let currentMessage = '';
 export default class ChangePassword extends React.Component {
   constructor(props){
     super(props);
-    this.state = {currentPassword: '', newPassword: '', confirmPassword: ''};
+    this.state = {currentPassword: '', newPassword: '', confirmPassword: '', disable : true};
   }
 
   //on every keystroke in the newPassword, call this function
   checkNewPassword(text){
+    this.setState({disable: false});
     //if new password matches current password
     if(text == this.state.currentPassword){
       //set error message for new password
@@ -45,6 +47,7 @@ export default class ChangePassword extends React.Component {
 
   //on every keystroke in the confirm new password field, call this function
   checkConfirmPassword(text){
+    this.setState({disable: false});
     //if confirm password does not match new password
     if(text != this.state.newPassword){
       //set error message for confirm password
@@ -61,6 +64,7 @@ export default class ChangePassword extends React.Component {
 
   //on every keystroke in the current password field, call this function
   checkCurrentPassword(text){
+    this.setState({disable: false});
     //if current password field is not empty
     if(text != ''){
       //clear error message for current password
@@ -136,22 +140,23 @@ export default class ChangePassword extends React.Component {
 
   }
 
-  static navigationOptions ={
-    drawerIcon: (tintColor) =>(
-      <Icon name="sitemap" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
-    )
-  }
 
   render() {
+    const isDisabled  = this.state.disable;
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+
+        <KeyboardAwareScrollView contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'space-between'
+        }}>
+
         <View style={styles.overlay} />
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Choose a new secure password</Text>
             <Text> </Text>
             <Text style={styles.title}>Changing your password will log you out of the app. You will need to log back in with your new password.</Text>
-
           </View>
           <View style={styles.infoContainer}>
 
@@ -193,12 +198,17 @@ export default class ChangePassword extends React.Component {
             />
             <Text style = {styles.errorMessage}>{confirmMessage}</Text>
 
+            <View style={isDisabled?styles.disabled:styles.enabled}>
               <TouchableOpacity style={styles.button}
-                onPress={this.onChangePasswordPress.bind(this)}>
+                onPress={this.onChangePasswordPress.bind(this)}
+                disabled = {isDisabled}>
                 <Text style={styles.btntext}>Update</Text>
               </TouchableOpacity>
+            </View>
 
             </View>
+
+            </KeyboardAwareScrollView>
           </ImageBackground>
       </SafeAreaView>
     );
@@ -218,12 +228,13 @@ const styles = StyleSheet.create({
   inputBoxContainer:{
     flex:8,
   },
-  signUpContainer: {
+  disabled: {
     flex:1,
+    opacity: 0.3,
   },
-  datePickerContainer: {
+  enabled: {
     flex:1,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    opacity: 1,
   },
   header:{
     position:'absolute',
@@ -236,51 +247,51 @@ const styles = StyleSheet.create({
       ...StyleSheet.absoluteFillObject,
       backgroundColor: 'rgba(69,85,117,0.7)',
   },
-logo: {
-  flex: 1,
-  resizeMode: 'contain',
-},
-titleContainer:{
-  justifyContent: 'center',
-  padding: 20,
-  flex: 1,
-  width: width,
-},
-infoContainer: {
-  flex: 3,
-  width: width,
-  padding:20,
-},
-input: {
-  height:40,
-  backgroundColor: 'rgba(255,255,255,0.2)',
-  color:'#fff',
-  paddingHorizontal:10
-},
-title:{
-  fontWeight: 'bold',
-  color: '#fff',
-  fontSize: 20,
-  textAlign:'left',
-},
-inputTitle: {
-  color: 'white',
-  fontSize: 16,
-  fontWeight: 'bold',
-  marginBottom: 5,
-  marginTop: 10,
-},
-button: {
-  paddingVertical: 15,
-  marginTop: 15,
-  backgroundColor: '#34c6de',
+  logo: {
+    flex: 1,
+    resizeMode: 'contain',
+  },
+  titleContainer:{
+    justifyContent: 'center',
+    padding: 20,
+    flex: 1,
+    width: width,
+  },
+  infoContainer: {
+    flex: 3,
+    width: width,
+    padding:20,
+  },
+  input: {
+    height:40,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    color:'#fff',
+    paddingHorizontal:10
+  },
+  title:{
+    fontWeight: 'bold',
+    color: '#fff',
+    fontSize: 20,
+    textAlign:'left',
+  },
+  inputTitle: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    marginTop: 10,
+  },
+  button: {
+    paddingVertical: 15,
+    marginTop: 15,
+    backgroundColor: '#34c6de',
 
-},
-btntext:{
-  textAlign: 'center',
-  color: 'rgb(32,53,70)',
-  fontWeight: 'bold',
-  color: 'white',
-  fontSize: 18,
-}
+  },
+  btntext:{
+    textAlign: 'center',
+    color: 'rgb(32,53,70)',
+    fontWeight: 'bold',
+    color: 'white',
+    fontSize: 18,
+  }
 });
