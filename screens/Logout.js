@@ -13,7 +13,7 @@ export default class BillSplit extends React.Component {
     )
   }
 
-
+  //function to log out current user
   signOutUser = async () => {
     try{
       await firebase.auth().signOut();
