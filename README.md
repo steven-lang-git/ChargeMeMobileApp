@@ -23,6 +23,7 @@ $ npm install react-native-form-validator --save
 $ npm install react-native-masked-text --save
 $ npm install --save moment react-moment
 $ npm i react-native-awesome-alerts --save
+$ npm install react-native-circle-checkbox --save
 ```
 5. Fix errors within react-native-vector-icons
 ```
