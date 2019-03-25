@@ -119,15 +119,21 @@ inputTitle: {
   marginTop: 10,
 },
 button: {
-  paddingVertical: 15,
-  marginTop: 15,
+  marginTop:10,
+  marginBottom: 10,
+  paddingTop:15,
+  paddingBottom:15,
+  marginLeft:30,
+  marginRight:30,
+  borderRadius:10,
+  borderWidth: 1,
+  borderColor: '#34c6de',
   backgroundColor: '#34c6de',
 
 },
 btntext:{
   textAlign: 'center',
   color: 'rgb(32,53,70)',
-  fontWeight: 'bold',
   color: 'white',
   fontSize: 18,
 }
