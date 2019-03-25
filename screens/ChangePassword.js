@@ -8,6 +8,9 @@ const{width} = Dimensions.get('window')
 let confirmMessage = '';
 let newMessage = '';
 let currentMessage = '';
+let confirmEmpty = false;
+let newEmpty = false;
+let currentEmpty = false;
 
 export default class ChangePassword extends React.Component {
   constructor(props){
@@ -22,6 +25,12 @@ export default class ChangePassword extends React.Component {
   //on every keystroke in the newPassword, call this function
   checkNewPassword(text){
     this.setState({disable: false});
+    if(text == ''){
+      newEmpty = true;
+    }
+    else{
+      newEmpty = false;
+    }
     //if new password matches current password
     if(text == this.state.currentPassword){
       //set error message for new password
@@ -51,6 +60,12 @@ export default class ChangePassword extends React.Component {
 
   //on every keystroke in the confirm new password field, call this function
   checkConfirmPassword(text){
+    if(text == ''){
+      confirmEmpty = true;
+    }
+    else{
+      confirmEmpty = false;
+    }
     this.setState({disable: false});
     //if confirm password does not match new password
     if(text != this.state.newPassword){
@@ -69,6 +84,12 @@ export default class ChangePassword extends React.Component {
   //on every keystroke in the current password field, call this function
   checkCurrentPassword(text){
     this.setState({disable: false});
+    if(text == ''){
+      currentEmpty = true;
+    }
+    else{
+      currentEmpty = false;
+    }
     //if current password field is not empty
     if(text != ''){
       //clear error message for current password
@@ -166,7 +187,11 @@ export default class ChangePassword extends React.Component {
 
             <Text style={styles.inputTitle}>Current Password</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input,{
+                borderColor: currentEmpty == true || currentMessage != ''
+                  ? 'red'
+                  : '#35b0d2',
+              }]}
               placeholder="********"
               placeholderTextColor="rgba(255,255,255,0.8)"
               onChangeText={(currentPassword) => this.checkCurrentPassword(currentPassword)}
@@ -180,7 +205,11 @@ export default class ChangePassword extends React.Component {
 
             <Text style={styles.inputTitle}>New Password</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input,{
+                borderColor: newEmpty == true || newMessage != ''
+                  ? 'red'
+                  : '#35b0d2',
+              }]}
               placeholder="********"
               placeholderTextColor="rgba(255,255,255,0.8)"
               onChangeText={(text) => this.checkNewPassword(text)}
@@ -194,7 +223,11 @@ export default class ChangePassword extends React.Component {
 
             <Text style={styles.inputTitle}>Confirm New Password</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input,{
+                borderColor: confirmEmpty == true || confirmMessage != ''
+                  ? 'red'
+                  : '#35b0d2',
+              }]}
               placeholder="********"
               placeholderTextColor="rgba(255,255,255,0.8)"
               onChangeText={(text) =>this.checkConfirmPassword(text)}
@@ -274,7 +307,10 @@ const styles = StyleSheet.create({
     height:40,
     backgroundColor: 'rgba(255,255,255,0.2)',
     color:'#fff',
-    paddingHorizontal:10
+    marginBottom: 5,
+    paddingHorizontal:10,
+    borderWidth: 2,
+    borderRadius: 20,
   },
   title:{
     fontWeight: 'bold',

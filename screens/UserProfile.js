@@ -7,7 +7,10 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import * as firebase from 'firebase';
 
 const{width} = Dimensions.get('window')
-
+let usernameEmpty = false;
+let firstNameEmpty = false;
+let lastNameEmpty = false;
+let phoneEmpty = false;
 let usernameMessage = '';
 let firstnameMessage = '';
 let lastnameMessage = '';
@@ -42,6 +45,10 @@ export default class UserProfile extends React.Component {
     firstnameMessage = '';
     lastnameMessage = '';
     phoneMessage = '';
+    usernameEmpty = false;
+    firstNameEmpty = false;
+    lastNameEmpty = false;
+    phoneEmpty = false;
 
     //disable buttons
     this.setState({disable: true});
@@ -74,6 +81,12 @@ export default class UserProfile extends React.Component {
   }
 
   handleUsername(value){
+    if(value == ''){
+      usernameEmpty = true;
+    }
+    else{
+      usernameEmpty = false;
+    }
     //clear out any existing errors
     usernameMessage = '';
     //enable buttons
@@ -83,6 +96,12 @@ export default class UserProfile extends React.Component {
   }
 
   handleFirstName(value){
+    if(value == ''){
+      firstNameEmpty = true;
+    }
+    else{
+      firstNameEmpty = false;
+    }
     //clear out any existing errors
     firstnameMessage = '';
     //enable buttons
@@ -92,6 +111,12 @@ export default class UserProfile extends React.Component {
   }
 
   handleLastName(value){
+    if(value == ''){
+      lastNameEmpty = true;
+    }
+    else{
+      lastNameEmpty = false;
+    }
     //clear out any existing errors
     lastnameMessage = '';
     //enable buttons
@@ -101,10 +126,18 @@ export default class UserProfile extends React.Component {
   }
 
   handlePhone(){
-    //clear out any existing errors
-    phoneMessage = '';
     //get raw value of phone field
     value = this.phoneNum.getRawValue();
+
+    if(value == ''){
+      phoneEmpty = true;
+    }
+    else{
+      phoneEmpty = false;
+    }
+    //clear out any existing errors
+    phoneMessage = '';
+
     //make sure phone number is correct length
     if(value.length < 11){
       phoneMessage = 'Invalid phone number'
@@ -206,9 +239,46 @@ export default class UserProfile extends React.Component {
 
           <View style = {styles.infoContainer}>
 
-            <Text style={styles.inputTitle}>Username</Text>
-            <TextInput style={styles.input}
-            placeholder="'john123'"
+            <View style={styles.nameContainer}>
+              <TextInput
+              placeholder="First Name"
+              style={[styles.nameInput,{
+                borderColor: firstNameEmpty == true || firstnameMessage != ''
+                  ? 'red'
+                  : '#35b0d2',
+              }]}
+              defaultValue = {this.state.firstname}
+              ref = "firstName"
+              placeholderTextColor="rgba(255,255,255,0.8)"
+              autoCorrect= {false}
+              returnKeyType='next'
+              onChangeText={(firstname) => this.handleFirstName(firstname)}
+              onSubmitEditing={()=> this.refs.lastName.focus()}
+              />
+
+              <TextInput
+              placeholder="Last Name"
+              style={[styles.nameInput,{
+                borderColor: lastNameEmpty == true || lastnameMessage != ''
+                  ? 'red'
+                  : '#35b0d2',
+              }]}
+              value = {this.state.lastname}
+              ref = "lastName"
+              placeholderTextColor="rgba(255,255,255,0.8)"
+              autoCorrect= {false}
+              returnKeyType='next'
+              onChangeText={(lastname) => this.handleLastName(lastname)}
+              />
+            </View>
+
+            <TextInput
+            placeholder="Username"
+            style={[styles.input,{
+              borderColor: usernameEmpty == true || usernameMessage != ''
+                ? 'red'
+                : '#35b0d2',
+            }]}
             value = {username}
             ref = "username"
             placeholderTextColor="rgba(255,255,255,0.8)"
@@ -218,34 +288,8 @@ export default class UserProfile extends React.Component {
             onChangeText={(username) => this.handleUsername(username)}
             onSubmitEditing={()=> this.refs.email.focus()}
             />
-            <Text style = {styles.errorMessage}>{usernameMessage}</Text>
+            <Text/>
 
-            <Text style={styles.inputTitle}>First Name</Text>
-            <TextInput style={styles.input}
-            placeholder="'John'"
-            defaultValue = {this.state.firstname}
-            ref = "firstName"
-            placeholderTextColor="rgba(255,255,255,0.8)"
-            autoCorrect= {false}
-            returnKeyType='next'
-            onChangeText={(firstname) => this.handleFirstName(firstname)}
-            onSubmitEditing={()=> this.refs.lastName.focus()}
-            />
-            <Text style = {styles.errorMessage}>{firstnameMessage}</Text>
-
-            <Text style={styles.inputTitle}>Last Name</Text>
-            <TextInput style={styles.input}
-            placeholder="'Doe'"
-            value = {this.state.lastname}
-            ref = "lastName"
-            placeholderTextColor="rgba(255,255,255,0.8)"
-            autoCorrect= {false}
-            returnKeyType='next'
-            onChangeText={(lastname) => this.handleLastName(lastname)}
-            />
-            <Text style = {styles.errorMessage}>{lastnameMessage}</Text>
-
-            <Text style={styles.inputTitle}>Phone Number</Text>
             <TextInputMask
             type={'custom'}
             options={
@@ -259,8 +303,12 @@ export default class UserProfile extends React.Component {
             ref = {(phone) => this.phoneNum = phone}
             value={this.state.phone}
             onChangeText= {() => this.handlePhone()}
-            style={styles.input}
-            placeholder="+1(###)###-####"
+            style={[styles.input,{
+              borderColor: phoneEmpty == true || phoneMessage != ''
+                ? 'red'
+                : '#35b0d2',
+            }]}
+            placeholder="Phone"
             placeholderTextColor="rgba(255,255,255,0.8)"
             keyboardType='numeric'
             returnKeyType='next'
@@ -331,6 +379,11 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignContent: 'center',
     },
+    nameContainer:{
+      height: 64,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
     errorMessage:{
       color: 'red',
     },
@@ -349,7 +402,20 @@ const styles = StyleSheet.create({
       height:40,
       backgroundColor: 'rgba(255,255,255,0.2)',
       color:'#fff',
-      paddingHorizontal:10
+      marginBottom: 5,
+      paddingHorizontal:10,
+      borderWidth: 2,
+      borderRadius: 20,
+    },
+    nameInput: {
+      height:40,
+      backgroundColor: 'rgba(255,255,255,0.2)',
+      color:'#fff',
+      width: width/2.3,
+      marginBottom: 5,
+      paddingHorizontal:10,
+      borderWidth: 2,
+      borderRadius: 20,
     },
     title:{
       fontWeight: 'bold',
