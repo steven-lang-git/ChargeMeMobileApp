@@ -24,11 +24,13 @@ export default class Loading extends React.Component{
 
             <KeyboardAvoidingView style={styles.container}>
               <TouchableWithoutFeedback style={styles.container} onPress={Keyboard.dismiss}>
-                <View style={styles.logoContainer}>
+                <View style={styles.container}>
                       <View style={styles.logoContainer}>
-                        <Image style={styles.logo} source={require('../assets/logo_transparent.png')}>
-                        </Image>
-                        <Text style={{color: 'white'}}>Loading</Text>
+                        <Image style={styles.logo} source={require('../assets/logo_transparent.png')}/>
+                      </View>
+
+                      <View style={styles.infoContainer}>
+                        <Text style={styles.pageTitle}>Loading</Text>
                         <ActivityIndicator size="large" color="#34c6de"/>
                       </View>
 
@@ -46,16 +48,10 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   imageContainer: {
-      width: null,
-      height: null,
-      aspectRatio:1,
-      resizeMode:'cover',
-      justifyContent: 'center',
-      flex:1,
-      alignItems: 'center',
+    resizeMode:'cover',
+    flex:1,
   },
   overlay: {
       ...StyleSheet.absoluteFillObject,
@@ -64,23 +60,21 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
   },
   logo: {
-    width: 256,
-    height:112,
-    bottom:170,
+    flex: 1,
+    width: width/1.5,
+    resizeMode: 'contain',
   },
   logoContainer:{
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-    width: width,
-    padding:20,
+    margin: 20,
+
   },
   infoContainer: {
-    position:'absolute',
-    left:0,
-    right: 0,
-    bottom: 200,
-    height: 200,
+    flex: 1,
+    width: width,
+    padding:20,
     padding: 20,
   },
   input: {
@@ -96,5 +90,11 @@ const styles = StyleSheet.create({
     textAlign:'center',
     marginTop: 20,
     opacity: 0.9
+  },
+  pageTitle: {
+    color: '#fff',
+    fontSize: 25,
+    marginBottom: 20,
+    textAlign: 'center',
   },
 });
