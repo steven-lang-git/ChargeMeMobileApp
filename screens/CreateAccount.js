@@ -5,6 +5,7 @@ import {Header,Left,Right,Icon} from 'native-base';
 import * as firebase from 'firebase';
 import moment from 'moment';
 import {TextInputMask} from 'react-native-masked-text';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 let firstNameError = false;
 let lastNameError = false;
@@ -305,38 +306,31 @@ export default class CreateAccount extends React.Component {
 
   //function to decide whether to display login button or loading spin
   renderButtonOrLoading(){
-
-    //if we are in a state of loading show loading spin
-    if(this.state.loading){
+    if(this.state.loading == false){
+      //if not in state of loading show sign up button (button is bound to
+      //onSignUpPress function)
+      const isDisabled  = this.state.disable;
       return (
-        <View style={[styles.container, styles.horizontal]}>
-          <ActivityIndicator size="large" color="#35b0d2" />
+        <View style={styles.container}>
+        <View style={isDisabled?styles.disabled:styles.enabled}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress ={this.onSignUpPress.bind(this)}
+            disabled = {isDisabled}>
+            <Text style={styles.btntext}>SIGN UP</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style = {styles.container}>
+          <Text style={styles.title} onPress={() => this.props.navigation.navigate('HomeScreen')}> Already have an Account? </Text>
+        </View>
         </View>
       )
     }
-    //if not in state of loading show sign up button (button is bound to
-    //onSignUpPress function)
-    const isDisabled  = this.state.disable;
-    return (
-      <View style={styles.container}>
-      <View style={isDisabled?styles.disabled:styles.enabled}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress ={this.onSignUpPress.bind(this)}
-          disabled = {isDisabled}>
-          <Text style={styles.btntext}>SIGN UP</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style = {styles.container}>
-        <Text style={styles.title} onPress={() => this.props.navigation.navigate('HomeScreen')}> Already have an Account? </Text>
-      </View>
-      </View>
-    )
   }
 
   render(){
-
+    const showAlert = this.state.loading
     return(
 
       <SafeAreaView style={styles.container}>
@@ -358,6 +352,7 @@ export default class CreateAccount extends React.Component {
                   }}>
 
                     <View style = {styles.inputBoxContainer}>
+                    <Text style={styles.pageTitle}>Please fill out all fields</Text>
 
                       <View style={styles.nameContainer}>
                         <TextInput
@@ -495,6 +490,13 @@ export default class CreateAccount extends React.Component {
 
                   </KeyboardAwareScrollView>
                 </View>
+                <AwesomeAlert
+                show={showAlert}
+                showProgress={true}
+                title="Creating Account"
+                closeOnTouchOutside={false}
+                closeOnHardwareBackPress={false}
+              />
               </View>
             </TouchableWithoutFeedback>
         </ImageBackground>
@@ -581,7 +583,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign:'center',
     marginTop: 20,
-    opacity: 0.9
   },
   inputTitle: {
     color: "rgba(255,255,255,0.8)",
@@ -613,5 +614,11 @@ const styles = StyleSheet.create({
   enabled: {
     flex:1,
     opacity: 1,
+  },
+  pageTitle: {
+    color: '#fff',
+    fontSize: 25,
+    marginBottom: 20,
+    textAlign: 'center',
   },
 });
