@@ -6,14 +6,12 @@ import {TextInputMask} from 'react-native-masked-text';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import * as firebase from 'firebase';
 
-
 const{width} = Dimensions.get('window')
 
 let usernameMessage = '';
 let firstnameMessage = '';
 let lastnameMessage = '';
 let phoneMessage = '';
-
 
 export default class UserProfile extends React.Component {
   constructor(props){
@@ -169,7 +167,7 @@ export default class UserProfile extends React.Component {
     if(this.state.loading){
       return (
         <View style={styles.buttonsContainer}>
-            <ActivityIndicator size="large" color="#34c6de" />
+            <ActivityIndicator size="large" color='#35b0d2' />
         </View>
       )
     }
@@ -179,11 +177,11 @@ export default class UserProfile extends React.Component {
     return (
         <View style={isDisabled?styles.disabled:styles.enabled}>
             <TouchableOpacity disabled = {isDisabled} style={styles.updateButton} onPress={this.onUpdatePress.bind(this)}>
-              <Text style={styles.btntext}>Update</Text>
+              <Text style={styles.btntext}>UPDATE</Text>
             </TouchableOpacity>
 
             <TouchableOpacity disabled = {isDisabled} style={styles.cancelButton} onPress={this.componentDidMount.bind(this)}>
-              <Text style={styles.btntext}>Cancel</Text>
+              <Text style={styles.btntext}>CANCEL</Text>
             </TouchableOpacity>
         </View>
       )
@@ -281,7 +279,7 @@ export default class UserProfile extends React.Component {
           closeOnHardwareBackPress={false}
           showConfirmButton={true}
           confirmText="Gotcha"
-          confirmButtonColor='#34c6de'
+          confirmButtonColor='#35b0d2'
           onConfirmPressed={() => {
             this.hideAlert();
           }}
@@ -361,7 +359,7 @@ const styles = StyleSheet.create({
     },
     inputTitle: {
       color: 'white',
-      fontSize: 16,
+      fontSize: 20,
       fontWeight: 'bold',
       marginBottom: 5,
       marginTop: 10,
@@ -370,22 +368,33 @@ const styles = StyleSheet.create({
       flex: 1,
       margin: 20,
       height: 50,
+      marginTop:10,
+      paddingTop:15,
+      paddingBottom:15,
+      borderRadius:10,
+      borderWidth: 1,
+      borderColor: '#35b0d2',
+      backgroundColor: '#35b0d2',
       alignContent: 'center',
       justifyContent: 'center',
-      backgroundColor: '#34c6de',
     },
     cancelButton: {
       flex: 1,
       margin: 20,
       height: 50,
+      marginTop:10,
+      paddingTop:15,
+      paddingBottom:15,
+      borderRadius:10,
+      borderWidth: 1,
+      borderColor: 'coral',
+      backgroundColor: 'coral',
       alignContent: 'center',
       justifyContent: 'center',
-      backgroundColor: '#ff7f50',
     },
     btntext:{
       textAlign: 'center',
       color: 'rgb(32,53,70)',
-      fontWeight: 'bold',
       color: 'white',
       fontSize: 18,
     }

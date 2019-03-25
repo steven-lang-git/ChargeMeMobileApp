@@ -12,7 +12,11 @@ let currentMessage = '';
 export default class ChangePassword extends React.Component {
   constructor(props){
     super(props);
-    this.state = {currentPassword: '', newPassword: '', confirmPassword: '', disable : true};
+    this.state = {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+      disable : true};
   }
 
   //on every keystroke in the newPassword, call this function
@@ -161,7 +165,8 @@ export default class ChangePassword extends React.Component {
           <View style={styles.infoContainer}>
 
             <Text style={styles.inputTitle}>Current Password</Text>
-            <TextInput style={styles.input}
+            <TextInput
+              style={styles.input}
               placeholder="********"
               placeholderTextColor="rgba(255,255,255,0.8)"
               onChangeText={(currentPassword) => this.checkCurrentPassword(currentPassword)}
@@ -174,7 +179,8 @@ export default class ChangePassword extends React.Component {
             <Text style = {styles.errorMessage}>{currentMessage}</Text>
 
             <Text style={styles.inputTitle}>New Password</Text>
-            <TextInput style={styles.input}
+            <TextInput
+              style={styles.input}
               placeholder="********"
               placeholderTextColor="rgba(255,255,255,0.8)"
               onChangeText={(text) => this.checkNewPassword(text)}
@@ -187,7 +193,8 @@ export default class ChangePassword extends React.Component {
             <Text style = {styles.errorMessage}>{newMessage}</Text>
 
             <Text style={styles.inputTitle}>Confirm New Password</Text>
-            <TextInput style={styles.input}
+            <TextInput
+              style={styles.input}
               placeholder="********"
               placeholderTextColor="rgba(255,255,255,0.8)"
               onChangeText={(text) =>this.checkConfirmPassword(text)}
@@ -199,10 +206,11 @@ export default class ChangePassword extends React.Component {
             <Text style = {styles.errorMessage}>{confirmMessage}</Text>
 
             <View style={isDisabled?styles.disabled:styles.enabled}>
-              <TouchableOpacity style={styles.button}
+              <TouchableOpacity
+                style={styles.button}
                 onPress={this.onChangePasswordPress.bind(this)}
                 disabled = {isDisabled}>
-                <Text style={styles.btntext}>Update</Text>
+                <Text style={styles.btntext}>UPDATE</Text>
               </TouchableOpacity>
             </View>
 
@@ -276,21 +284,26 @@ const styles = StyleSheet.create({
   },
   inputTitle: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 5,
     marginTop: 10,
   },
   button: {
-    paddingVertical: 15,
-    marginTop: 15,
-    backgroundColor: '#34c6de',
-
+    marginTop:10,
+    marginBottom: 10,
+    paddingTop:15,
+    paddingBottom:15,
+    marginLeft:30,
+    marginRight:30,
+    borderRadius:10,
+    borderWidth: 1,
+    borderColor: '#35b0d2',
+    backgroundColor: '#35b0d2',
   },
   btntext:{
     textAlign: 'center',
     color: 'rgb(32,53,70)',
-    fontWeight: 'bold',
     color: 'white',
     fontSize: 18,
   }
