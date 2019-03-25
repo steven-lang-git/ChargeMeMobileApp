@@ -31,21 +31,21 @@ export default class PastTransactions extends React.Component {
          const data = snapshot.val()
          if(snapshot.val()) {
            const initMessages = [];
-           Object 
+           Object
             .keys(data)
             .forEach(message => initMessages.push(data[message]));
             this.setState({
               messages: initMessages
             })
-         } 
+         }
         });
 
-        
+
       firebase
         .database()
         .ref()
         .child("messages")
-        .on("child_added", snapshot=> { 
+        .on("child_added", snapshot=> {
           const data = snapshot.val();
           if( snapshot.val()) {
             this.setState(prevState => ({
@@ -66,16 +66,16 @@ export default class PastTransactions extends React.Component {
       });
       // usersRef.once('value').then(snapshot => {
       // this.setState({ names: snapshot.val() });}
-      // ); 
+      // );
     }
     addItem(){
-      if(!this.state.message) return; 
+      if(!this.state.message) return;
       const newMessage = firebase.database().ref()
                             .child("messages")
                             .push();
       newMessage.set(this.state.message, () => this.setState({message: ''}))
     }
-  
+
   render() {
     const { names,message } = this.state;
     return (
@@ -86,14 +86,15 @@ export default class PastTransactions extends React.Component {
         </Left>
       </Header>
       <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-      <TextInput placeholder = 'enter your message' onChangeText={(text)=> this.setState({message:text})} 
+      <TextInput placeholder = 'enter your message' onChangeText={(text)=> this.setState({message:text})}
       style={styles.txtInput}/>
+
       <Button title='Send' onPress={this.addItem}/>
       <Text style={styles.nameItem}>Welcome back {this.state.first}</Text>
       <Text> past transactions</Text>
       </View>
       <FlatList data={this.state.messages}
-      renderItem={({item}) => 
+      renderItem={({item}) =>
       <View style={styles.listItemContainer}>
         <Text style={styles.listItem}>
           {item}
@@ -118,16 +119,16 @@ msgBox:{
   backgroundColor:'#fff'
 },
 txtInput:{
-  flex: 1 
+  flex: 1
 },
 listItemContainer:{
-  backgroundColor: '#fff', 
+  backgroundColor: '#fff',
   margin: 5,
   borderRadius: 5,
 },
 listItem:{
   fontSize:20,
-  padding: 10 
+  padding: 10
 },
 nameItem:{
   fontSize: 30,
