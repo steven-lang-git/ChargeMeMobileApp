@@ -19,11 +19,18 @@ export default class FriendsList extends React.Component {
     }
 
   }
+ 
 
-  save(){
-    firebase.database().ref('friendslist/possibleFriends').set(this.state.possibleFriends);
-    firebase.database().ref('friendslist/currentFriends').set(this.state.currentFriends);
+  save() {
+    const {
+      currentFriends,
+      possibleFriends,
+    } = this.state
+    var uid = firebase.auth().currentUser.uid;
+    firebase.database().ref('friendslist/' + uid + '/possibleFriends').set(possibleFriends);
+    firebase.database().ref('friendslist/' + uid + '/currentFriends').set(currentFriends);
     console.log('data saved');
+
   }
 
 
@@ -33,11 +40,17 @@ export default class FriendsList extends React.Component {
       possibleFriends,
     } = this.state
 
-    // Pull friend out of possibleFriends
-    const addedFriend = possibleFriends.splice(index, 1)
+
+    console.log("index", index);
+    console.log("addedIndex:", possibleFriends[index]);
+
+
 
     // And put friend in currentFriends
-    currentFriends.push(addedFriend)
+    currentFriends.push(possibleFriends[index]);
+
+    // Pull friend out of possibleFriends
+    possibleFriends.splice(index, 1);
 
     // Finally, update our app state
     this.setState({
@@ -53,11 +66,14 @@ export default class FriendsList extends React.Component {
       possibleFriends,
     } = this.state
 
-    // Pull friend out of currentFriends
-    const removedFriend = currentFriends.splice(index, 1)
 
     // And put friend in possibleFriends
-    possibleFriends.push(removedFriend)
+
+    possibleFriends.push(currentFriends[index]);
+
+
+    // Pull friend out of currentFriends
+    currentFriends.splice(index, 1);
 
     // Finally, update our app state
     this.setState({
@@ -70,8 +86,11 @@ export default class FriendsList extends React.Component {
       <Icon name="users" type="FontAwesome" style={{ fontSize: 24, color: tintColor }} />
     )
   }
+
   componentDidMount() {
-    
+ 
+
+
     var uid = firebase.auth().currentUser.uid;
     firebase.database().ref('users/' + uid).once("value", snapshot => {
       const nameUser = snapshot.val().firstName;
@@ -79,77 +98,119 @@ export default class FriendsList extends React.Component {
         first: nameUser
       })
 
-    });
+    });    
 
-    firebase.database().ref().child('users').once('value').then((snapshot) => {
-      const {
-        possibleFriends
+    firebase
+    .database()
+    .ref('friendslist/' + uid)
+    .child('currentFriends')
+    .on('value', snapshot => {
+      if(snapshot.val()){
+      const data = snapshot.val();
+      console.log("DATA:", data);
+      this.setState({
+        currentFriends: snapshot.val()
+      })
+    }
+    else{
+      const{
+        currentFriends
       } = this.state
+      console.log("used else");
+      this.setState({
+        currentFriends: currentFriends
+      })
+    }
+      
 
-      const {
+    })
+    firebase
+    .database()
+    .ref('friendslist/' + uid)
+    .child('possibleFriends')
+    .on('value', snapshot => {
+      const{
+        possibleFriends
+      }=this.state
+          const {
         first
       } = this.state
-      snapshot.forEach((childSnapShot) => {
-
-        possibleFriends.push(
-          // value: childSnapShot.val(),
-            name = childSnapShot.val().firstName
-          // testing: childSnapShot.key.child(firstName)
-        )
-        console.log("exists", possibleFriends);
-      });
       possibleFriends.splice(possibleFriends.indexOf(first), 1);
-      this.setState({
-        possibleFriends: possibleFriends,
-      })
+      if(snapshot.val()){
+      
+      const data = snapshot.val();
+      console.log("DATA?:",data);
+      this.setState(
+        {
+          possibleFriends: snapshot.val()
+        }
+      )
+      }
+      else{
+        
+        console.log("used else again");
+        this.setState({
+          possibleFriends: possibleFriends
+        })
+      }
+    })
+  
+    
 
-      // snapshot.child('fords').ref.push(possibleFriends);
-      // if( firebase.database().ref('users/' + uid+'/friendList')==null){
-      // firebase.database().ref('users/' + uid+'/friendList').push(possibleFriends);
-      // console.log(uid);
-      // }
-    });
-    // firebase.database().ref('users/' + uid).once("value", snapshot => {
-    //   const nameUser = snapshot.val().firstName;
+    // firebase.database().ref().child('users').once('value').then((snapshot) => {
     //   const {
     //     possibleFriends
     //   } = this.state
-    //   console.log(snapshot.val());
-    //   snapshot.child('friendList').ref.push(possibleFriends);
+
+    //   const {
+    //     first
+    //   } = this.state
+    //   snapshot.forEach((childSnapShot) => {
+
+    //     possibleFriends.push(
+    //       name = childSnapShot.val().firstName
+    //     )
+    //     console.log("exists", possibleFriends);
+    //   });
+    //   possibleFriends.splice(possibleFriends.indexOf(first), 1);
+
     //   this.setState({
-    //     first: nameUser
+    //     possibleFriends: possibleFriends,
     //   })
 
+   
     // });
- 
-    firebase.database().ref().child("friendslist").once("value",snapshot=>{
-        
-        const{
-          possibleFriends,
-          currentFriends
-        } = this.state
-        if(snapshot.child(uid).exists()){
-          this.setState({
-              possibleFriends: possibleFriends,
-              currentFriends: currentFriends
-            })
-      
-        }
-        else{
+
+    // });
+
+    firebase.database().ref().child("friendslist").once("value", snapshot => {
+
+      const {
+        possibleFriends,
+        currentFriends
+      } = this.state
+      if (snapshot.child(uid).exists()) {
+        this.setState({
+          possibleFriends: possibleFriends,
+          currentFriends: currentFriends
+        })
+
+      }
+      else {
         snapshot.child(uid).ref.push(
           possibleFriends);
         snapshot.child(uid).ref.push(
           currentFriends);
 
-       
-         
-      }
-     
-      });
 
-      // var ref = firebase.database().ref("friendslist")
-      // var query = ref.orderByChild();
-    }
+
+      }
+
+    });
+
+    // var ref = firebase.database().ref("friendslist")
+    // var query = ref.orderByChild();
+  }
   render() {
     return (
 
@@ -162,7 +223,7 @@ export default class FriendsList extends React.Component {
             </Left>
           </Header>
           <StatusBar barStyle="light-content" />
-          <Text> We have {this.state.currentFriends.length} friends!</Text>
+          {/* <Text> We have {this.state.currentFriends.length} friends!</Text> */}
 
           <Button color="white"
             title="Back to home"
@@ -222,9 +283,9 @@ export default class FriendsList extends React.Component {
                 )
                 )
               }
-      <TouchableOpacity style={styles.btntext} onPress={()=>this.save()}>
-        <Text>Save</Text>
-      </TouchableOpacity>                  
+              <TouchableOpacity style={styles.btntext} onPress={() => this.save()}>
+                <Text>Save</Text>
+              </TouchableOpacity>
             </KeyboardAvoidingView>
           </View>
         </ImageBackground>
