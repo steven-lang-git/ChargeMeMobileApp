@@ -5,6 +5,7 @@ import {Header,Left,Right,Icon} from 'native-base';
 import {StackNavigator, createAppContainer, createStackNavigator, StackActions, NavigationActions} from 'react-navigation';
 import CreateAccount from './CreateAccount';
 import PastTransactions from './PastTransactions';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 let emailEmpty = false;
 let passwordEmpty = false;
@@ -95,35 +96,31 @@ export default class HomeScreen extends React.Component {
   //function to decide whether to display login button or loading spin
   renderButtonOrLoading(){
     //if we are in a state of loading show loading spin
-    if(this.state.loading){
+    if(this.state.loading == false){
+      //if not in state of loading show login button (button is bound to
+      //onLoginPress function)
+      const isDisabled  = this.state.disable;
       return (
-        <View style={[styles.container, styles.horizontal]}>
-          <ActivityIndicator size="large" color="#35b0d2" />
+        <View>
+            <View style={isDisabled?styles.disabled:styles.enabled}>
+              <TouchableOpacity
+                style={styles.button}
+                disabled = {isDisabled}
+                onPress={this.onLoginPress.bind(this)}>
+                <Text style={styles.btntext}>SIGN IN</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.container}>
+              <Text style={styles.title} onPress={() => this.props.navigation.navigate('CreateAccount')}> Create an Account </Text>
+            </View>
         </View>
       )
     }
-    //if not in state of loading show login button (button is bound to
-    //onLoginPress function)
-    const isDisabled  = this.state.disable;
-    return (
-      <View>
-          <View style={isDisabled?styles.disabled:styles.enabled}>
-            <TouchableOpacity
-              style={styles.button}
-              disabled = {isDisabled}
-              onPress={this.onLoginPress.bind(this)}>
-              <Text style={styles.btntext}>SIGN IN</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.container}>
-            <Text style={styles.title} onPress={() => this.props.navigation.navigate('CreateAccount')}> Create an Account </Text>
-          </View>
-      </View>
-    )
   }
 
   render() {
+    const showAlert = this.state.loading
     const {navigate} =this.props.navigation;
     return (
       <SafeAreaView style={styles.container}>
@@ -135,9 +132,12 @@ export default class HomeScreen extends React.Component {
 
                   <View style={styles.logoContainer}>
                     <Image style={styles.logo} source={require('../assets/logo_transparent.png')}/>
+                    <Text style={styles.pageTitle}>Welcome!</Text>
                   </View>
 
                   <View style={styles.infoContainer}>
+
+
 
                     <View style={styles.inputBoxContainer}>
 
@@ -177,9 +177,16 @@ export default class HomeScreen extends React.Component {
                     <View style = {styles.signUpContainer}>
                       {this.renderButtonOrLoading()}
                     </View>
-
                   </View>
+                  <AwesomeAlert
+                  show={showAlert}
+                  showProgress={true}
+                  title="Signing In"
+                  closeOnTouchOutside={false}
+                  closeOnHardwareBackPress={false}
+                />
                 </View>
+
               </TouchableWithoutFeedback>
             </ImageBackground>
           </SafeAreaView>
@@ -266,7 +273,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 15,
     textAlign:'center',
-    opacity: 0.9
   },
   inputTitle: {
     color: "rgba(255,255,255,0.8)",
@@ -298,5 +304,11 @@ const styles = StyleSheet.create({
   enabled: {
     flex:1,
     opacity: 1,
+  },
+  pageTitle: {
+    color: '#fff',
+    fontSize: 25,
+    marginBottom: 20,
+    textAlign: 'center',
   },
 });
