@@ -139,7 +139,6 @@ export default class FriendsList extends React.Component {
       if(snapshot.val()){
       
       const data = snapshot.val();
-      console.log("DATA?:",data);
       this.setState(
         {
           possibleFriends: snapshot.val()
