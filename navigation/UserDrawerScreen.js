@@ -1,32 +1,21 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions, Image, TextInput, TouchableOpacity } from 'react-native';
 import {createDrawerNavigator, DrawerItems} from 'react-navigation';
+import * as firebase from 'firebase';
 import {Icon} from 'native-base'
+import AwesomeAlert from 'react-native-awesome-alerts';
 import HomeScreen from '../screens/HomeScreen'
 import CreateAccount from '../screens/CreateAccount';
 import PastTransactions from '../screens/PastTransactions';
 import CurrentTransactions from '../screens/CurrentTransactions';
 //import NotificationSettings from '../screens/NotificationSettings';
-import Logout from '../screens/Logout';
 import BillSplitStackScreen from '../navigation/BillSplitStackScreen';
 import FriendsList from '../screens/FriendsList';
 //import SettingsScreen from '../screens/SettingsScreen';
 import SettingsStackScreen from '../navigation/SettingsStackScreen';
+import DrawerMenu from "../screens/DrawerMenu";
 
-
-
-const{width} = Dimensions.get('window')
-
-const CustomDrawerComponent= (props) => (
-  <SafeAreaView style={{flex:1}}>
-    <View style={{height:150,backgroundColor:'white', alignItems: 'center', justifyContent: 'center'}}>
-      <Image source={require('../assets/AppIcons/Assets.xcassets/AppIcon.appiconset/1024.png')} style={{ height: 120, width: 120, borderRadius: 60 }}/>
-    </View>
-    <ScrollView>
-    <DrawerItems {...props}/>
-    </ScrollView>
-  </SafeAreaView>
-)
+const{width, height} = Dimensions.get('window')
 
 const AppDrawerNavigator = createDrawerNavigator({
     // Home:{screen: HomeScreen},
@@ -52,12 +41,10 @@ const AppDrawerNavigator = createDrawerNavigator({
     },
 
     FriendsList: {screen: FriendsList, navigationOptions:{title: 'Friends List'}},
-    Logout: {screen: Logout, navigationOptions: {title: 'Log Out'}},
   },
   {
     initialRouteName: 'PastTransactions',
-    contentComponent: CustomDrawerComponent,
-    //drawerWidth: width,
+    contentComponent: DrawerMenu,
     contentOptions: {
     activeTintColor: '#35b0d2'
   }
@@ -72,6 +59,31 @@ const styles = StyleSheet.create({
     paddingLeft:60,
     paddingRight: 60,
   },
+  logoutContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: 100,
+  },
+  button: {
+    height: 40,
+    width: 100,
+    marginTop:10,
+    marginBottom: 10,
+    paddingTop: 10,
+    marginLeft:30,
+    marginRight:30,
+    borderRadius:10,
+    borderWidth: 1,
+    borderColor: 'black',
+    backgroundColor: '#35b0d2',
+  },
+  btntext:{
+    textAlign: 'center',
+    color: 'rgb(32,53,70)',
+    color: 'white',
+    fontSize: 15,
+  }
 });
 
 
