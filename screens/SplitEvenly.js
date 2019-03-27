@@ -16,14 +16,14 @@ export default class SplitEvenly extends React.Component {
       name: '',
       total: 0,
       tip: 0,
-      disable : true,
       friends: [],
       checked10: false,
       checked15: false,
       checked18: false,
       checked20: false,
       checkedCustom: false,
-      checkedNo: true
+      checkedNo: true,
+      disable: true,
     };
   }
 
@@ -180,6 +180,7 @@ export default class SplitEvenly extends React.Component {
 
   //update total entered by user
   checkTotal(value){
+
     const numericTotal = this.totalField.getRawValue().toFixed(2);
     if(numericTotal == 0){
       totalEmpty = true;
@@ -187,7 +188,7 @@ export default class SplitEvenly extends React.Component {
     else{
       totalEmpty = false;
     }
-    this.setState({total: numericTotal});
+    this.setState({total: numericTotal, disable: false});
   }
 
   //update bill split name entered by user
@@ -198,7 +199,7 @@ export default class SplitEvenly extends React.Component {
     else{
       nameEmpty = false;
     }
-    this.setState({name: value})
+    this.setState({name: value, disable: false})
   }
 
   //update custom tip entered by user
@@ -225,9 +226,10 @@ export default class SplitEvenly extends React.Component {
   }
 
   render() {
+    const isDisabled = this.state.disable;
     return (
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+        <ImageBackground source={require('../assets/group-dinner.jpg')} style={styles.imageContainer}>
         <View style={styles.overlay} />
 
         <KeyboardAwareScrollView contentContainerStyle={{
@@ -386,7 +388,7 @@ export default class SplitEvenly extends React.Component {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.container}>
+            <View style={isDisabled?styles.disabled:styles.enabled}>
               <TouchableOpacity style={styles.button} onPress={() => this.onSubmitBillSplit()}>
                 <Text style={styles.btntext}>REVIEW</Text>
               </TouchableOpacity>
@@ -406,7 +408,6 @@ const styles = StyleSheet.create({
   container:{
     flex: 1,
     alignItems: 'center',
-
   },
   errorMessage:{
     color: 'red',
@@ -460,8 +461,6 @@ const styles = StyleSheet.create({
     flex: 2,
     width: width,
     padding:20,
-    //justifyContent: 'center',
-    //alignItems: 'center',
   },
   input: {
     height:40,
@@ -529,5 +528,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     opacity: 0.8,
     fontSize: 15,
-  }
+  },
+  disabled: {
+    flex:1,
+    opacity: 0.3,
+    alignItems: 'center',
+  },
+  enabled: {
+    flex:1,
+    opacity: 1,
+    alignItems: 'center',
+  },
 });

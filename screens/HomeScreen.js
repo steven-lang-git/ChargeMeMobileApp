@@ -167,6 +167,7 @@ export default class HomeScreen extends React.Component {
                           }]}
                           placeholder="Enter password"
                           placeholderTextColor="rgba(255,255,255,0.8)"
+                          keyboardType='default'
                           returnKeyType='go'
                           onChangeText={(password) => this.updatePassword(password)}
                           secureTextEntry
