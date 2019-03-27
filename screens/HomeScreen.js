@@ -73,6 +73,7 @@ export default class HomeScreen extends React.Component {
 
   updateEmail(email){
     this.setState({disable: false})
+    this.setState({error: ''})
     if(email == ''){
       emailEmpty = true
     }
@@ -84,6 +85,7 @@ export default class HomeScreen extends React.Component {
 
   updatePassword(password){
     this.setState({disable: false})
+    this.setState({error: ''})
     if(password == ''){
       passwordEmpty = true
     }
@@ -165,6 +167,7 @@ export default class HomeScreen extends React.Component {
                           }]}
                           placeholder="Enter password"
                           placeholderTextColor="rgba(255,255,255,0.8)"
+                          keyboardType='default'
                           returnKeyType='go'
                           onChangeText={(password) => this.updatePassword(password)}
                           secureTextEntry
