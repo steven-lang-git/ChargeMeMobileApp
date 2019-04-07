@@ -1,8 +1,22 @@
 import React from 'react';
-import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard} from 'react-native';
-import {Header,Left,Right,Icon} from 'native-base'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  TextInput,
+  Button,
+  Dimensions,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+  Keyboard
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as firebase from 'firebase';
+import ButtonComponent from '../../../../components/ButtonComponent'
 
 const{width} = Dimensions.get('window')
 let confirmMessage = '';
@@ -170,7 +184,7 @@ export default class ChangePassword extends React.Component {
     const isDisabled  = this.state.disable;
     return (
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+        <ImageBackground source={require('../../../../assets/blue.jpg')} style={styles.imageContainer}>
 
         <KeyboardAwareScrollView contentContainerStyle={{
           flexGrow: 1,
@@ -238,14 +252,12 @@ export default class ChangePassword extends React.Component {
             />
             <Text style = {styles.errorMessage}>{confirmMessage}</Text>
 
-            <View style={isDisabled?styles.disabled:styles.enabled}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={this.onChangePasswordPress.bind(this)}
-                disabled = {isDisabled}>
-                <Text style={styles.btntext}>UPDATE</Text>
-              </TouchableOpacity>
-            </View>
+            <ButtonComponent
+              text='UPDATE'
+              onPress={this.onChangePasswordPress.bind(this)}
+              disabled={isDisabled}
+              primary={true}
+            />
 
             </View>
 
@@ -268,17 +280,6 @@ const styles = StyleSheet.create({
   },
   inputBoxContainer:{
     flex:8,
-  },
-  disabled: {
-    flex:1,
-    opacity: 0.3,
-  },
-  enabled: {
-    flex:1,
-    opacity: 1,
-  },
-  header:{
-    position:'absolute',
   },
   imageContainer: {
       resizeMode:'cover',
@@ -325,22 +326,4 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginTop: 10,
   },
-  button: {
-    marginTop:10,
-    marginBottom: 10,
-    paddingTop:15,
-    paddingBottom:15,
-    marginLeft:30,
-    marginRight:30,
-    borderRadius:10,
-    borderWidth: 1,
-    borderColor: '#35b0d2',
-    backgroundColor: '#35b0d2',
-  },
-  btntext:{
-    textAlign: 'center',
-    color: 'rgb(32,53,70)',
-    color: 'white',
-    fontSize: 18,
-  }
 });
