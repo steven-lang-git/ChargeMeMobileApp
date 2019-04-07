@@ -3,6 +3,7 @@ import { ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithou
 import { Header, Left, Right, Icon, ListItem, List } from 'native-base'
 const { width } = Dimensions.get('window')
 import * as firebase from 'firebase';
+import {Dropdown} from 'react-native-material-dropdown';
 
 
 export default class FriendsList extends React.Component {
@@ -81,14 +82,13 @@ export default class FriendsList extends React.Component {
       possibleFriends: possibleFriends,
     })
   }
-  static navigationOptions = {
-    drawerIcon: (tintColor) => (
-      <Icon name="users" type="FontAwesome" style={{ fontSize: 24, color: tintColor }} />
-    )
-  }
+
 
   componentDidMount() {
- 
+    
+    
+
+
 
 
     var uid = firebase.auth().currentUser.uid;
@@ -211,6 +211,14 @@ export default class FriendsList extends React.Component {
     // var query = ref.orderByChild();
   }
   render() {
+    let data = [{
+      value:'Banana',
+    },{
+      value:'Mango',
+    },{
+      value: 'Pear',
+    
+    }];
     return (
 
       <SafeAreaView style={styles.container}>
@@ -240,8 +248,11 @@ export default class FriendsList extends React.Component {
                 autoCorrect={false}
 
               />
+              <Dropdown label ='FavoriteFruit' data={data}/>
             </View>
-            <Text> Currently our friends are:</Text>
+
+        
+                  <Text> Currently our friends are:</Text>
             {
               this.state.currentFriends.map((friend, index) => (
                 <ListItem style={styles.listContainer} >
