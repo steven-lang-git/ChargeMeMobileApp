@@ -1,8 +1,31 @@
 import React from 'react';
-import { ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button, Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard } from 'react-native';
-import { Header, Left, Right, Icon, ListItem, List } from 'native-base'
-const { width } = Dimensions.get('window')
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  StatusBar,
+  TextInput,
+  Button,
+  Dimensions,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+  Keyboard
+} from 'react-native';
+import {
+  Header,
+  Left,
+  Right,
+  Icon,
+  ListItem,
+  List
+} from 'native-base'
 import * as firebase from 'firebase';
+
+const { width } = Dimensions.get('window')
 
 export default class SelectFriend extends React.Component {
 
@@ -10,10 +33,10 @@ export default class SelectFriend extends React.Component {
     super(props)
     this.state = {
       possibleFriends: [
-        
+
       ],
       currentFriends: [
-        
+
       ],
       firstName:' ',
       first:'',
@@ -88,7 +111,7 @@ export default class SelectFriend extends React.Component {
     snapshot.forEach((childSnapShot)=>
     {
       const name = childSnapShot.val().firstName;
-    
+
         possibleFriends.push(
           // value: childSnapShot.val(),
           name
@@ -99,14 +122,14 @@ export default class SelectFriend extends React.Component {
       possibleFriends.splice(possibleFriends.indexOf(first),1);
       this.setState({
       possibleFriends: possibleFriends,
-    })     
+    })
   });
 }
   render() {
     return (
 
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../assets/selectFriend.jpeg')} style={styles.imageContainer}>
+        <ImageBackground source={require('../../../assets/selectFriend.jpeg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
           <Header style={{ backgroundColor: 'transparent', borderBottomWidth: 0, }}>
             <Left>
@@ -147,7 +170,7 @@ export default class SelectFriend extends React.Component {
                       <TouchableOpacity style={styles.btntext}
                         onPress={() =>
                           this.removeFriend(index)
-                        }>   
+                        }>
                         <Text style={styles.btntext}>Remove</Text>
                        </TouchableOpacity>
                     </View>

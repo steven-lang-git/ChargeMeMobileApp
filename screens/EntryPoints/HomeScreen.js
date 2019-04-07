@@ -1,10 +1,23 @@
 import React from 'react';
 import * as firebase from 'firebase';
-import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard} from 'react-native';
-import {Header,Left,Right,Icon} from 'native-base';
-import {StackNavigator, createAppContainer, createStackNavigator, StackActions, NavigationActions} from 'react-navigation';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  StatusBar,
+  TextInput,
+  Button,
+  Dimensions,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+  Keyboard
+} from 'react-native';
 import CreateAccount from './CreateAccount';
-import PastTransactions from './PastTransactions';
+import PastTransactions from '../DrawerScreens/PastTransactions';
 import AwesomeAlert from 'react-native-awesome-alerts';
 
 let emailEmpty = false;
@@ -126,14 +139,14 @@ export default class HomeScreen extends React.Component {
     const {navigate} =this.props.navigation;
     return (
       <SafeAreaView style={styles.container}>
-            <ImageBackground source={require('../assets/coin.jpg')} style={styles.imageContainer}>
+            <ImageBackground source={require('../../assets/coin.jpg')} style={styles.imageContainer}>
               <View style={styles.overlay} />
               <StatusBar barStyle="light-content" />
               <TouchableWithoutFeedback style={styles.container} onPress={Keyboard.dismiss}>
                 <View style={styles.container}>
 
                   <View style={styles.logoContainer}>
-                    <Image style={styles.logo} source={require('../assets/logo_transparent.png')}/>
+                    <Image style={styles.logo} source={require('../../assets/logo_transparent.png')}/>
                     <Text style={styles.pageTitle}>Welcome!</Text>
                   </View>
 

@@ -1,11 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import {Header,Left,Right,Icon} from 'native-base'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity
+} from 'react-native';
+import {
+  Header,
+  Left,
+  Icon
+} from 'native-base'
 
-export default class Search extends React.Component {
+export default class CurrentTransactions extends React.Component {
   static navigationOptions ={
     drawerIcon: (tintColor) =>(
-      <Icon name="search" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
+      <Icon name="clock-o" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
     )
   }
   render() {
@@ -18,7 +28,7 @@ export default class Search extends React.Component {
       </Header>
       <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
 
-      <Text> search screen</Text>
+      <Text> current transactions</Text>
       </View>
 
       </View>
@@ -30,6 +40,7 @@ export default class Search extends React.Component {
 const styles = StyleSheet.create({
 container:{
   flex: 1,
+
 }
 
 });

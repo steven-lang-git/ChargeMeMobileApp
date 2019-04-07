@@ -1,6 +1,28 @@
 import React from 'react';
-import { ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button, Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard } from 'react-native';
-import { Header, Left, Right, Icon, ListItem, List } from 'native-base'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  StatusBar,
+  TextInput,
+  Button,
+  Dimensions,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+  Keyboard
+} from 'react-native';
+import {
+  Header,
+  Left,
+  Right,
+  Icon,
+  ListItem,
+  List
+} from 'native-base'
 const { width } = Dimensions.get('window')
 import * as firebase from 'firebase';
 
@@ -19,7 +41,7 @@ export default class FriendsList extends React.Component {
     }
 
   }
- 
+
 
   save() {
     const {
@@ -88,7 +110,7 @@ export default class FriendsList extends React.Component {
   }
 
   componentDidMount() {
- 
+
 
 
     var uid = firebase.auth().currentUser.uid;
@@ -98,7 +120,7 @@ export default class FriendsList extends React.Component {
         first: nameUser
       })
 
-    });    
+    });
 
     firebase
     .database()
@@ -121,7 +143,7 @@ export default class FriendsList extends React.Component {
         currentFriends: currentFriends
       })
     }
-      
+
 
     })
     firebase
@@ -137,7 +159,7 @@ export default class FriendsList extends React.Component {
       } = this.state
       possibleFriends.splice(possibleFriends.indexOf(first), 1);
       if(snapshot.val()){
-      
+
       const data = snapshot.val();
       console.log("DATA?:",data);
       this.setState(
@@ -147,15 +169,15 @@ export default class FriendsList extends React.Component {
       )
       }
       else{
-        
+
         console.log("used else again");
         this.setState({
           possibleFriends: possibleFriends
         })
       }
     })
-  
-    
+
+
 
     // firebase.database().ref().child('users').once('value').then((snapshot) => {
     //   const {
@@ -178,7 +200,7 @@ export default class FriendsList extends React.Component {
     //     possibleFriends: possibleFriends,
     //   })
 
-   
+
     // });
 
     // });
@@ -215,7 +237,7 @@ export default class FriendsList extends React.Component {
     return (
 
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../assets/friends.jpeg')} style={styles.imageContainer}>
+        <ImageBackground source={require('../../assets/friends.jpeg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
           <Header style={{ backgroundColor: 'transparent', borderBottomWidth: 0, }}>
             <Left>
