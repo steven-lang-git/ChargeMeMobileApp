@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity,ActivityIndicator, Alert,Image, ListView, FlatList,Dimensions } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 import {Camera, Permissions} from 'expo';
-const{width} = Dimensions.get('window')
+let{width,height} = Dimensions.get('window')
 
 export default class ReceiptScanner extends React.Component {
   static navigationOptions ={
@@ -37,7 +37,9 @@ export default class ReceiptScanner extends React.Component {
       return <Text>No access to camera</Text>;
     } else {
       return (
+     
         <View style={{ flex: 1 }}>
+         
           <Camera style={{ flex: 1 }} type={this.state.type}>
           <View
               style={{
@@ -47,7 +49,7 @@ export default class ReceiptScanner extends React.Component {
                 justifyContent: 'center',
               }}>           
            
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={{
                   flex: 0.5,
                   alignSelf: 'flex-end',
@@ -63,11 +65,12 @@ export default class ReceiptScanner extends React.Component {
                 {/* <Text
                   style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
                   {' '}Flip{' '}
-                </Text> */}
-                <Image style={{width:70, height: 70,marginBottom:10}} source={require('../assets/flip.png')} />
+                </Text> 
+                    <Image style={{width:70, height: 70,marginBottom:10}} source={require('../assets/flip.png')} />
                 
                
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+            
 
               <TouchableOpacity
                 style={{
@@ -99,7 +102,7 @@ export default class ReceiptScanner extends React.Component {
                
               </TouchableOpacity>
 
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={{
                   flex: 0.5,
                   alignSelf: 'flex-end',
@@ -134,11 +137,26 @@ export default class ReceiptScanner extends React.Component {
                 <Image style={{width:60, height: 60}} source={require('../assets/flashofff.png')} />
                 
                
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               
             </View>
+            <View 
+          style={{
+            position:'absolute',
+            top: -width/2 + 100,
+            left: -width/2 +50,
+            right: -width/2 + 50, 
+            bottom: -width/2 + 200,
+
+            borderWidth: width/2, 
+            borderRadius: width,
+            borderColor: 'red', 
+            opacity:0.3,
+          }}
+          />
           </Camera>
         </View>
+        
       );
     }
   }
