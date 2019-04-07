@@ -1,6 +1,21 @@
 import React from 'react';
-import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard} from 'react-native';
-import {Header,Left,Right,Icon} from 'native-base'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  StatusBar,
+  TextInput,
+  Dimensions,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+  Keyboard
+} from 'react-native';
+import {Header,Left,Icon} from 'native-base'
+import ButtonComponent from '../../../components/ButtonComponent'
 
 const{width} = Dimensions.get('window')
 
@@ -10,7 +25,7 @@ export default class BillSplit extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../assets/group-dinner.jpg')} style={styles.imageContainer}>
+        <ImageBackground source={require('../../../assets/group-dinner.jpg')} style={styles.imageContainer}>
         <View style={styles.overlay} />
         <Header>
           <Left>
@@ -27,13 +42,23 @@ export default class BillSplit extends React.Component {
 
           <View style={styles.infoContainer}>
 
-            <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('SplitEvenly')}>
-              <Text style={styles.btntext}>SPLIT EVENLY</Text>
-            </TouchableOpacity>
+            <View style={styles.topContainer}>
+              <ButtonComponent
+                text='SPLIT EVENLY'
+                onPress={() => this.props.navigation.navigate('SplitEvenly')}
+                disabled={false}
+                primary={true}
+              />
+            </View>
 
-            <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('SplitByItem')}>
-              <Text style={styles.btntext}>SPLIT BY ITEM</Text>
-            </TouchableOpacity>
+            <View style={styles.bottomContainer}>
+              <ButtonComponent
+                text='SPLIT BY ITEM'
+                onPress={() => this.props.navigation.navigate('SplitByItem')}
+                disabled={false}
+                primary={true}
+              />
+            </View>
 
           </View>
         </ImageBackground>
@@ -50,6 +75,12 @@ const styles = StyleSheet.create({
   container:{
     flex: 1,
     alignItems: 'center',
+  },
+  bottomContainer:{
+    flex: 2.5,
+  },
+  topContainer:{
+    flex: 1,
   },
   errorMessage:{
     color: 'red',
@@ -86,6 +117,7 @@ const styles = StyleSheet.create({
     flex: 2,
     width: width,
     padding:20,
+    justifyContent:'flex-end',
   },
   input: {
     height:40,
@@ -110,24 +142,4 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  button: {
-    marginTop:10,
-    marginBottom: 10,
-    paddingTop:15,
-    paddingBottom:15,
-    marginLeft:30,
-    marginRight:30,
-    borderRadius:10,
-    borderWidth: 1,
-    borderColor: '#35b0d2',
-    backgroundColor: '#35b0d2',
-
-  },
-  btntext:{
-    textAlign: 'center',
-    color: 'rgb(32,53,70)',
-    //fontWeight: 'bold',
-    color: 'white',
-    fontSize: 18,
-  }
 });

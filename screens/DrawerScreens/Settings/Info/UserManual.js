@@ -1,19 +1,21 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, SafeAreaView, ImageBackground} from 'react-native';
-import {Header,Left,Right,Icon} from 'native-base'
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  SafeAreaView,
+  ImageBackground
+} from 'react-native';
 
 export default class UserManual extends React.Component {
-  static navigationOptions ={
-    drawerIcon: (tintColor) =>(
-      <Icon name="sitemap" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
-    )
-  }
+
   render() {
     return (
 
 
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+        <ImageBackground source={require('../../../../assets/blue.jpg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
 
       <View style={styles.container}>
