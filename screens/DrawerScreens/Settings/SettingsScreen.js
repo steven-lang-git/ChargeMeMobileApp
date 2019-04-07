@@ -1,6 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView, Linking, SafeAreaView, ImageBackground} from 'react-native';
-import {Header,Left,Right,Icon} from 'native-base'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Linking,
+  SafeAreaView,
+  ImageBackground
+} from 'react-native';
+import {Header,Left,Icon} from 'native-base'
 
 export default class SettingsScreen extends React.Component {
 
@@ -8,7 +19,7 @@ export default class SettingsScreen extends React.Component {
     return (
 
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+        <ImageBackground source={require('../../../assets/blue.jpg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
 
       <View style={styles.container}>

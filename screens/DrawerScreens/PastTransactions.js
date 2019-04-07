@@ -1,6 +1,18 @@
 import React from 'react';
-import { Button,StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList } from 'react-native';
-import {Header,Left,Right,Icon} from 'native-base'
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  FlatList
+} from 'react-native';
+import {
+  Header,
+  Left,
+  Icon
+} from 'native-base'
 import { Constants } from 'expo';
 import * as firebase from 'firebase';
 

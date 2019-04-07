@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity,ActivityIndicator, Alert,Image, ListView, FlatList,Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert,Image, ListView, FlatList,Dimensions } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 import {Camera, Permissions} from 'expo';
 const{width} = Dimensions.get('window')
@@ -45,8 +45,8 @@ export default class ReceiptScanner extends React.Component {
                 backgroundColor: 'transparent',
                 flexDirection: 'row',
                 justifyContent: 'center',
-              }}>           
-           
+              }}>
+
               <TouchableOpacity
                 style={{
                   flex: 0.5,
@@ -64,9 +64,9 @@ export default class ReceiptScanner extends React.Component {
                   style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
                   {' '}Flip{' '}
                 </Text> */}
-                <Image style={{width:70, height: 70,marginBottom:10}} source={require('../assets/flip.png')} />
-                
-               
+                <Image style={{width:70, height: 70,marginBottom:10}} source={require('../../../assets/flip.png')} />
+
+
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -77,12 +77,12 @@ export default class ReceiptScanner extends React.Component {
                 }}
                 onPress={() => {
                   this.setState({
-                  
+
                   });
                 }}>
-                <Image style={{width:60, height: 60,marginBottom:10}} source={require('../assets/flashonn.png')} />
-                
-               
+                <Image style={{width:60, height: 60,marginBottom:10}} source={require('../../../assets/flashonn.png')} />
+
+
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -94,9 +94,9 @@ export default class ReceiptScanner extends React.Component {
                 onPress={()=>this.takePicture()}
 
                 >
-                <Image style={{width:60, height: 60,marginBottom:10}} source={require('../assets/capture.png')} />
-                
-               
+                <Image style={{width:60, height: 60,marginBottom:10}} source={require('../../../assets/capture.png')} />
+
+
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -108,15 +108,15 @@ export default class ReceiptScanner extends React.Component {
                 }}
                 onPress={() => {
                   this.setState({
-                  
+
                   });
                 }}>
-                <Image style={{width:60, height: 60}} source={require('../assets/flashau.png')} />
-                
-               
+                <Image style={{width:60, height: 60}} source={require('../../../assets/flashau.png')} />
+
+
               </TouchableOpacity>
 
-             
+
 
               <TouchableOpacity
                 style={{
@@ -128,14 +128,14 @@ export default class ReceiptScanner extends React.Component {
                 }}
                 onPress={() => {
                   this.setState({
-                  
+
                   });
                 }}>
-                <Image style={{width:60, height: 60}} source={require('../assets/flashofff.png')} />
-                
-               
+                <Image style={{width:60, height: 60}} source={require('../../../assets/flashofff.png')} />
+
+
               </TouchableOpacity>
-              
+
             </View>
           </Camera>
         </View>
@@ -143,7 +143,7 @@ export default class ReceiptScanner extends React.Component {
     }
   }
 }
- 
+
 
 const styles = StyleSheet.create({
   container: {
