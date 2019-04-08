@@ -17,6 +17,7 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as firebase from 'firebase';
 import ButtonComponent from '../../../../components/ButtonComponent'
+import TextInputComponent from '../../../../components/TextInputComponent'
 
 const{width} = Dimensions.get('window')
 let confirmMessage = '';
@@ -149,7 +150,6 @@ export default class ChangePassword extends React.Component {
 
       //get the user's email
       email = user.email;
-      //console.log('email: ' + email);
 
       //get credentials token for the current user
       const credentials = firebase.auth.EmailAuthProvider.credential(
@@ -200,55 +200,43 @@ export default class ChangePassword extends React.Component {
           <View style={styles.infoContainer}>
 
             <Text style={styles.inputTitle}>Current Password</Text>
-            <TextInput
-              style={[styles.input,{
-                borderColor: currentEmpty == true || currentMessage != ''
-                  ? 'red'
-                  : '#35b0d2',
-              }]}
+            <TextInputComponent
+              empty={currentEmpty}
+              error={currentMessage}
               placeholder="********"
-              placeholderTextColor="rgba(255,255,255,0.8)"
-              onChangeText={(currentPassword) => this.checkCurrentPassword(currentPassword)}
+              onChangeText={(text) => this.checkCurrentPassword(text)}
               returnKeyType='next'
-              ref = 'current'
+              inputRef = {(input) => {this.current = input}}
               autoCorrect={false}
-              secureTextEntry
-              onSubmitEditing={()=> this.refs.new.focus()}
+              secureTextEntry={true}
+              onSubmitEditing={()=> this.new.focus()}
             />
             <Text style = {styles.errorMessage}>{currentMessage}</Text>
 
             <Text style={styles.inputTitle}>New Password</Text>
-            <TextInput
-              style={[styles.input,{
-                borderColor: newEmpty == true || newMessage != ''
-                  ? 'red'
-                  : '#35b0d2',
-              }]}
+            <TextInputComponent
+              empty={newEmpty}
+              error={newMessage}
               placeholder="********"
-              placeholderTextColor="rgba(255,255,255,0.8)"
               onChangeText={(text) => this.checkNewPassword(text)}
               returnKeyType='next'
-              ref = 'new'
+              inputRef= {(input) => {this.new = input}}
               autoCorrect={false}
-              secureTextEntry
-              onSubmitEditing={()=> this.refs.confirm.focus()}
+              secureTextEntry={true}
+              onSubmitEditing={()=> this.confirm.focus()}
             />
             <Text style = {styles.errorMessage}>{newMessage}</Text>
 
             <Text style={styles.inputTitle}>Confirm New Password</Text>
-            <TextInput
-              style={[styles.input,{
-                borderColor: confirmEmpty == true || confirmMessage != ''
-                  ? 'red'
-                  : '#35b0d2',
-              }]}
+            <TextInputComponent
+              empty={confirmEmpty}
+              error={confirmMessage}
               placeholder="********"
-              placeholderTextColor="rgba(255,255,255,0.8)"
               onChangeText={(text) =>this.checkConfirmPassword(text)}
               returnKeyType='go'
-              ref = 'confirm'
+              inputRef = {(input) => {this.confirm = input}}
               autoCorrect={false}
-              secureTextEntry
+              secureTextEntry={true}
             />
             <Text style = {styles.errorMessage}>{confirmMessage}</Text>
 
@@ -278,9 +266,6 @@ const styles = StyleSheet.create({
   errorMessage:{
     color: 'red',
   },
-  inputBoxContainer:{
-    flex:8,
-  },
   imageContainer: {
       resizeMode:'cover',
       flex:1,
@@ -288,10 +273,6 @@ const styles = StyleSheet.create({
   overlay: {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: 'rgba(69,85,117,0.7)',
-  },
-  logo: {
-    flex: 1,
-    resizeMode: 'contain',
   },
   titleContainer:{
     justifyContent: 'center',
@@ -303,15 +284,6 @@ const styles = StyleSheet.create({
     flex: 3,
     width: width,
     padding:20,
-  },
-  input: {
-    height:40,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    color:'#fff',
-    marginBottom: 5,
-    paddingHorizontal:10,
-    borderWidth: 2,
-    borderRadius: 20,
   },
   title:{
     fontWeight: 'bold',
