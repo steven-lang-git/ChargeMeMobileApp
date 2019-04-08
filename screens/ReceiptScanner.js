@@ -72,7 +72,7 @@ export default class ReceiptScanner extends React.Component {
               </TouchableOpacity> */}
             
 
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={{
                   flex: 0.5,
                   alignSelf: 'flex-end',
@@ -86,8 +86,20 @@ export default class ReceiptScanner extends React.Component {
                 <Image style={{width:60, height: 60,marginBottom:10}} source={require('../assets/flashonn.png')} />
                 
                
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+          <View 
+          style={{
+            position:'absolute',
+            top: -width/2 + 30,
+            left: -width/2 +75,
+            right: -width/2 + 75, 
+            bottom: -width/2 + 100,
 
+            borderWidth: width/2, 
+            borderColor: 'rgb(32,53,70)', 
+            opacity:0.9,
+          }}
+          />
               <TouchableOpacity
                 style={{
                   flex: 0.5,
@@ -140,20 +152,7 @@ export default class ReceiptScanner extends React.Component {
               </TouchableOpacity> */}
               
             </View>
-            <View 
-          style={{
-            position:'absolute',
-            top: -width/2 + 100,
-            left: -width/2 +50,
-            right: -width/2 + 50, 
-            bottom: -width/2 + 200,
-
-            borderWidth: width/2, 
-            borderRadius: width,
-            borderColor: 'red', 
-            opacity:0.3,
-          }}
-          />
+          
           </Camera>
         </View>
         
