@@ -19,6 +19,7 @@ import CircleCheckBox, {LABEL_POSITION} from 'react-native-circle-checkbox';
 import {TextInputMask} from 'react-native-masked-text';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ButtonComponent from '../../../components/ButtonComponent'
+import TextInputComponent from '../../../components/TextInputComponent'
 
 let totalEmpty = false;
 let nameEmpty = false;
@@ -164,25 +165,26 @@ export default class SplitEvenly extends React.Component {
   showCustomField = () => {
     if(this.state.checkedCustom == true){
       return(
-        <TextInputMask
-          type={'money'}
-          options={{
-            precision: 2,
-            separator: '.',
-            delimiter: ',',
-            unit: '$',
-            suffixUnit: ''
-          }}
-          value={this.state.tip}
-          onChangeText={(customTip) => this.checkCustom(customTip)}
-          style={styles.customInput}
-          ref={(ref) => this.tipField = ref}
-          placeholder="$0"
-          placeholderTextColor="rgba(255,255,255,0.8)"
-          keyboardType={'numeric'}
-          returnKeyType='go'
-        />
-
+        <View style={styles.customContainer}>
+          <TextInputMask
+            type={'money'}
+            options={{
+              precision: 2,
+              separator: '.',
+              delimiter: ',',
+              unit: '$',
+              suffixUnit: ''
+            }}
+            value={this.state.tip}
+            onChangeText={(customTip) => this.checkCustom(customTip)}
+            style={[styles.input, {borderColor: '#35b0d2'}]}
+            ref={(ref) => this.tipField = ref}
+            placeholder="$0"
+            placeholderTextColor="rgba(255,255,255,0.8)"
+            keyboardType={'numeric'}
+            returnKeyType='go'
+          />
+        </View>
       )
     }
   }
@@ -251,18 +253,11 @@ export default class SplitEvenly extends React.Component {
             <View style= {{alignContent:'flex-start'}}>
               <Text style={styles.inputTitle}>Bill Split Name</Text>
             </View>
-            <TextInput
-              style={[styles.input,{
-                borderColor: nameEmpty == true
-                  ? 'red'
-                  : '#35b0d2',
-              }]}
+            <TextInputComponent
+              empty = {nameEmpty}
               placeholder="'Sunday Brunch'"
-              placeholderTextColor="rgba(255,255,255,0.8)"
               onChangeText={(name) => this.updateName(name)}
               returnKeyType='next'
-              ref = 'name'
-              autoCorrect={false}
             />
 
             <Text style={styles.inputTitle}>Total (including tax)</Text>
@@ -448,9 +443,6 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     alignItems: 'center'
   },
-  header:{
-    position:'absolute',
-  },
   imageContainer: {
       resizeMode:'cover',
       flex:1,
@@ -458,17 +450,6 @@ const styles = StyleSheet.create({
   overlay: {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: 'rgba(69,85,117,0.7)',
-  },
-  logo: {
-    flex: 1,
-    resizeMode: 'contain',
-  },
-  titleContainer:{
-    justifyContent: 'flex-end',
-    alignContent: 'flex-end',
-    padding: 20,
-    flex: 1,
-    width: width,
   },
   infoContainer: {
     flex: 2,
@@ -484,21 +465,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 20,
   },
-  customInput: {
-    height:40,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    color:'#fff',
+  customContainer: {
     width: width / 4,
-    paddingHorizontal:10,
-    borderWidth: 2,
-    borderRadius: 20,
-    borderColor: '#35b0d2',
-  },
-  title:{
-    fontWeight: 'bold',
-    color: '#fff',
-    fontSize: 25,
-    textAlign:'center',
   },
   inputTitle: {
     color: 'white',
@@ -510,8 +478,11 @@ const styles = StyleSheet.create({
   },
   tipText:{
     color: 'white',
-    fontSize: 18,
-    opacity: 0.8,
     fontSize: 15,
+    opacity: 0.8,
+  },
+  btntext: {
+    color: 'white',
+    fontSize: 18,
   },
 });
