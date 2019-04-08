@@ -6,9 +6,11 @@ import CurrentTransactions from '../screens/DrawerScreens/CurrentTransactions';
 import BillSplitStackScreen from './BillSplitStackScreen';
 import FriendsList from '../screens/DrawerScreens/FriendsList';
 import SettingsStackScreen from './SettingsStackScreen';
+import Dashboard from '../screens/DrawerScreens/Dashboard';
 import DrawerMenu from "./DrawerMenu";
 
 const AppDrawerNavigator = createDrawerNavigator({
+    Dashboard: {screen: Dashboard},
     PastTransactions: {screen:  PastTransactions},
     CurrentTransactions: {screen: CurrentTransactions},
     SettingsStackScreen: {screen: SettingsStackScreen},
