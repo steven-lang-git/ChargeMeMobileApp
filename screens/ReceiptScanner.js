@@ -49,44 +49,10 @@ export default class ReceiptScanner extends React.Component {
                 justifyContent: 'center',
               }}>           
            
-              {/* <TouchableOpacity
-                style={{
-                  flex: 0.5,
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  this.setState({
-                    type: this.state.type === Camera.Constants.Type.back
-                      ? Camera.Constants.Type.front
-                      : Camera.Constants.Type.back,
-                  });
-                }}>
-                {/* <Text
-                  style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
-                  {' '}Flip{' '}
-                </Text> 
-                    <Image style={{width:70, height: 70,marginBottom:10}} source={require('../assets/flip.png')} />
-                
-               
-              </TouchableOpacity> */}
+             
             
 
-              {/* <TouchableOpacity
-                style={{
-                  flex: 0.5,
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  this.setState({
-                  
-                  });
-                }}>
-                <Image style={{width:60, height: 60,marginBottom:10}} source={require('../assets/flashonn.png')} />
-                
-               
-              </TouchableOpacity> */}
+   
           <View 
           style={{
             position:'absolute',
@@ -114,42 +80,7 @@ export default class ReceiptScanner extends React.Component {
                
               </TouchableOpacity>
 
-              {/* <TouchableOpacity
-                style={{
-                  flex: 0.5,
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
-                  marginBottom:10,
-                }}
-                onPress={() => {
-                  this.setState({
-                  
-                  });
-                }}>
-                <Image style={{width:60, height: 60}} source={require('../assets/flashau.png')} />
-                
-               
-              </TouchableOpacity>
-
-             
-
-              <TouchableOpacity
-                style={{
-                  flex: 0.5,
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
-                  marginBottom:10,
-                  marginRight:10
-                }}
-                onPress={() => {
-                  this.setState({
-                  
-                  });
-                }}>
-                <Image style={{width:60, height: 60}} source={require('../assets/flashofff.png')} />
-                
-               
-              </TouchableOpacity> */}
+          
               
             </View>
           
