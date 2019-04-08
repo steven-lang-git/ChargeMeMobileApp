@@ -17,11 +17,12 @@ import * as firebase from 'firebase';
 const{width, height} = Dimensions.get('window')
 
 const menuData = [
-  {icon: "check-circle", name:"Past Transactions", screenName:"PastTransactions", activeTint: "#35b0d2", key: 1},
-  {icon: "clock-o", name:"Current Transactions", screenName:"CurrentTransactions", activeTint: "#35b0d2", key: 2},
-  {icon: "sliders", name:"Settings", screenName:"SettingsStackScreen", activeTint: "#35b0d2", key: 3},
-  {icon: "money", name:"Bill Split", screenName:"BillSplitStackScreen", activeTint: "#35b0d2", key: 4},
-  {icon: "users", name:"Friends", screenName:"FriendsList", activeTint: "#35b0d2", key: 5},
+  {icon: "address-card", name:"Dashboard", screenName:"Dashboard", activeTint: "#35b0d2", key: 1},
+  {icon: "check-circle", name:"Past Transactions", screenName:"PastTransactions", activeTint: "#35b0d2", key: 2},
+  {icon: "clock-o", name:"Current Transactions", screenName:"CurrentTransactions", activeTint: "#35b0d2", key: 3},
+  {icon: "sliders", name:"Settings", screenName:"SettingsStackScreen", activeTint: "#35b0d2", key: 4},
+  {icon: "money", name:"Bill Split", screenName:"BillSplitStackScreen", activeTint: "#35b0d2", key: 5},
+  {icon: "users", name:"Friends", screenName:"FriendsList", activeTint: "#35b0d2", key: 6},
 ]
 
 let showAlert = false
