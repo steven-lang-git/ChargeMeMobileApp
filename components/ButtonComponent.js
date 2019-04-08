@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withNavigation } from 'react-navigation';
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 
+//button component that incorporates making the button dim when it is disabled
 class ButtonComponent extends Component {
 	render() {
 		const { text, onPress, disabled, primary} = this.props;
@@ -19,6 +20,7 @@ class ButtonComponent extends Component {
 	}
 }
 
+//check the type of the prop and whether or not they are required
 ButtonComponent.propTypes = {
   text: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
