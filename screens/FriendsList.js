@@ -22,7 +22,6 @@ import { Header, Left, Right, Icon, ListItem, List } from "native-base";
 const { width } = Dimensions.get("window");
 import * as firebase from "firebase";
 import SearchableDropdown from "react-native-searchable-dropdown";
-import { Dropdown } from "react-native-material-dropdown";
 
 var items = [
   {
