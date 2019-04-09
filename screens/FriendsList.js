@@ -64,6 +64,7 @@ export default class FriendsList extends React.Component {
     this.state = {
       possibleFriends: [],
       currentFriends: [],
+      tempArray: [],
       firstName: " ",
       first: ""
     };
@@ -84,7 +85,7 @@ export default class FriendsList extends React.Component {
   }
 
   addFriend = index => {
-    const { currentFriends, possibleFriends } = this.state;
+    const { currentFriends, possibleFriends, tempArray } = this.state;
 
     console.log("index", index);
     console.log("addedIndex:", possibleFriends[index]);
@@ -94,11 +95,12 @@ export default class FriendsList extends React.Component {
 
     // Pull friend out of possibleFriends
     possibleFriends.splice(index, 1);
-
+    tempArray.splice(index,1);
     // Finally, update our app state
     this.setState({
       currentFriends: currentFriends,
-      possibleFriends: possibleFriends
+      possibleFriends: possibleFriends,
+      tempArray: tempArray
     });
   };
 
@@ -213,46 +215,22 @@ export default class FriendsList extends React.Component {
         }
       });
 
+   
 
-     
     // var ref = firebase.database().ref("friendslist")
     // var query = ref.orderByChild();
   }
   render() {
-    var data = [
-      {
-        id: 1,
-        name: "JavaScript"
-      },
-      {
-        id: 2,
-        name: "Java"
-      },
-      {
-        id: 3,
-        name: "Ruby"
-      },
-      {
-        id: 4,
-        name: "React Native"
-      },
-      {
-        id: 5,
-        name: "PHP"
-      },
-      {
-        id: 6,
-        name: "Python"
-      },
-      {
-        id: 7,
-        name: "Go"
-      },
-      {
-        id: 8,
-        value: "Swift"
+    const { tempArray, possibleFriends } = this.state;
+    console.log(possibleFriends.length);
+    var x;
+    for(x in this.state.possibleFriends){
+      this.state.tempArray[x] = {id: x, name:this.state.possibleFriends[x] };
       }
-    ];
+  
+   
+    
+
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground
@@ -282,16 +260,10 @@ export default class FriendsList extends React.Component {
 
           <View style={styles.container}>
             <View style={styles.infoContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Search for friends"
-                placeholderTextColor="rgba(255,255,255,0.8)"
-                returnKeyType="go"
-                autoCorrect={false}
-              />
+             
             
               <SearchableDropdown
-              
+            
                  onTextChange={text => alert(text)}
                  onItemSelect={item => alert(JSON.stringify(item))}
                 containerStyle={{ padding: 5 }}
@@ -312,7 +284,7 @@ export default class FriendsList extends React.Component {
                 itemTextStyle={{ color: "#35b0d2" }}
                 itemsContainerStyle={{ maxHeight: 140 }}
             
-                items={data}
+                items={this.state.tempArray}
                 defaultIndex={2}
                 placeholder="Search for friends!"
                 resetValue={false}
