@@ -160,7 +160,7 @@ export default class FriendsList extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground
-          source={require("../assets/friends.jpeg")}
+          source={require("../../assets/friends.jpeg")}
           style={styles.imageContainer}
         >
           <View style={styles.overlay} />
