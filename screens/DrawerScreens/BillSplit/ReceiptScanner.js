@@ -21,6 +21,16 @@ export default class ReceiptScanner extends React.Component {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
   }
+
+  async press(){
+    console.log('Button Pressed');
+    if (this.camera) {
+        console.log('Taking photo');
+        let photo = await this.camera.takePictureAsync();
+        console.log(photo);
+    }
+  }
+
   takePicture = async function() {this.camera.takePictureAsync({ skipProcessing: true }).then((data) => {
     this.setState({
         //takeImageText: "PICTURE TAKEN",
@@ -40,7 +50,7 @@ export default class ReceiptScanner extends React.Component {
 
         <View style={{ flex: 1 }}>
 
-          <Camera style={{ flex: 1 }} type={this.state.type}>
+          <Camera style={{ flex: 1 }} type={this.state.type} ref={(ref)=>{this.camera=ref}}>
           <View
               style={{
                 flex: 1,
@@ -72,7 +82,8 @@ export default class ReceiptScanner extends React.Component {
                   alignSelf: 'flex-end',
                   alignItems: 'center',
                 }}
-                onPress={()=>this.takePicture()}
+                // onPress={()=>this.takePicture()}
+                onPress={this.press.bind(this)}
 
                 >
                 <Image style={{width:60, height: 60,marginBottom:10}} source={require('../../../assets/capture.png')} />
