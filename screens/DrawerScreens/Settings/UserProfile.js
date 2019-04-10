@@ -20,6 +20,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import {TextInputMask} from 'react-native-masked-text';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import ButtonComponent from '../../../components/ButtonComponent'
+import TextInputComponent from '../../../components/TextInputComponent'
 import * as firebase from 'firebase';
 
 const{width} = Dimensions.get('window')
@@ -210,7 +211,7 @@ export default class UserProfile extends React.Component {
     }
   }
 
-  
+
   render() {
     const showAlert  = this.state.showAlert;
     const username = this.state.username;
@@ -232,78 +233,66 @@ export default class UserProfile extends React.Component {
           <View style = {styles.infoContainer}>
 
             <View style={styles.nameContainer}>
-              <TextInput
-              placeholder="First Name"
-              style={[styles.nameInput,{
-                borderColor: firstNameEmpty == true || firstnameMessage != ''
-                  ? 'red'
-                  : '#35b0d2',
-              }]}
-              defaultValue = {this.state.firstname}
-              ref = "firstName"
-              placeholderTextColor="rgba(255,255,255,0.8)"
-              autoCorrect= {false}
-              returnKeyType='next'
-              onChangeText={(firstname) => this.handleFirstName(firstname)}
-              onSubmitEditing={()=> this.refs.lastName.focus()}
-              />
+              <View style={styles.nameInputContainer}>
+                <TextInputComponent
+                  empty={firstNameEmpty}
+                  error={firstnameMessage}
+                  placeholder="First Name"
+                  defaultValue = {this.state.firstname}
+                  returnKeyType='next'
+                  onChangeText={(firstname) => this.handleFirstName(firstname)}
+                  onSubmitEditing={()=> this.lastName.focus()}
+                />
+              </View>
 
-              <TextInput
-              placeholder="Last Name"
-              style={[styles.nameInput,{
-                borderColor: lastNameEmpty == true || lastnameMessage != ''
-                  ? 'red'
-                  : '#35b0d2',
-              }]}
-              value = {this.state.lastname}
-              ref = "lastName"
-              placeholderTextColor="rgba(255,255,255,0.8)"
-              autoCorrect= {false}
-              returnKeyType='next'
-              onChangeText={(lastname) => this.handleLastName(lastname)}
-              />
+                <View style={styles.nameInputContainer}>
+                <TextInputComponent
+                  empty={lastNameEmpty}
+                  error={lastnameMessage}
+                  placeholder="Last Name"
+                  defaultValue = {this.state.lastname}
+                  inputRef = {(input) => {this.lastName = input}}
+                  returnKeyType='next'
+                  onChangeText={(lastname) => this.handleLastName(lastname)}
+                  onSubmitEditing={()=> this.username.focus()}
+                />
+              </View>
             </View>
 
-            <TextInput
-            placeholder="Username"
-            style={[styles.input,{
-              borderColor: usernameEmpty == true || usernameMessage != ''
-                ? 'red'
-                : '#35b0d2',
-            }]}
-            value = {username}
-            ref = "username"
-            placeholderTextColor="rgba(255,255,255,0.8)"
-            autoCorrect= {false}
-            autoCapitalize = 'none'
-            returnKeyType='next'
-            onChangeText={(username) => this.handleUsername(username)}
-            onSubmitEditing={()=> this.refs.email.focus()}
+            <TextInputComponent
+              empty= {usernameEmpty}
+              error= {usernameMessage}
+              placeholder="Username"
+              defaultValue = {username}
+              inputRef = {(input) => {this.username = input}}
+              autoCapitalize = 'none'
+              returnKeyType='next'
+              onChangeText={(username) => this.handleUsername(username)}
             />
             <Text/>
 
             <TextInputMask
-            type={'custom'}
-            options={
-              {
-                mask: '+1(999)999-9999',
-                getRawValue: function(value,settings){
-                  return value.replace(/\D/g,'');
+              type={'custom'}
+              options={
+                {
+                  mask: '+1(999)999-9999',
+                  getRawValue: function(value,settings){
+                    return value.replace(/\D/g,'');
+                  }
                 }
               }
-            }
-            ref = {(phone) => this.phoneNum = phone}
-            value={this.state.phone}
-            onChangeText= {() => this.handlePhone()}
-            style={[styles.input,{
-              borderColor: phoneEmpty == true || phoneMessage != ''
-                ? 'red'
-                : '#35b0d2',
-            }]}
-            placeholder="Phone"
-            placeholderTextColor="rgba(255,255,255,0.8)"
-            keyboardType='numeric'
-            returnKeyType='next'
+              ref = {(phone) => this.phoneNum = phone}
+              value={this.state.phone}
+              onChangeText= {() => this.handlePhone()}
+              style={[styles.input,{
+                borderColor: phoneEmpty == true || phoneMessage != ''
+                  ? 'red'
+                  : '#35b0d2',
+              }]}
+              placeholder="Phone"
+              placeholderTextColor="rgba(255,255,255,0.8)"
+              keyboardType='numeric'
+              returnKeyType='next'
             />
             <Text style = {styles.errorMessage}>{phoneMessage}</Text>
 
@@ -411,15 +400,9 @@ const styles = StyleSheet.create({
       borderWidth: 2,
       borderRadius: 20,
     },
-    nameInput: {
+    nameInputContainer: {
       height:40,
-      backgroundColor: 'rgba(255,255,255,0.2)',
-      color:'#fff',
       width: width/2.3,
-      marginBottom: 5,
-      paddingHorizontal:10,
-      borderWidth: 2,
-      borderRadius: 20,
     },
     title:{
       fontWeight: 'bold',
