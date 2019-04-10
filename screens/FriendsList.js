@@ -23,41 +23,6 @@ const { width } = Dimensions.get("window");
 import * as firebase from "firebase";
 import SearchableDropdown from "react-native-searchable-dropdown";
 
-var items = [
-  {
-    id: 1,
-    name: "JavaScript"
-  },
-  {
-    id: 2,
-    name: "Java"
-  },
-  {
-    id: 3,
-    name: "Ruby"
-  },
-  {
-    id: 4,
-    name: "React Native"
-  },
-  {
-    id: 5,
-    name: "PHP"
-  },
-  {
-    id: 6,
-    name: "Python"
-  },
-  {
-    id: 7,
-    name: "Go"
-  },
-  {
-    id: 8,
-    name: "Swift"
-  }
-];
-
 export default class FriendsList extends React.Component {
   constructor(props) {
     super(props);
@@ -81,21 +46,17 @@ export default class FriendsList extends React.Component {
       .database()
       .ref("friendslist/" + uid + "/currentFriends")
       .set(currentFriends);
-    console.log("data saved");
   }
 
   addFriend = index => {
     const { currentFriends, possibleFriends, tempArray } = this.state;
-
-    console.log("index", index);
-    console.log("addedIndex:", possibleFriends[index]);
 
     // And put friend in currentFriends
     currentFriends.push(possibleFriends[index]);
 
     // Pull friend out of possibleFriends
     possibleFriends.splice(index, 1);
-    tempArray.splice(index,1);
+    tempArray.splice(index, 1);
     // Finally, update our app state
     this.setState({
       currentFriends: currentFriends,
@@ -166,37 +127,11 @@ export default class FriendsList extends React.Component {
             possibleFriends: snapshot.val()
           });
         } else {
-          console.log("used else again");
           this.setState({
             possibleFriends: possibleFriends
           });
         }
       });
-
-    // firebase.database().ref().child('users').once('value').then((snapshot) => {
-    //   const {
-    //     possibleFriends
-    //   } = this.state
-
-    //   const {
-    //     first
-    //   } = this.state
-    //   snapshot.forEach((childSnapShot) => {
-
-    //     possibleFriends.push(
-    //       name = childSnapShot.val().firstName
-    //     )
-    //     console.log("exists", possibleFriends);
-    //   });
-    //   possibleFriends.splice(possibleFriends.indexOf(first), 1);
-
-    //   this.setState({
-    //     possibleFriends: possibleFriends,
-    //   })
-
-    // });
-
-    // });
 
     firebase
       .database()
@@ -214,22 +149,13 @@ export default class FriendsList extends React.Component {
           snapshot.child(uid).ref.push(currentFriends);
         }
       });
-
-   
-
-    // var ref = firebase.database().ref("friendslist")
-    // var query = ref.orderByChild();
   }
   render() {
     const { tempArray, possibleFriends } = this.state;
-    console.log(possibleFriends.length);
     var x;
-    for(x in this.state.possibleFriends){
-      this.state.tempArray[x] = {id: x, name:this.state.possibleFriends[x] };
-      }
-  
-   
-    
+    for (x in this.state.possibleFriends) {
+      this.state.tempArray[x] = { id: x, name: this.state.possibleFriends[x] };
+    }
 
     return (
       <SafeAreaView style={styles.container}>
@@ -260,12 +186,12 @@ export default class FriendsList extends React.Component {
 
           <View style={styles.container}>
             <View style={styles.infoContainer}>
-             
-            
               <SearchableDropdown
-            
-                 onTextChange={text => alert(text)}
-                 onItemSelect={item => alert(JSON.stringify(item))}
+                //  onTextChange={text => alert(text)}
+                onItemSelect={item =>
+                  this.addFriend(eval(JSON.stringify(item.id)))
+                }
+                //  {this.state.currentFriends.map((friend, index) => (this.addFriend(index)))}
                 containerStyle={{ padding: 5 }}
                 textInputStyle={{
                   padding: 12,
@@ -283,14 +209,12 @@ export default class FriendsList extends React.Component {
                 }}
                 itemTextStyle={{ color: "#35b0d2" }}
                 itemsContainerStyle={{ maxHeight: 140 }}
-            
                 items={this.state.tempArray}
                 defaultIndex={2}
                 placeholder="Search for friends!"
                 resetValue={false}
                 underlineColorAndroid="transparent"
               />
-  
             </View>
 
             <Text> Currently our friends are:</Text>
