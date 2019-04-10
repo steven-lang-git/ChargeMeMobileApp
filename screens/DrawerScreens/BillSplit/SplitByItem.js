@@ -19,6 +19,10 @@ export default class SplitByItem extends React.Component {
         <Text style={styles.btntext}>FriendsList</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('ReceiptScanner')}>
+        <Text style={styles.btntext}>Receipt Scanner</Text>
+      </TouchableOpacity>
+
       </View>
 
       </View>
