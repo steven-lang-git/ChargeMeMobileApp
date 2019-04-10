@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert,Image, ListView, FlatList,Dimensions } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 import {Camera, Permissions} from 'expo';
-const{width} = Dimensions.get('window')
+let{width,height} = Dimensions.get('window')
 
 export default class ReceiptScanner extends React.Component {
   static navigationOptions ={
@@ -37,7 +37,9 @@ export default class ReceiptScanner extends React.Component {
       return <Text>No access to camera</Text>;
     } else {
       return (
+
         <View style={{ flex: 1 }}>
+
           <Camera style={{ flex: 1 }} type={this.state.type}>
           <View
               style={{
@@ -47,44 +49,23 @@ export default class ReceiptScanner extends React.Component {
                 justifyContent: 'center',
               }}>
 
-              <TouchableOpacity
-                style={{
-                  flex: 0.5,
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  this.setState({
-                    type: this.state.type === Camera.Constants.Type.back
-                      ? Camera.Constants.Type.front
-                      : Camera.Constants.Type.back,
-                  });
-                }}>
-                {/* <Text
-                  style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
-                  {' '}Flip{' '}
-                </Text> */}
-                <Image style={{width:70, height: 70,marginBottom:10}} source={require('../../../assets/flip.png')} />
 
 
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  flex: 0.5,
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  this.setState({
-
-                  });
-                }}>
-                <Image style={{width:60, height: 60,marginBottom:10}} source={require('../../../assets/flashonn.png')} />
 
 
-              </TouchableOpacity>
+          <View
+          style={{
+            position:'absolute',
+            top: -width/2 + 30,
+            left: -width/2 +75,
+            right: -width/2 + 75,
+            bottom: -width/2 + 100,
 
+            borderWidth: width/2,
+            borderColor: 'rgb(32,53,70)',
+            opacity:0.9,
+          }}
+          />
               <TouchableOpacity
                 style={{
                   flex: 0.5,
@@ -99,46 +80,13 @@ export default class ReceiptScanner extends React.Component {
 
               </TouchableOpacity>
 
-              <TouchableOpacity
-                style={{
-                  flex: 0.5,
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
-                  marginBottom:10,
-                }}
-                onPress={() => {
-                  this.setState({
 
-                  });
-                }}>
-                <Image style={{width:60, height: 60}} source={require('../../../assets/flashau.png')} />
-
-
-              </TouchableOpacity>
-
-
-
-              <TouchableOpacity
-                style={{
-                  flex: 0.5,
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
-                  marginBottom:10,
-                  marginRight:10
-                }}
-                onPress={() => {
-                  this.setState({
-
-                  });
-                }}>
-                <Image style={{width:60, height: 60}} source={require('../../../assets/flashofff.png')} />
-
-
-              </TouchableOpacity>
 
             </View>
+
           </Camera>
         </View>
+
       );
     }
   }
