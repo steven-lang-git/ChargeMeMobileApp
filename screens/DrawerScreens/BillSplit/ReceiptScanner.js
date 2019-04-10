@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity,ActivityIndicator, Alert,Image, ListView, FlatList,Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert,Image, ListView, FlatList,Dimensions } from 'react-native';
 import {Header,Left,Right,Icon} from 'native-base'
 import {Camera, Permissions} from 'expo';
 let{width,height} = Dimensions.get('window')
@@ -37,9 +37,9 @@ export default class ReceiptScanner extends React.Component {
       return <Text>No access to camera</Text>;
     } else {
       return (
-     
+
         <View style={{ flex: 1 }}>
-         
+
           <Camera style={{ flex: 1 }} type={this.state.type}>
           <View
               style={{
@@ -47,22 +47,22 @@ export default class ReceiptScanner extends React.Component {
                 backgroundColor: 'transparent',
                 flexDirection: 'row',
                 justifyContent: 'center',
-              }}>           
-           
-             
-            
+              }}>
 
-   
-          <View 
+
+
+
+
+          <View
           style={{
             position:'absolute',
             top: -width/2 + 30,
             left: -width/2 +75,
-            right: -width/2 + 75, 
+            right: -width/2 + 75,
             bottom: -width/2 + 100,
 
-            borderWidth: width/2, 
-            borderColor: 'rgb(32,53,70)', 
+            borderWidth: width/2,
+            borderColor: 'rgb(32,53,70)',
             opacity:0.9,
           }}
           />
@@ -75,23 +75,23 @@ export default class ReceiptScanner extends React.Component {
                 onPress={()=>this.takePicture()}
 
                 >
-                <Image style={{width:60, height: 60,marginBottom:10}} source={require('../assets/capture.png')} />
-                
-               
+                <Image style={{width:60, height: 60,marginBottom:10}} source={require('../../../assets/capture.png')} />
+
+
               </TouchableOpacity>
 
-          
-              
+
+
             </View>
-          
+
           </Camera>
         </View>
-        
+
       );
     }
   }
 }
- 
+
 
 const styles = StyleSheet.create({
   container: {

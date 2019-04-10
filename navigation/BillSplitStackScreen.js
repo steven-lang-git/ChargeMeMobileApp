@@ -1,11 +1,10 @@
 import React from 'react';
 import {createStackNavigator} from 'react-navigation';
-import BillSplit from '../screens/BillSplit';
-import SplitByItem from '../screens/SplitByItem';
-import SplitEvenly from '../screens/SplitEvenly';
-import FriendsList from '../screens/FriendsList';
-import SelectFriend from '../screens/SelectFriend';
-import ReceiptScanner from '../screens/ReceiptScanner';
+import BillSplit from '../screens/DrawerScreens/BillSplit/BillSplit';
+import SplitByItem from '../screens/DrawerScreens/BillSplit/SplitByItem';
+import SplitEvenly from '../screens/DrawerScreens/BillSplit/SplitEvenly';
+import SelectFriend from '../screens/DrawerScreens/BillSplit/SelectFriend';
+import ReceiptScanner from '../screens/DrawerScreens/BillSplit/ReceiptScanner';
 
 const BillSplitStack = createStackNavigator({
 
