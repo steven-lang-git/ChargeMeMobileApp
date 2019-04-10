@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import {Image, Dimensions} from 'react-native'
-import { DrawerActions } from 'react-navigation';
+import { DrawerActions, StackActions, NavigationActions} from 'react-navigation';
 import {
   StatusBar,
   StyleSheet,
@@ -29,9 +29,14 @@ let showAlert = false
 
 class DrawerMenu extends Component {
 
+  constructor(props){
+    super(props);
+    showAlert = false;
+    this.props.navigation.dispatch(DrawerActions.closeDrawer());
+  }
+
   //function to show alert
   showMyAlert =() => {
-    //
     showAlert = true;
     this.forceUpdate();
   }
@@ -39,14 +44,19 @@ class DrawerMenu extends Component {
   //function to log out current user
   signOutUser = async () => {
     try{
+      console.log('trying to log out')
       //sign out user
       await firebase.auth().signOut();
-      //hide alert
-      this.hideAlert()
-      //close drawer
-      this.props.navigation.dispatch(DrawerActions.closeDrawer());
-      //navigate back to homescreen
-      this.props.navigation.navigate('HomeScreen');
+      console.log('signed out')
+      // //hide alert
+      // this.hideAlert()
+      // console.log('alert closed')
+      // //close drawer
+      // this.props.navigation.dispatch(DrawerActions.closeDrawer());
+      // console.log('drawer closed')
+      //navigate back to authorization navigator
+      this.props.navigation.navigate('Auth');
+      console.log('back to login')
     } catch (e) {
       console.log(e);
     }
