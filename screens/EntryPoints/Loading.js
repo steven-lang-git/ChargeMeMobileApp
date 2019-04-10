@@ -12,8 +12,6 @@ import {
   Keyboard,
   Dimensions
 } from 'react-native';
-import HomeScreen from './HomeScreen';
-import PastTransactions from '../DrawerScreens/PastTransactions';
 import * as firebase from 'firebase';
 
 const{width} = Dimensions.get('window')
@@ -21,11 +19,11 @@ const{width} = Dimensions.get('window')
 export default class Loading extends React.Component{
 
   componentDidMount(){
+    console.log('loading screen')
     firebase.auth().onAuthStateChanged(user => {
-      this.props.navigation.navigate(user ? 'PastTransactions' : 'HomeScreen')
+      this.props.navigation.navigate(user ? 'App' : 'Auth')
     })
   }
-
 
   render(){
     return(

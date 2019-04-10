@@ -15,9 +15,9 @@ import {
 } from 'native-base'
 import { Constants } from 'expo';
 import * as firebase from 'firebase';
+import { StackActions, NavigationActions } from 'react-navigation';
 
-
-export default class PastTransactions extends React.Component {
+export default class Dashboard extends React.Component {
   static navigationOptions ={
     drawerIcon: (tintColor) =>(
       <Icon name="check-circle" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
@@ -31,10 +31,12 @@ export default class PastTransactions extends React.Component {
       messages: [],
       first:''
     }
-
     this.addItem = this.addItem.bind(this);
   }
     componentDidMount() {
+      //clear stack Navigator
+
+
       firebase
         .database()
         .ref()
@@ -103,7 +105,7 @@ export default class PastTransactions extends React.Component {
 
       <Button title='Send' onPress={this.addItem}/>
       <Text style={styles.nameItem}>Welcome back {this.state.first}</Text>
-      <Text> past transactions</Text>
+      <Text> Dashboard</Text>
       </View>
       <FlatList data={this.state.messages}
       renderItem={({item}) =>

@@ -18,6 +18,7 @@ import * as firebase from 'firebase';
 import moment from 'moment';
 import {TextInputMask} from 'react-native-masked-text';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 let firstNameError = false;
 let lastNameError = false;
@@ -33,6 +34,11 @@ let usernameErrorMessage = '';
 let phoneErrorMessage = '';
 
 const{width} = Dimensions.get('window')
+
+const resetToLogin = StackActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'Login' })],
+});
 
 export default class CreateAccount extends React.Component {
   // constructor with state of email, password,username, firstName, lastName, phoneNumber,birthday, street, city,
@@ -50,9 +56,6 @@ export default class CreateAccount extends React.Component {
       loading: false,
       disable: true,
     };
-  }
-
-  componentDidMount(){
     firstNameError = false;
     lastNameError = false;
     phoneError = false;
@@ -65,6 +68,11 @@ export default class CreateAccount extends React.Component {
     birthdayErrorMessage = '';
     usernameErrorMessage = '';
     phoneErrorMessage = '';
+
+  }
+
+  onLoginPress(){
+    this.props.navigation.dispatch(resetToLogin)
   }
 
   //function to handle clicking sign up button
@@ -163,7 +171,7 @@ export default class CreateAccount extends React.Component {
               birthday: day,
             });
             //allow access to app
-            this.props.navigation.navigate('PastTransactions');
+            this.props.navigation.navigate('App');
       })
       .catch(() =>{
             //if there is an error during account creation
@@ -334,7 +342,9 @@ export default class CreateAccount extends React.Component {
         </View>
 
         <View style = {styles.container}>
-          <Text style={styles.title} onPress={() => this.props.navigation.navigate('HomeScreen')}> Already have an Account? </Text>
+          <Text
+          style={styles.title}
+          onPress={this.onLoginPress.bind(this)}> Already have an Account? </Text>
         </View>
         </View>
       )
