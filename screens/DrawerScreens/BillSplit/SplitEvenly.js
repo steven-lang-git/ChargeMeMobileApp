@@ -41,6 +41,8 @@ export default class SplitEvenly extends React.Component {
       checkedNo: true,
       disable: true,
     };
+    totalEmpty = false;
+    nameEmpty = false;
   }
 
   on10Toggle = (checked10) => {
