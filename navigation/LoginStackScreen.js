@@ -1,8 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from 'react-navigation';
-import Loading from '../screens/Loading';
-import HomeScreen from '../screens/HomeScreen';
-import CreateAccount from '../screens/CreateAccount';
+import Loading from '../screens/EntryPoints/Loading';
+import HomeScreen from '../screens/EntryPoints/HomeScreen';
+import CreateAccount from '../screens/EntryPoints/CreateAccount';
 import UserDrawerScreen from './UserDrawerScreen';
 
 const LoginStack = createStackNavigator({

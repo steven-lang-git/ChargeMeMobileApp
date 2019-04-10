@@ -1,9 +1,26 @@
 import React from 'react';
-import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard, DatePickerIOS, ScrollView} from 'react-native';
-import {Header,Left,Right,Icon} from 'native-base'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+  StatusBar,
+  TextInput,
+  Button,
+  Dimensions,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+  Keyboard,
+  ScrollView
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {TextInputMask} from 'react-native-masked-text';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import ButtonComponent from '../../../components/ButtonComponent'
+import TextInputComponent from '../../../components/TextInputComponent'
 import * as firebase from 'firebase';
 
 const{width} = Dimensions.get('window')
@@ -194,38 +211,14 @@ export default class UserProfile extends React.Component {
     }
   }
 
-  //function to decide whether to display login button or loading spin
-  renderButtonOrLoading(){
-    //if we are in a state of loading show loading spin
-    if(this.state.loading){
-      return (
-        <View style={styles.buttonsContainer}>
-            <ActivityIndicator size="large" color='#35b0d2' />
-        </View>
-      )
-    }
-    //if not in state of loading show update and cancel buttons (buttons each bound to
-    //thier own function
-    const isDisabled  = this.state.disable;
-    return (
-        <View style={isDisabled?styles.disabled:styles.enabled}>
-            <TouchableOpacity disabled = {isDisabled} style={styles.updateButton} onPress={this.onUpdatePress.bind(this)}>
-              <Text style={styles.btntext}>UPDATE</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity disabled = {isDisabled} style={styles.cancelButton} onPress={this.componentDidMount.bind(this)}>
-              <Text style={styles.btntext}>CANCEL</Text>
-            </TouchableOpacity>
-        </View>
-      )
-  }
 
   render() {
     const showAlert  = this.state.showAlert;
     const username = this.state.username;
+    const isDisabled  = this.state.disable;
     return (
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+        <ImageBackground source={require('../../../assets/blue.jpg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
 
           <KeyboardAwareScrollView contentContainerStyle={{
@@ -240,84 +233,90 @@ export default class UserProfile extends React.Component {
           <View style = {styles.infoContainer}>
 
             <View style={styles.nameContainer}>
-              <TextInput
-              placeholder="First Name"
-              style={[styles.nameInput,{
-                borderColor: firstNameEmpty == true || firstnameMessage != ''
-                  ? 'red'
-                  : '#35b0d2',
-              }]}
-              defaultValue = {this.state.firstname}
-              ref = "firstName"
-              placeholderTextColor="rgba(255,255,255,0.8)"
-              autoCorrect= {false}
-              returnKeyType='next'
-              onChangeText={(firstname) => this.handleFirstName(firstname)}
-              onSubmitEditing={()=> this.refs.lastName.focus()}
-              />
+              <View style={styles.nameInputContainer}>
+                <TextInputComponent
+                  empty={firstNameEmpty}
+                  error={firstnameMessage}
+                  placeholder="First Name"
+                  defaultValue = {this.state.firstname}
+                  returnKeyType='next'
+                  onChangeText={(firstname) => this.handleFirstName(firstname)}
+                  onSubmitEditing={()=> this.lastName.focus()}
+                />
+              </View>
 
-              <TextInput
-              placeholder="Last Name"
-              style={[styles.nameInput,{
-                borderColor: lastNameEmpty == true || lastnameMessage != ''
-                  ? 'red'
-                  : '#35b0d2',
-              }]}
-              value = {this.state.lastname}
-              ref = "lastName"
-              placeholderTextColor="rgba(255,255,255,0.8)"
-              autoCorrect= {false}
-              returnKeyType='next'
-              onChangeText={(lastname) => this.handleLastName(lastname)}
-              />
+                <View style={styles.nameInputContainer}>
+                <TextInputComponent
+                  empty={lastNameEmpty}
+                  error={lastnameMessage}
+                  placeholder="Last Name"
+                  defaultValue = {this.state.lastname}
+                  inputRef = {(input) => {this.lastName = input}}
+                  returnKeyType='next'
+                  onChangeText={(lastname) => this.handleLastName(lastname)}
+                  onSubmitEditing={()=> this.username.focus()}
+                />
+              </View>
             </View>
 
-            <TextInput
-            placeholder="Username"
-            style={[styles.input,{
-              borderColor: usernameEmpty == true || usernameMessage != ''
-                ? 'red'
-                : '#35b0d2',
-            }]}
-            value = {username}
-            ref = "username"
-            placeholderTextColor="rgba(255,255,255,0.8)"
-            autoCorrect= {false}
-            autoCapitalize = 'none'
-            returnKeyType='next'
-            onChangeText={(username) => this.handleUsername(username)}
-            onSubmitEditing={()=> this.refs.email.focus()}
+            <TextInputComponent
+              empty= {usernameEmpty}
+              error= {usernameMessage}
+              placeholder="Username"
+              defaultValue = {username}
+              inputRef = {(input) => {this.username = input}}
+              autoCapitalize = 'none'
+              returnKeyType='next'
+              onChangeText={(username) => this.handleUsername(username)}
             />
             <Text/>
 
             <TextInputMask
-            type={'custom'}
-            options={
-              {
-                mask: '+1(999)999-9999',
-                getRawValue: function(value,settings){
-                  return value.replace(/\D/g,'');
+              type={'custom'}
+              options={
+                {
+                  mask: '+1(999)999-9999',
+                  getRawValue: function(value,settings){
+                    return value.replace(/\D/g,'');
+                  }
                 }
               }
-            }
-            ref = {(phone) => this.phoneNum = phone}
-            value={this.state.phone}
-            onChangeText= {() => this.handlePhone()}
-            style={[styles.input,{
-              borderColor: phoneEmpty == true || phoneMessage != ''
-                ? 'red'
-                : '#35b0d2',
-            }]}
-            placeholder="Phone"
-            placeholderTextColor="rgba(255,255,255,0.8)"
-            keyboardType='numeric'
-            returnKeyType='next'
+              ref = {(phone) => this.phoneNum = phone}
+              value={this.state.phone}
+              onChangeText= {() => this.handlePhone()}
+              style={[styles.input,{
+                borderColor: phoneEmpty == true || phoneMessage != ''
+                  ? 'red'
+                  : '#35b0d2',
+              }]}
+              placeholder="Phone"
+              placeholderTextColor="rgba(255,255,255,0.8)"
+              keyboardType='numeric'
+              returnKeyType='next'
             />
             <Text style = {styles.errorMessage}>{phoneMessage}</Text>
 
           </View>
 
-          {this.renderButtonOrLoading()}
+          <View style={styles.buttonContainer}>
+            <View style={styles.buttonWidth}>
+              <ButtonComponent
+                text='UPDATE'
+                onPress={this.onUpdatePress.bind(this)}
+                disabled={isDisabled}
+                primary={true}
+              />
+            </View>
+
+            <View style={styles.buttonWidth}>
+              <ButtonComponent
+                text='CANCEL'
+                onPress={this.componentDidMount.bind(this)}
+                disabled={isDisabled}
+                primary={false}
+              />
+            </View>
+          </View>
 
           <AwesomeAlert
           show={showAlert}
@@ -353,24 +352,18 @@ const styles = StyleSheet.create({
     },
     titleContainer:{
       justifyContent: 'flex-end',
-      //alignItems: 'center',
       padding: 20,
       flex: 1,
       width: width,
     },
-    disabled:{
-      flex: 2,
+    buttonContainer:{
+      flex: 3,
       flexDirection: 'row',
-      justifyContent: 'space-around',
-      padding: 5,
-      opacity: 0.3,
+      justifyContent: 'space-between',
+      padding: 20,
     },
-    enabled:{
-      flex: 2,
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      padding: 5,
-      opacity: 1,
+    buttonWidth: {
+      width: width/2.4,
     },
     infoContainer: {
       flex: 5,
@@ -407,15 +400,9 @@ const styles = StyleSheet.create({
       borderWidth: 2,
       borderRadius: 20,
     },
-    nameInput: {
+    nameInputContainer: {
       height:40,
-      backgroundColor: 'rgba(255,255,255,0.2)',
-      color:'#fff',
       width: width/2.3,
-      marginBottom: 5,
-      paddingHorizontal:10,
-      borderWidth: 2,
-      borderRadius: 20,
     },
     title:{
       fontWeight: 'bold',
@@ -430,38 +417,4 @@ const styles = StyleSheet.create({
       marginBottom: 5,
       marginTop: 10,
     },
-    updateButton: {
-      flex: 1,
-      margin: 20,
-      height: 50,
-      marginTop:10,
-      paddingTop:15,
-      paddingBottom:15,
-      borderRadius:10,
-      borderWidth: 1,
-      borderColor: '#35b0d2',
-      backgroundColor: '#35b0d2',
-      alignContent: 'center',
-      justifyContent: 'center',
-    },
-    cancelButton: {
-      flex: 1,
-      margin: 20,
-      height: 50,
-      marginTop:10,
-      paddingTop:15,
-      paddingBottom:15,
-      borderRadius:10,
-      borderWidth: 1,
-      borderColor: 'coral',
-      backgroundColor: 'coral',
-      alignContent: 'center',
-      justifyContent: 'center',
-    },
-    btntext:{
-      textAlign: 'center',
-      color: 'rgb(32,53,70)',
-      color: 'white',
-      fontSize: 18,
-    }
 });

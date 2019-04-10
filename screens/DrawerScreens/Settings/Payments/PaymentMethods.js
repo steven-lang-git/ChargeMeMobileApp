@@ -1,6 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Button, SafeAreaView, ImageBackground} from 'react-native';
-import {Header,Left,Right,Icon} from 'native-base'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Button,
+  SafeAreaView,
+  ImageBackground
+} from 'react-native';
+import {Icon} from 'native-base'
 
 export default class PaymentMethods extends React.Component {
   static navigationOptions ={
@@ -12,7 +22,7 @@ export default class PaymentMethods extends React.Component {
     return (
 
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../assets/blue.jpg')} style={styles.imageContainer}>
+        <ImageBackground source={require('../../../../assets/blue.jpg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
 
       <View style={styles.container}>

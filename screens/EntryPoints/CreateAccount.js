@@ -1,7 +1,19 @@
 import React from 'react';
-import {ActivityIndicator, AppRegistry, StyleSheet, Text, View, TouchableWithoutFeedback, SafeAreaView, StatusBar, TextInput, Button,Dimensions, Image, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard, DatePickerIOS, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View, TouchableWithoutFeedback,
+  SafeAreaView,
+  StatusBar,
+  TextInput,
+  Dimensions,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+  Keyboard,
+  ScrollView
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import {Header,Left,Right,Icon} from 'native-base';
 import * as firebase from 'firebase';
 import moment from 'moment';
 import {TextInputMask} from 'react-native-masked-text';
@@ -334,14 +346,14 @@ export default class CreateAccount extends React.Component {
     return(
 
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../assets/coin.jpg')} style={styles.imageContainer}>
+        <ImageBackground source={require('../../assets/coin.jpg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
           <StatusBar barStyle="light-content" />
             <TouchableWithoutFeedback style={styles.container} onPress={Keyboard.dismiss}>
               <View style={styles.container}>
 
                 <View style={styles.logoContainer}>
-                  <Image style={styles.logo} source={require('../assets/logo_transparent.png')}/>
+                  <Image style={styles.logo} source={require('../../assets/logo_transparent.png')}/>
                 </View>
 
                 <View style={styles.infoContainer}>
