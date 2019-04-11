@@ -44,19 +44,10 @@ class DrawerMenu extends Component {
   //function to log out current user
   signOutUser = async () => {
     try{
-      console.log('trying to log out')
       //sign out user
       await firebase.auth().signOut();
-      console.log('signed out')
-      // //hide alert
-      // this.hideAlert()
-      // console.log('alert closed')
-      // //close drawer
-      // this.props.navigation.dispatch(DrawerActions.closeDrawer());
-      // console.log('drawer closed')
       //navigate back to authorization navigator
       this.props.navigation.navigate('Auth');
-      console.log('back to login')
     } catch (e) {
       console.log(e);
     }
