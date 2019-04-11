@@ -19,7 +19,6 @@ const{width} = Dimensions.get('window')
 export default class Loading extends React.Component{
 
   componentDidMount(){
-    console.log('loading screen')
     firebase.auth().onAuthStateChanged(user => {
       this.props.navigation.navigate(user ? 'App' : 'Auth')
     })
