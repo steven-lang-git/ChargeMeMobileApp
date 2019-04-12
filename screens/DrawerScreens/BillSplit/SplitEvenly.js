@@ -7,8 +7,6 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   StatusBar,
-  TextInput,
-  Button,
   Dimensions,
   Image,
   ImageBackground,
@@ -18,7 +16,6 @@ import {
 } from 'react-native';
 import {
   ListItem,
-  List,
   CheckBox,
 } from 'react-native-elements';
 import CircleCheckBox, {LABEL_POSITION} from 'react-native-circle-checkbox';
@@ -335,8 +332,14 @@ export default class SplitEvenly extends React.Component {
     this.forceUpdate();
 
     if(totalEmpty == false && nameEmpty == false && noFriends == ''){
-      console.log("total: " + this.state.total);
-      console.log("tip: " + this.state.tip)
+      console.log("first total: " + this.state.total);
+      console.log("first tip: " + this.state.tip)
+      this.props.navigation.navigate('SplitEvenlyReview', {
+                                                            name: this.state.name,
+                                                            total: this.state.total,
+                                                            tip: this.state.tip,
+                                                            selectedFriends: this.state.selectedFriends
+                                                          })
     }
   }
 
@@ -427,7 +430,7 @@ export default class SplitEvenly extends React.Component {
                     />
                   </View>
                   <Text style={styles.btntext}> 18% </Text>
-                  <Text style={styles.tipText}>(${(this.state.total * 0.10).toFixed(2)})</Text>
+                  <Text style={styles.tipText}>(${(this.state.total * 0.18).toFixed(2)})</Text>
                 </View>
 
                 <View style={styles.optionContainer}>
@@ -460,7 +463,7 @@ export default class SplitEvenly extends React.Component {
                     />
                   </View>
                   <Text style={styles.btntext}> 15% </Text>
-                  <Text style={styles.tipText}>(${(this.state.total * 0.10).toFixed(2)})</Text>
+                  <Text style={styles.tipText}>(${(this.state.total * 0.15).toFixed(2)})</Text>
                 </View>
 
                 <View style={styles.optionContainer}>
@@ -475,7 +478,7 @@ export default class SplitEvenly extends React.Component {
                     />
                   </View>
                   <Text style={styles.btntext}> 20% </Text>
-                  <Text style={styles.tipText}>(${(this.state.total * 0.10).toFixed(2)})</Text>
+                  <Text style={styles.tipText}>(${(this.state.total * 0.20).toFixed(2)})</Text>
                 </View>
 
                 <View style={styles.optionContainer}>
@@ -498,7 +501,7 @@ export default class SplitEvenly extends React.Component {
             <Text style={styles.inputTitle}>Bill Split Friends:</Text>
 
             <View style={styles.friendsContainer}>
-              <View style={{height: selectedFriends.length*40}}>
+              <View style={{height: selectedFriends.length*50}}>
                 <FlatList
                   data={this.state.selectedFlat}
                   extraData={this.state}
@@ -609,7 +612,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255, 0.8)',
     borderWidth: 1,
     borderRadius: 5,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginBottom: 10,
   },
   checkBoxContainer: {
       height: 150,
