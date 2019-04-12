@@ -11,11 +11,11 @@ import DrawerMenu from "./DrawerMenu";
 
 const AppDrawerNavigator = createDrawerNavigator({
     Dashboard: {screen: Dashboard},
+    BillSplitStackScreen: {screen: BillSplitStackScreen},
+    FriendsList: {screen: FriendsList},
     PastTransactions: {screen:  PastTransactions},
     CurrentTransactions: {screen: CurrentTransactions},
     SettingsStackScreen: {screen: SettingsStackScreen},
-    BillSplitStackScreen: {screen: BillSplitStackScreen},
-    FriendsList: {screen: FriendsList},
   },
   {
     initialRouteName: 'Dashboard',
