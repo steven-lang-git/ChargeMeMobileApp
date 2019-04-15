@@ -17,8 +17,10 @@ import {
   Keyboard
 } from 'react-native';
 import CreateAccount from './CreateAccount';
-import PastTransactions from '../DrawerScreens/PastTransactions';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import { StackActions, NavigationActions } from 'react-navigation';
+
+console.log('login page')
 
 let emailEmpty = false;
 let passwordEmpty = false;
@@ -35,8 +37,12 @@ firebase.initializeApp({
   }
 );
 
+const resetToCreateAccount = StackActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'CreateAccount' })],
+});
 
-export default class HomeScreen extends React.Component {
+export default class Login extends React.Component {
   // constructor with state of email, password,
   // error, and loading properties to support login
   constructor(props){
@@ -48,6 +54,8 @@ export default class HomeScreen extends React.Component {
       loading: false,
       disable: true,
     };
+    emailEmpty = false;
+    passwordEmpty = false;
   }
 
   //function to handle clicking login button
@@ -73,15 +81,18 @@ export default class HomeScreen extends React.Component {
       //call firebase authentication method using email and password
       firebase.auth().signInWithEmailAndPassword(email,password)
       .then(() => {
-        //if we are signed in without any error, navigate to PastTransactions page
+        //if we are signed in without any error, navigate to auhtorized app navigator
         this.setState({error:'', loading:false});
-        this.props.navigation.navigate('PastTransactions');
+        this.props.navigation.navigate('App');
       })
       .catch(() =>{
         //if there is an error during authentication
         this.setState({error: 'Login failed', loading: false});
       })
     }
+  }
+  onCreateAccountPress(){
+    this.props.navigation.dispatch(resetToCreateAccount);
   }
 
   updateEmail(email){
@@ -127,7 +138,9 @@ export default class HomeScreen extends React.Component {
             </View>
 
             <View style={styles.container}>
-              <Text style={styles.title} onPress={() => this.props.navigation.navigate('CreateAccount')}> Create an Account </Text>
+              <Text
+              style={styles.title}
+              onPress={this.onCreateAccountPress.bind(this)}> Create an Account </Text>
             </View>
         </View>
       )
