@@ -191,27 +191,32 @@ export default class FriendsList extends React.Component {
                 onItemSelect={item =>
                   this.addFriend(eval(JSON.stringify(item.id)))
                 }
-                //  {this.state.currentFriends.map((friend, index) => (this.addFriend(index)))}
                 containerStyle={{ padding: 5 }}
                 textInputStyle={{
+                  fontSize: 15,
+                  color:'#fff',
+                  textAlign: 'center',
                   padding: 12,
                   borderWidth: 1,
                   borderColor: "#35b0d2",
-                  borderRadius: 5
+                  borderRadius: 5,
+                  width: width/2,
+                  backgroundColor: 'rgba(255,255,255,0.2)',
                 }}
                 itemStyle={{
                   padding: 10,
                   marginTop: 2,
-                  backgroundColor: "transparent",
+                  backgroundColor: 'rgba(255,255,255,0.2)',
                   borderColor: "#35b0d2",
                   borderWidth: 1,
                   borderRadius: 5
                 }}
-                itemTextStyle={{ color: "#35b0d2" }}
+                itemTextStyle={{ color: "white", textAlign: 'center', fontSize: 15, }}
                 itemsContainerStyle={{ maxHeight: 140 }}
                 items={this.state.tempArray}
                 defaultIndex={2}
                 placeholder="Search for friends!"
+                placeholderTextColor="rgba(255,255,255,0.8)"
                 resetValue={false}
                 underlineColorAndroid="transparent"
               />

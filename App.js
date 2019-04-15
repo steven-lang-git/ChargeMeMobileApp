@@ -1,11 +1,11 @@
 import React from 'react';
-import LoginStackScreen from './navigation/LoginStackScreen';
+import RootSwitchNavigator from './navigation/RootSwitchNavigator';
 
 export default class App extends React.Component {
 
   render() {
     return (
-        <LoginStackScreen/>
+        <RootSwitchNavigator/>
     );
   }
 }
