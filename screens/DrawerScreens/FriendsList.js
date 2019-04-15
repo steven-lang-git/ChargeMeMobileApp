@@ -41,9 +41,16 @@ export default class FriendsList extends React.Component {
   }
 
   save() {
+    //show confirmation alert
     showAlert = true
     this.forceUpdate();
     var uid = firebase.auth().currentUser.uid;
+
+    //clear out user's current friends
+    firebase
+      .database()
+      .ref("friendslist/" + uid + "/currentFriends")
+      .set(" ");
     for (let i = 0; i < currentFriends.length; i++){
       firebase
         .database()
