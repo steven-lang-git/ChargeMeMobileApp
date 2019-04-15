@@ -51,6 +51,8 @@ export default class FriendsList extends React.Component {
       .database()
       .ref("friendslist/" + uid + "/currentFriends")
       .set(" ");
+
+    //write in each current friend
     for (let i = 0; i < currentFriends.length; i++){
       firebase
         .database()
@@ -62,14 +64,14 @@ export default class FriendsList extends React.Component {
               });
     }
   }
-
+  //funciton to hide confirmation alert
   hideAlert = () => {
     showAlert = false;
     this.forceUpdate();
   };
 
+  //function to add friend to current friends
   addFriend = index => {
-    console.log('adding friends')
     // And put friend in currentFriends
     currentFriends.push(possibleFriends[index]);
 
@@ -77,14 +79,11 @@ export default class FriendsList extends React.Component {
     possibleFriends.splice(index, 1);
     tempArray.splice(index, 1);
     this.forceUpdate();
-    console.log('new current: ', currentFriends)
-    console.log('new possible: ', possibleFriends)
   };
 
+  //function to remove friend from current friends
   removeFriend = index => {
-    console.log('removing friends')
     // And put friend in possibleFriends
-
     possibleFriends.push(currentFriends[index]);
 
     // Pull friend out of currentFriends
@@ -93,20 +92,10 @@ export default class FriendsList extends React.Component {
 
   };
 
+  //function that is called everytime page mounts
   componentDidMount() {
     // get current user's uid
     var uid = firebase.auth().currentUser.uid;
-
-    //get current user's first name
-    // firebase
-    //   .database()
-    //   .ref("users/" + uid)
-    //   .once("value", snapshot => {
-    //     const nameUser = snapshot.val().firstName;
-    //     this.setState({
-    //       first: nameUser
-    //     });
-    //   });
 
     // load their current friends
     firebase
@@ -129,15 +118,6 @@ export default class FriendsList extends React.Component {
         });
 
       })
-
-      //   if (snapshot.val()) {
-      //     const data = snapshot.val();
-      //     console.log('snapshot: ', data.length)
-      //     currentFriends = data
-      //   } else {
-      //     console.log("used else");
-      //   }
-      // });
 
       //load possible friends
       firebase
@@ -164,7 +144,6 @@ export default class FriendsList extends React.Component {
 
             //remove current friends from possible friends
             if(currentFriends.length > 0){
-              // console.log('removing current friends')
               var y;
               for( y in currentFriends){
                 possibleFriends.splice(possibleFriends.map((el) => el.key).indexOf(currentFriends[y].key), 1);
@@ -175,14 +154,11 @@ export default class FriendsList extends React.Component {
   }
 
   render() {
-    console.log('possibleFriends: ',possibleFriends)
     var x;
     for (x in possibleFriends) {
       var name = possibleFriends[x].firstName + " " + possibleFriends[x].lastName
-      console.log('name', name)
       tempArray[x] = { id: x, name: name };
     }
-    console.log('tempArray: ',tempArray)
 
     return (
       <SafeAreaView style={styles.container}>

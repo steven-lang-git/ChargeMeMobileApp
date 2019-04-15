@@ -3,6 +3,7 @@ import * as firebase from "firebase";
 import ButtonComponent from '../../../components/ButtonComponent'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import AwesomeAlert from 'react-native-awesome-alerts';
+import moment from 'moment';
 import { StackActions } from 'react-navigation';
 import {
   StyleSheet,
@@ -39,6 +40,8 @@ export default class SplitEvenlyReview extends React.Component{
     showOptionAlert = false;
     showLoadingAlert = false;
     showConfirmedAlert = false;
+
+    console.log('reached review screen')
   }
 
   //function to show option alert
@@ -86,6 +89,55 @@ export default class SplitEvenlyReview extends React.Component{
     //call correct sequence of alerts
     this.hideOptionAlert()
     this.showLoadingAlert()
+
+    const { navigation } = this.props;
+
+    const name = navigation.getParam('name');
+    const total = parseFloat(navigation.getParam('total'))
+    const tip = parseFloat(navigation.getParam('tip'))
+    const finalTotal = parseFloat((total + tip).toFixed(2))
+    const selectedFriends = navigation.getParam('selectedFriends');
+    const payEach = parseFloat((finalTotal/(selectedFriends.length + 1)).toFixed(2))
+    const today = moment().format("MMM Do YY");
+
+
+    console.log('todays date: ', today )
+
+    //get current user's uid
+    var uid = firebase.auth().currentUser.uid
+
+    for (let i = 0; i < selectedFriends.length; i++){
+      const unique = moment()
+      console.log('unique: ', unique)
+
+
+      //dispatch charge to database under user
+      firebase
+        .database()
+        .ref("currentTransactions/" + uid + "/" + unique )
+        .set({
+              charging: uid,
+              paying: selectedFriends[i].key,
+              amount: payEach,
+              name: name,
+              date: today
+        });
+
+        //dispatch charge to database under friend
+        firebase
+          .database()
+          .ref("currentTransactions/" + selectedFriends[i].key + "/" + unique)
+          .set({
+                charging: uid,
+                paying: selectedFriends[i].key,
+                amount: payEach,
+                name: name,
+                date: today
+          });
+     }
+
+    console.log('FINAL FRIENDS: ', selectedFriends)
+
     this.hideLoadingAlert()
     this.showConfirmedAlert()
 
@@ -124,7 +176,8 @@ export default class SplitEvenlyReview extends React.Component{
     let selectedFlat = []
     var y;
     for (y in selectedFriends) {
-      selectedFlat[y] = { id: y, name: selectedFriends[y] };
+      var friendName = selectedFriends[y].firstName + " " + selectedFriends[y].lastName
+      selectedFlat[y] = { id: y, name: friendName };
     }
     return(
       <SafeAreaView style={styles.container}>
