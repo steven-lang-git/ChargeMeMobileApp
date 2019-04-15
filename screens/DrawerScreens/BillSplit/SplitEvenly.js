@@ -29,6 +29,7 @@ import * as firebase from "firebase";
 let totalEmpty = false;
 let nameEmpty = false;
 let noFriends = '';
+let tempArray = []
 const{width} = Dimensions.get('window')
 
 export default class SplitEvenly extends React.Component {
@@ -41,7 +42,6 @@ export default class SplitEvenly extends React.Component {
       friends: [],
       selectedFriends: [],
       selectedFlat: [],
-      tempArray: [],
       first:'',
       checked10: false,
       checked15: false,
@@ -54,6 +54,7 @@ export default class SplitEvenly extends React.Component {
     totalEmpty = false;
     nameEmpty = false;
     noFriends = '';
+    tempArray = []
   }
 
   //run when page first loads
@@ -77,26 +78,28 @@ export default class SplitEvenly extends React.Component {
       .database()
       .ref("friendslist/" + uid)
       .child("currentFriends")
-      .on("value", snapshot => {
-        if (snapshot.val()) {
-          const data = snapshot.val();
-          this.setState({
-            friends: snapshot.val()
-          });
-          // console.log('got friends')
-        } else {
-          const { friends } = this.state;
-          console.log("used else");
-          this.setState({
-            friends: friends
-          });
-        }
-      });
+      .once("value")
+      .then((snapshot) => {
+
+        var friendsArray = []
+        // for each friend
+        snapshot.forEach((childSnapShot) => {
+          //save their first name, last name, user id, and username
+          friendsArray.push({
+                              key: childSnapShot.key,
+                              firstName: childSnapShot.val().firstName,
+                              lastName: childSnapShot.val().lastName,
+                              username: childSnapShot.val().username,
+                            })
+
+        });
+        this.setState({friends: friendsArray})
+      })
   }
 
   addFriend = index => {
     // console.log('adding friend: ', index)
-    const { selectedFriends, friends, tempArray } = this.state;
+    const { selectedFriends, friends } = this.state;
 
     // And put friend in selectedFriends
     selectedFriends.push(friends[index]);
@@ -108,8 +111,7 @@ export default class SplitEvenly extends React.Component {
     // Finally, update our app state
     this.setState({
       friends: friends,
-      selectedFriends: selectedFriends,
-      tempArray: tempArray
+      selectedFriends: selectedFriends
     });
   };
 
@@ -117,16 +119,12 @@ export default class SplitEvenly extends React.Component {
 
 
     const { friends, selectedFriends } = this.state;
-    // console.log('position: ', index)
-    // console.log('removing friend: ', selectedFriends[index])
 
     // And put friend in friends
     friends.push(selectedFriends[index]);
 
     // Pull friend out of selectedFriends
     selectedFriends.splice(index, 1);
-
-    // console.log('selectedFriends after removal', selectedFriends)
 
     // Finally, update our app state
     this.setState({
@@ -313,9 +311,6 @@ export default class SplitEvenly extends React.Component {
 
   //function to handle when user clicks review button
   onSubmitBillSplit(){
-    // console.log('reviewing bill split')
-    // console.log('no friends: ', noFriends)
-    // console.log('number of friends: ', this.state.selectedFriends.length)
     if(this.state.name == ''){
       nameEmpty = true;
     }
@@ -334,6 +329,7 @@ export default class SplitEvenly extends React.Component {
     if(totalEmpty == false && nameEmpty == false && noFriends == ''){
       console.log("first total: " + this.state.total);
       console.log("first tip: " + this.state.tip)
+      console.log('submitting selected friends: ', this.state.selectedFriends)
       this.props.navigation.navigate('SplitEvenlyReview', {
                                                             name: this.state.name,
                                                             total: this.state.total,
@@ -344,18 +340,18 @@ export default class SplitEvenly extends React.Component {
   }
 
   render() {
-    const { tempArray, disable, selectedFriends, selectedFlat} = this.state;
+    const { disable, selectedFriends, selectedFlat} = this.state;
     var x;
     for (x in this.state.friends) {
-      this.state.tempArray[x] = { id: x, name: this.state.friends[x] };
+      var name1 = this.state.friends[x].firstName + " " + this.state.friends[x].lastName
+      tempArray[x] = { id: x, name: name1 };
     }
+    console.log('temp array: ', tempArray)
     var y;
-    for (y in this.state.selectedFriends) {
-      this.state.selectedFlat[y] = { id: y, name: this.state.selectedFriends[y] };
+    for (y in selectedFriends) {
+      var name = selectedFriends[y].firstName + " " + selectedFriends[y].lastName
+      this.state.selectedFlat[y] = { id: y, name: name };
     }
-    // console.log('selected friends', selectedFriends)
-    // console.log('selected flat', selectedFlat)
-    // console.log('no friends: ', noFriends)
     return (
 
       <SafeAreaView style={styles.container}>
@@ -532,7 +528,7 @@ export default class SplitEvenly extends React.Component {
                 />
               </View>
                 <SearchableDropdown
-                  onTextChange={(value) => this.searchFriends(value)}
+                  // onTextChange={(value) => this.searchFriends(value)}
                   onItemSelect={item =>this.addFriend(eval(JSON.stringify(item.id)))}
                   containerStyle={{ padding: 5 }}
                   textInputStyle={{
@@ -558,7 +554,7 @@ export default class SplitEvenly extends React.Component {
                   }}
                   itemTextStyle={{ color: "white", textAlign: 'center', fontSize: 15,}}
                   itemsContainerStyle={{ maxHeight: 150 }}
-                  items={this.state.tempArray}
+                  items={tempArray}
                   placeholder="Add friends!"
                   placeholderTextColor="rgba(255,255,255,0.8)"
                   autoCorrect= {false}
