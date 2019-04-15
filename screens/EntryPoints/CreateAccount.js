@@ -27,6 +27,7 @@ let birthdayError = false;
 let usernameError = false;
 let emailError = false;
 let passwordError = false;
+let loading = false;
 let passwordErrorMessage = '';
 let emailErrorMessage = '';
 let birthdayErrorMessage = '';
@@ -53,7 +54,6 @@ export default class CreateAccount extends React.Component {
       phone: '',
       birthday: '',
       password:'',
-      loading: false,
       disable: true,
     };
     firstNameError = false;
@@ -63,6 +63,7 @@ export default class CreateAccount extends React.Component {
     usernameError = false;
     emailError = false;
     passwordError = false;
+    loading = false;
     passwordErrorMessage = '';
     emailErrorMessage = '';
     birthdayErrorMessage = '';
@@ -139,7 +140,7 @@ export default class CreateAccount extends React.Component {
       const{email,password} = this.state;
 
       //display loading spinner
-      this.setState({loading:true});
+      loading = true;
 
       //call firebase authentication method using email and password
       firebase.auth().createUserWithEmailAndPassword(email,password)
@@ -147,7 +148,7 @@ export default class CreateAccount extends React.Component {
             //if we are signed in without any error
 
             //display sign up button
-            this.setState({ loading:false});
+            loading = false;
 
             //get user id
             var userId = firebase.auth().currentUser.uid;
@@ -177,7 +178,7 @@ export default class CreateAccount extends React.Component {
             //if there is an error during account creation
 
             //display sign up button
-            this.setState({ loading:false});
+            loading = false;
 
             //display email error
             emailErrorMessage = "That email is taken";
@@ -188,7 +189,7 @@ export default class CreateAccount extends React.Component {
   //function to check if entered username already exists
   makeUsernameUnique(){
     //display loading spinner
-    this.setState({loading:true});
+    loading = true;
 
     //save the username entered
     var currentUsername = this.state.username;
@@ -211,7 +212,7 @@ export default class CreateAccount extends React.Component {
       else{
 
         //display sign up button
-        this.setState({loading:false});
+        loading = false;
         //set username error message
         usernameErrorMessage= 'Username is taken';
         this.forceUpdate();
@@ -326,7 +327,7 @@ export default class CreateAccount extends React.Component {
 
   //function to decide whether to display login button or loading spin
   renderButtonOrLoading(){
-    if(this.state.loading == false){
+    if(loading == false){
       //if not in state of loading show sign up button (button is bound to
       //onSignUpPress function)
       const isDisabled  = this.state.disable;
@@ -352,7 +353,7 @@ export default class CreateAccount extends React.Component {
   }
 
   render(){
-    const showAlert = this.state.loading
+    let showAlert = loading
     return(
 
       <SafeAreaView style={styles.container}>
@@ -513,12 +514,12 @@ export default class CreateAccount extends React.Component {
                   </KeyboardAwareScrollView>
                 </View>
                 <AwesomeAlert
-                show={showAlert}
-                showProgress={true}
-                title="Creating Account"
-                closeOnTouchOutside={false}
-                closeOnHardwareBackPress={false}
-              />
+                  show={showAlert}
+                  showProgress={true}
+                  title="Creating Account"
+                  closeOnTouchOutside={false}
+                  closeOnHardwareBackPress={false}
+                />
               </View>
             </TouchableWithoutFeedback>
         </ImageBackground>
