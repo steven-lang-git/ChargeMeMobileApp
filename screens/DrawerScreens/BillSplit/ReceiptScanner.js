@@ -14,6 +14,8 @@ import {
 } from "react-native";
 import { Header, Left, Right, Icon } from "native-base";
 import { Camera, Permissions } from "expo";
+import ButtonComponent from "../../../components/ButtonComponent";
+
 let { width, height } = Dimensions.get("window");
 
 export default class ReceiptScanner extends React.Component {
@@ -31,9 +33,7 @@ export default class ReceiptScanner extends React.Component {
     this.state = {
       hasCameraPermission: null,
       type: Camera.Constants.Type.back,
-      photo: null,
-      photoId: "",
-      path: null,
+      path: null
     };
   }
   async componentDidMount() {
@@ -41,129 +41,121 @@ export default class ReceiptScanner extends React.Component {
     this.setState({ hasCameraPermission: status === "granted" });
   }
 
-  press = async() => {
+  press = async () => {
     if (this.camera) {
       const data = await this.camera.takePictureAsync();
       this.setState({
         path: data.uri
       });
-   
     }
-  }
-  renderImage() {
-    
+  };
 
+  processImage = async(path, imageProperties) =>{
+    const visionResp = await RNTextDetector.detectFromUri(path);
+    if(!(visionResp && visionResp.length >0)){
+      throw "unmatched";
+    }
+    this.setState({
+      visionResp: this.mapVisionRespToScreen(visionResp, imageProperties)
+    });
+  };
+  renderImage() {
     return (
       <View>
-        
-        <Image source={{uri: this.state.path}} style={styles.preview}/>
-        <TouchableOpacity  style={styles.cancel}
-          onPress={() => this.setState({ path: null })}>
-        <Text
-         
-        >Cancel
-        </Text>
-        </TouchableOpacity>
+        <Image source={{ uri: this.state.path }} style={styles.preview} />
+        <View style={styles.buttonContainer}>
+          <ButtonComponent
+            style={styles.cancel}
+            onPress={() => this.setState({ path: null })}
+            text="Cancel"
+            disabled={false}
+            primary={true}
+          />
+        </View>
       </View>
     );
   }
 
-  takePicture = async function() {
-    this.camera.takePictureAsync({ skipProcessing: true }).then(data => {
-      this.setState(
-        {
-          //takeImageText: "PICTURE TAKEN",
-          photo: data.uri
-        },
-        () => alert(data.uri)
-      );
-    });
-  };
-renderCamera(){
-  const { hasCameraPermission } = this.state;
-  if (hasCameraPermission === null) {
-    return <View />;
-  } else if (hasCameraPermission === false) {
-    return <Text>No access to camera</Text>;
-  } else {
-    return (
-      <View style={{ flex: 1 }}>
-        <Camera
-          style={{ flex: 1 }}
-          type={this.state.type}
-          ref={ref => {
-            this.camera = ref;
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: "transparent",
-              flexDirection: "row",
-              justifyContent: "center"
+  
+  renderCamera() {
+    const { hasCameraPermission } = this.state;
+    if (hasCameraPermission === null) {
+      return <View />;
+    } else if (hasCameraPermission === false) {
+      return <Text>No access to camera</Text>;
+    } else {
+      return (
+        <View style={{ flex: 1 }}>
+          <Camera
+            style={{ flex: 1 }}
+            type={this.state.type}
+            ref={ref => {
+              this.camera = ref;
             }}
           >
             <View
               style={{
-                position: "absolute",
-                top: -width / 2 + 30,
-                left: -width / 2 + 75,
-                right: -width / 2 + 75,
-                bottom: -width / 2 + 100,
-
-                borderWidth: width / 2,
-                borderColor: "rgb(32,53,70)",
-                opacity: 0.9
+                flex: 1,
+                backgroundColor: "transparent",
+                flexDirection: "row",
+                justifyContent: "center"
               }}
-            />
-            <TouchableOpacity
-              style={{
-                flex: 0.5,
-                alignSelf: "flex-end",
-                alignItems: "center"
-              }}
-              // onPress={()=>this.takePicture()}
-              onPress={this.press.bind(this)}
             >
-              <Image
-                style={{ width: 60, height: 60, marginBottom: 10 }}
-                source={require("../../../assets/capture.png")}
+              <View
+                style={{
+                  position: "absolute",
+                  top: -width / 2 + 30,
+                  left: -width / 2 + 75,
+                  right: -width / 2 + 75,
+                  bottom: -width / 2 + 100,
+
+                  borderWidth: width / 2,
+                  borderColor: "rgb(32,53,70)",
+                  opacity: 0.9
+                }}
               />
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  flex: 0.5,
+                  alignSelf: "flex-end",
+                  alignItems: "center"
+                }}
+                onPress={this.press.bind(this)}
+              >
+                <Image
+                  style={{ width: 60, height: 60, marginBottom: 10 }}
+                  source={require("../../../assets/capture.png")}
+                />
+              </TouchableOpacity>
             </View>
           </Camera>
         </View>
-          );
-        }
-      }
-
+      );
+    }
+  }
 
   render() {
-    return(
-
-              <View
-                style={
-                 styles.container}
-              >
-                {this.state.path ? this.renderImage(): this.renderCamera()}
-              </View>
-    );    
-}
+    return (
+      <View style={styles.container}>
+        {this.state.path ? this.renderImage() : this.renderCamera()}
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    justifyContent:'center',
-    backgroundColor: '#000',
+    justifyContent: "center",
+    backgroundColor: "#000"
   },
   preview: {
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width
+    height: Dimensions.get("window").height,
+    width: Dimensions.get("window").width
   },
   capture: {
     flex: 0,
@@ -174,16 +166,22 @@ const styles = StyleSheet.create({
     margin: 40
   },
   cancel: {
-    position: 'absolute',
+    position: "absolute",
     left: 5,
-    top: 20,
-    backgroundColor: 'transparent',
-    color: '#FFF',
-    fontWeight: '600',
-    fontSize: 17,
+    top: 5,
+    backgroundColor: "transparent",
+    color: "#FFF",
+    fontWeight: "600",
+    fontSize: 17
   },
   imageContainer: {
-    resizeMode:'cover',
-    flex:1,
-},
+    resizeMode: "cover",
+    flex: 1
+  },
+  buttonContainer: {
+    width: width / 3,
+    flex: 0,
+    backgroundColor: "transparent",
+    position: "absolute"
+  }
 });
