@@ -21,140 +21,143 @@ import {
 import { Header, Left, Right, Icon, ListItem, List } from "native-base";
 const { width } = Dimensions.get("window");
 import * as firebase from "firebase";
+import AwesomeAlert from 'react-native-awesome-alerts';
 import SearchableDropdown from "react-native-searchable-dropdown";
+import ButtonComponent from '../../components/ButtonComponent'
+
+let currentFriends = []
+let possibleFriends = []
+let tempArray = []
+let showAlert = false
 
 export default class FriendsList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      possibleFriends: [],
-      currentFriends: [],
-      tempArray: [],
-      firstName: " ",
-      first: ""
-    };
+
+    possibleFriends = []
+    currentFriends = []
+    tempArray = []
+    showAlert = false
   }
 
   save() {
-    const { currentFriends, possibleFriends } = this.state;
+    //show confirmation alert
+    showAlert = true
+    this.forceUpdate();
     var uid = firebase.auth().currentUser.uid;
-    firebase
-      .database()
-      .ref("friendslist/" + uid + "/possibleFriends")
-      .set(possibleFriends);
+
+    //clear out user's current friends
     firebase
       .database()
       .ref("friendslist/" + uid + "/currentFriends")
-      .set(currentFriends);
+      .set(" ");
+
+    //write in each current friend
+    for (let i = 0; i < currentFriends.length; i++){
+      firebase
+        .database()
+        .ref("friendslist/" + uid + "/currentFriends/"+ currentFriends[i].key)
+        .set({
+                firstName: currentFriends[i].firstName,
+                lastName: currentFriends[i].lastName,
+                username: currentFriends[i].username
+              });
+    }
   }
+  //funciton to hide confirmation alert
+  hideAlert = () => {
+    showAlert = false;
+    this.forceUpdate();
+  };
 
+  //function to add friend to current friends
   addFriend = index => {
-    const { currentFriends, possibleFriends, tempArray } = this.state;
-
     // And put friend in currentFriends
     currentFriends.push(possibleFriends[index]);
 
     // Pull friend out of possibleFriends
     possibleFriends.splice(index, 1);
     tempArray.splice(index, 1);
-    // Finally, update our app state
-    this.setState({
-      currentFriends: currentFriends,
-      possibleFriends: possibleFriends,
-      tempArray: tempArray
-    });
+    this.forceUpdate();
   };
 
+  //function to remove friend from current friends
   removeFriend = index => {
-    const { currentFriends, possibleFriends } = this.state;
-
     // And put friend in possibleFriends
-
     possibleFriends.push(currentFriends[index]);
 
     // Pull friend out of currentFriends
     currentFriends.splice(index, 1);
+    this.forceUpdate();
 
-    // Finally, update our app state
-    this.setState({
-      currentFriends: currentFriends,
-      possibleFriends: possibleFriends
-    });
   };
 
+  //function that is called everytime page mounts
   componentDidMount() {
+    // get current user's uid
     var uid = firebase.auth().currentUser.uid;
-    firebase
-      .database()
-      .ref("users/" + uid)
-      .once("value", snapshot => {
-        const nameUser = snapshot.val().firstName;
-        this.setState({
-          first: nameUser
-        });
-      });
 
+    // load their current friends
     firebase
       .database()
       .ref("friendslist/" + uid)
       .child("currentFriends")
-      .on("value", snapshot => {
-        if (snapshot.val()) {
-          const data = snapshot.val();
-          this.setState({
-            currentFriends: snapshot.val()
-          });
-        } else {
-          const { currentFriends } = this.state;
-          console.log("used else");
-          this.setState({
-            currentFriends: currentFriends
-          });
-        }
-      });
+      .once("value")
+      .then((snapshot) => {
 
-    firebase
-      .database()
-      .ref("friendslist/" + uid)
-      .child("possibleFriends")
-      .on("value", snapshot => {
-        const { possibleFriends } = this.state;
-        const { first } = this.state;
-        possibleFriends.splice(possibleFriends.indexOf(first), 1);
-        if (snapshot.val()) {
-          const data = snapshot.val();
-          this.setState({
-            possibleFriends: snapshot.val()
-          });
-        } else {
-          this.setState({
-            possibleFriends: possibleFriends
-          });
-        }
-      });
+        // for each friend
+        snapshot.forEach((childSnapShot) => {
+          //save their first name, last name, user id, and username
+          currentFriends.push({
+                              key: childSnapShot.key,
+                              firstName: childSnapShot.val().firstName,
+                              lastName: childSnapShot.val().lastName,
+                              username: childSnapShot.val().username,
+                            })
 
-    firebase
-      .database()
-      .ref()
-      .child("friendslist")
-      .once("value", snapshot => {
-        const { possibleFriends, currentFriends } = this.state;
-        if (snapshot.child(uid).exists()) {
-          this.setState({
-            possibleFriends: possibleFriends,
-            currentFriends: currentFriends
+        });
+
+      })
+
+      //load possible friends
+      firebase
+        .database()
+        .ref()
+        .child("users")
+        .once("value")
+        .then ((snapshot) => {
+
+          // for each user
+          snapshot.forEach((childSnapShot) => {
+            //save their first name, last name, user id, and username
+            possibleFriends.push({
+                                key: childSnapShot.key,
+                                firstName: childSnapShot.val().firstName,
+                                lastName: childSnapShot.val().lastName,
+                                username: childSnapShot.val().username,
+                              })
+
           });
-        } else {
-          snapshot.child(uid).ref.push(possibleFriends);
-          snapshot.child(uid).ref.push(currentFriends);
-        }
-      });
+
+            //remove the current user from the list
+            possibleFriends.splice(possibleFriends.map((el) => el.key).indexOf(uid), 1);
+
+            //remove current friends from possible friends
+            if(currentFriends.length > 0){
+              var y;
+              for( y in currentFriends){
+                possibleFriends.splice(possibleFriends.map((el) => el.key).indexOf(currentFriends[y].key), 1);
+              }
+            }
+            this.forceUpdate();
+        })
   }
+
   render() {
-    const { tempArray, possibleFriends } = this.state;
     var x;
-    for (x in this.state.possibleFriends) {
-      this.state.tempArray[x] = { id: x, name: this.state.possibleFriends[x] };
+    for (x in possibleFriends) {
+      var name = possibleFriends[x].firstName + " " + possibleFriends[x].lastName
+      tempArray[x] = { id: x, name: name };
     }
 
     return (
@@ -213,7 +216,7 @@ export default class FriendsList extends React.Component {
                 }}
                 itemTextStyle={{ color: "white", textAlign: 'center', fontSize: 15, }}
                 itemsContainerStyle={{ maxHeight: 140 }}
-                items={this.state.tempArray}
+                items={tempArray}
                 defaultIndex={2}
                 placeholder="Search for friends!"
                 placeholderTextColor="rgba(255,255,255,0.8)"
@@ -223,12 +226,12 @@ export default class FriendsList extends React.Component {
             </View>
 
             <Text> Currently our friends are:</Text>
-            {this.state.currentFriends.map((friend, index) => (
+            {currentFriends.map((friend, index) => (
               <ListItem style={styles.listContainer}>
                 <Left>
-                  <Text style={styles.btntext} key={friend}>
+                  <Text style={styles.btntext} key={friend.username}>
                     {" "}
-                    {`${friend}`}{" "}
+                    {`${friend.firstName + ' ' + friend.lastName}`}{" "}
                   </Text>
                 </Left>
                 <Right>
@@ -236,31 +239,50 @@ export default class FriendsList extends React.Component {
                     <TouchableOpacity
                       style={styles.btntext}
                       onPress={() => this.removeFriend(index)}
-                      key={friend}
+                      key={friend.username}
                     >
-                      <Text style={styles.btntext}>{`Remove ${friend}`}</Text>
+                      <Text style={styles.btntext}>Remove</Text>
                     </TouchableOpacity>
                   </View>
                 </Right>
               </ListItem>
             ))}
+
             <KeyboardAvoidingView style={styles.container}>
               <Text>Add friends here!</Text>
-              {this.state.possibleFriends.map((fr, index) => (
+              {possibleFriends.map((friend, index) => (
+
                 <Button
                   color="white"
-                  key={fr}
-                  title={`Add ${fr}`}
+                  key={friend.username}
+                  title={`Add ${friend.firstName + " " + friend.lastName}`}
                   onPress={() => this.addFriend(index)}
                 />
               ))}
-              <TouchableOpacity
-                style={styles.btntext}
-                onPress={() => this.save()}
-              >
-                <Text>Save</Text>
-              </TouchableOpacity>
+
+              <View style={styles.buttonContainer}>
+                <ButtonComponent
+                  text='SAVE'
+                  onPress={() => this.save()}
+                  disabled={false}
+                  primary={true}
+                />
+              </View>
+
             </KeyboardAvoidingView>
+            <AwesomeAlert
+              show={showAlert}
+              showProgress={false}
+              title="Friends List Updated"
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={false}
+              showConfirmButton={true}
+              confirmText="Gotcha"
+              confirmButtonColor='#35b0d2'
+              onConfirmPressed={() => {
+                this.hideAlert();
+              }}
+            />
           </View>
         </ImageBackground>
       </SafeAreaView>
@@ -288,12 +310,15 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(69,85,117,0.7)"
   },
-
   listContainer: {
     position: "relative",
     justifyContent: "center",
     alignItems: "center",
     width: width
+  },
+  buttonContainer: {
+    width: width/2,
+    flex: 1,
   },
   input: {
     height: 40,
@@ -313,6 +338,6 @@ const styles = StyleSheet.create({
     height: 15
   },
   btntext: {
-    color: "white"
-  }
+    color: 'white',
+  },
 });
