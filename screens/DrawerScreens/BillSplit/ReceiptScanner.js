@@ -42,14 +42,11 @@ export default class ReceiptScanner extends React.Component {
   }
 
   press = async() => {
-    console.log("Button Pressed");
     if (this.camera) {
-      console.log("Taking photo");
       const data = await this.camera.takePictureAsync();
       this.setState({
         path: data.uri
       });
-      alert("Picture taken !");
    
     }
   }
@@ -60,11 +57,13 @@ export default class ReceiptScanner extends React.Component {
       <View>
         
         <Image source={{uri: this.state.path}} style={styles.preview}/>
+        <TouchableOpacity  style={styles.cancel}
+          onPress={() => this.setState({ path: null })}>
         <Text
-          style={styles.cancel}
-          onPress={() => this.setState({ path: null })}
+         
         >Cancel
         </Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -176,7 +175,7 @@ const styles = StyleSheet.create({
   },
   cancel: {
     position: 'absolute',
-    right: 50,
+    left: 5,
     top: 20,
     backgroundColor: 'transparent',
     color: '#FFF',
