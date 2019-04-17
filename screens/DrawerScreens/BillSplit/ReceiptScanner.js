@@ -32,7 +32,8 @@ export default class ReceiptScanner extends React.Component {
       hasCameraPermission: null,
       type: Camera.Constants.Type.back,
       photo: null,
-      photoId: ""
+      photoId: "",
+      path: null,
     };
   }
   async componentDidMount() {
@@ -40,30 +41,28 @@ export default class ReceiptScanner extends React.Component {
     this.setState({ hasCameraPermission: status === "granted" });
   }
 
-  async press() {
+  press = async() => {
     console.log("Button Pressed");
     if (this.camera) {
       console.log("Taking photo");
-      let photo = await this.camera.takePictureAsync();
-      console.log(photo);
-      alert("Picture taken !");
+      const data = await this.camera.takePictureAsync();
       this.setState({
-        photo: photo
+        path: data.uri
       });
+      alert("Picture taken !");
+   
     }
   }
   renderImage() {
     
-    const{photo}=this.state;
-
 
     return (
       <View>
         
-        <Image source={require('../../../assets/group-dinner.jpg')}style={styles.imageContainer}/>
+        <Image source={{uri: this.state.path}} style={styles.preview}/>
         <Text
           style={styles.cancel}
-          onPress={() => this.setState({ photo: null })}
+          onPress={() => this.setState({ path: null })}
         >Cancel
         </Text>
       </View>
@@ -147,7 +146,7 @@ renderCamera(){
                 style={
                  styles.container}
               >
-                {this.state.photo ? this.renderImage(): this.renderCamera()}
+                {this.state.path ? this.renderImage(): this.renderCamera()}
               </View>
     );    
 }
@@ -156,12 +155,16 @@ renderCamera(){
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row",
+    justifyContent:'center',
+    backgroundColor: '#000',
   },
   preview: {
     flex: 1,
     justifyContent: "flex-end",
-    alignItems: "center"
+    alignItems: "center",
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width
   },
   capture: {
     flex: 0,
@@ -173,7 +176,7 @@ const styles = StyleSheet.create({
   },
   cancel: {
     position: 'absolute',
-    right: 20,
+    right: 50,
     top: 20,
     backgroundColor: 'transparent',
     color: '#FFF',
