@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { Header, Left, Right, Icon } from "native-base";
 import { Camera, Permissions } from "expo";
+// import RNTextDetector from "react-native-text-detector";
 import ButtonComponent from "../../../components/ButtonComponent";
 
 let { width, height } = Dimensions.get("window");
@@ -33,7 +34,9 @@ export default class ReceiptScanner extends React.Component {
     this.state = {
       hasCameraPermission: null,
       type: Camera.Constants.Type.back,
-      path: null
+      path: null,
+      imageProperties: null,
+      data: null,
     };
   }
   async componentDidMount() {
@@ -44,20 +47,28 @@ export default class ReceiptScanner extends React.Component {
   press = async () => {
     if (this.camera) {
       const data = await this.camera.takePictureAsync();
+      console.log(data);
       this.setState({
-        path: data.uri
+        path: data.uri,
+        data: data, 
+        imageProperties: {height: data.height, width: data.width},
       });
     }
   };
 
-  processImage = async(path, imageProperties) =>{
-    const visionResp = await RNTextDetector.detectFromUri(path);
-    if(!(visionResp && visionResp.length >0)){
-      throw "unmatched";
-    }
-    this.setState({
-      visionResp: this.mapVisionRespToScreen(visionResp, imageProperties)
-    });
+  processImage =async() =>{
+  //   console.log("did we get here?");
+  //  const{data} =this.state;
+  //  console.log("1");
+  //   const visionResp = await RNTextDetector.detectFromUri(data);
+  //   console.log("2");
+  //   console.log('visionResp',visionResp);
+  //   if(!(visionResp && visionResp.length >0)){
+  //     throw "unmatched";
+  //   }
+    // this.setState({
+    //   visionResp: this.mapVisionRespToScreen(visionResp, imageProperties)
+    // });
   };
   renderImage() {
     return (
@@ -68,6 +79,13 @@ export default class ReceiptScanner extends React.Component {
             style={styles.cancel}
             onPress={() => this.setState({ path: null })}
             text="Cancel"
+            disabled={false}
+            primary={true}
+          />
+           <ButtonComponent
+            style={styles.cancel}
+            // onPress={this.processImage.bind(this)}
+            text="Scan Receipt"
             disabled={false}
             primary={true}
           />
