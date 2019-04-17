@@ -18,20 +18,34 @@ export default class CurrentTransactions extends React.Component {
       <Icon name="clock-o" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
     )
   }
+  constructor(){
+    super();
+    this.state={
+      selectedIndex:2,
+    }
+    this.updateIndex = this.updateIndex.bind(this)
+  }
+  updateIndex (selectedIndex){
+    this.setState({selectedIndex})
+  }
   render() {
+    const buttons = ['All', 'Current Only','Past Only']
+    const {selectedIndex} = this.state;
     return (
-      <View style={styles.container}>
-      <Header>
-        <Left>
-          <Icon name="bars" type="FontAwesome" onPress={()=>this.props.navigation.openDrawer()}/>
-        </Left>
-      </Header>
+      
+      
       <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
 
       <Text> current transactions</Text>
+      <ButtonGroup
+        onPress={this.updateIndex}
+        selectedIndex={selectedIndex}
+        buttons={buttons}
+        containerStyle={{height:100}}
+      />
       </View>
+      
 
-      </View>
     );
   }
 }
