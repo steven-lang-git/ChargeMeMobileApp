@@ -18,11 +18,11 @@ const{width, height} = Dimensions.get('window')
 
 const menuData = [
   {icon: "address-card", name:"Dashboard", screenName:"Dashboard", activeTint: "#35b0d2", key: 1},
-  {icon: "check-circle", name:"Past Transactions", screenName:"PastTransactions", activeTint: "#35b0d2", key: 2},
-  {icon: "clock-o", name:"Current Transactions", screenName:"CurrentTransactions", activeTint: "#35b0d2", key: 3},
-  {icon: "sliders", name:"Settings", screenName:"SettingsStackScreen", activeTint: "#35b0d2", key: 4},
-  {icon: "money", name:"Bill Split", screenName:"BillSplitStackScreen", activeTint: "#35b0d2", key: 5},
-  {icon: "users", name:"Friends", screenName:"FriendsList", activeTint: "#35b0d2", key: 6},
+  {icon: "money", name:"Bill Split", screenName:"BillSplitStackScreen", activeTint: "#35b0d2", key: 2},
+  {icon: "users", name:"Friends", screenName:"FriendsList", activeTint: "#35b0d2", key: 3},
+  {icon: "check-circle", name:"Past Transactions", screenName:"PastTransactions", activeTint: "#35b0d2", key: 4},
+  {icon: "clock-o", name:"Current Transactions", screenName:"CurrentTransactions", activeTint: "#35b0d2", key: 5},
+  {icon: "sliders", name:"Settings", screenName:"SettingsStackScreen", activeTint: "#35b0d2", key: 6},
 ]
 
 let showAlert = false
@@ -44,19 +44,10 @@ class DrawerMenu extends Component {
   //function to log out current user
   signOutUser = async () => {
     try{
-      console.log('trying to log out')
       //sign out user
       await firebase.auth().signOut();
-      console.log('signed out')
-      // //hide alert
-      // this.hideAlert()
-      // console.log('alert closed')
-      // //close drawer
-      // this.props.navigation.dispatch(DrawerActions.closeDrawer());
-      // console.log('drawer closed')
       //navigate back to authorization navigator
       this.props.navigation.navigate('Auth');
-      console.log('back to login')
     } catch (e) {
       console.log(e);
     }
@@ -66,7 +57,6 @@ class DrawerMenu extends Component {
   hideAlert = () => {
       showAlert= false;
       this.forceUpdate();
-
   }
 
   render() {
@@ -78,6 +68,7 @@ class DrawerMenu extends Component {
         <FlatList
           data={menuData}
           renderItem={({item}) => <DrawerItem navigation={this.props.navigation} screenName={item.screenName} icon={item.icon} name={item.name} key={item.key} />}
+          keyExtractor={ (item, index) => index.toString() }
         />
         <View style={styles.logoutContainer}>
           <TouchableOpacity
