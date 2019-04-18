@@ -98,7 +98,6 @@ export default class SplitEvenly extends React.Component {
   }
 
   addFriend = index => {
-    // console.log('adding friend: ', index)
     const { selectedFriends, friends } = this.state;
 
     // And put friend in selectedFriends
@@ -107,7 +106,7 @@ export default class SplitEvenly extends React.Component {
     // Pull friend out of friends
     friends.splice(index, 1);
     tempArray.splice(index, 1);
-    // console.log('temp friends', tempArray)
+
     // Finally, update our app state
     this.setState({
       friends: friends,
@@ -116,8 +115,6 @@ export default class SplitEvenly extends React.Component {
   };
 
   removeFriend = index => {
-
-
     const { friends, selectedFriends } = this.state;
 
     // And put friend in friends
@@ -280,7 +277,7 @@ export default class SplitEvenly extends React.Component {
   }
 
   //update total entered by user
-  checkTotal(value){
+  checkTotal = value =>{
 
     const numericTotal = this.totalField.getRawValue().toFixed(2);
     if(numericTotal == 0){
@@ -290,10 +287,10 @@ export default class SplitEvenly extends React.Component {
       totalEmpty = false;
     }
     this.setState({total: numericTotal, disable: false});
-  }
+  };
 
   //update bill split name entered by user
-  updateName(value){
+  updateName = value => {
     if(value == ''){
       nameEmpty = true;
     }
@@ -301,16 +298,16 @@ export default class SplitEvenly extends React.Component {
       nameEmpty = false;
     }
     this.setState({name: value, disable: false})
-  }
+  };
 
   //update custom tip entered by user
-  checkCustom(){
+  checkCustom = () => {
     const numericCust = this.tipField.getRawValue().toFixed(2);
     this.setState({tip: numericCust});
-  }
+  };
 
   //function to handle when user clicks review button
-  onSubmitBillSplit(){
+  onSubmitBillSplit = () => {
     if(this.state.name == ''){
       nameEmpty = true;
     }
@@ -360,6 +357,15 @@ export default class SplitEvenly extends React.Component {
         <View style={styles.overlay} />
         <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
           <View style={styles.infoContainer}>
+
+            <View style={styles.receiptScannerContainer}>
+              <ButtonComponent
+                text='RECEIPT SCANNER'
+                onPress={() => this.props.navigation.navigate('ReceiptScanner')}
+                disabled={false}
+                primary={true}
+              />
+            </View>
 
             <View style= {{alignContent:'flex-start'}}>
               <Text style={styles.inputTitle}>Bill Split Name</Text>
@@ -583,7 +589,6 @@ export default class SplitEvenly extends React.Component {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    alignItems: 'center',
   },
   errorMessage:{
     color: 'red',
@@ -640,6 +645,10 @@ const styles = StyleSheet.create({
     flex: 2,
     width: width,
     padding:20,
+  },
+  receiptScannerContainer: {
+    width: width/2,
+    justifyContent: 'flex-end'
   },
   input: {
     height:40,

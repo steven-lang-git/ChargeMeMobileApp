@@ -68,6 +68,7 @@ class DrawerMenu extends Component {
         <FlatList
           data={menuData}
           renderItem={({item}) => <DrawerItem navigation={this.props.navigation} screenName={item.screenName} icon={item.icon} name={item.name} key={item.key} />}
+          keyExtractor={ (item, index) => index.toString() }
         />
         <View style={styles.logoutContainer}>
           <TouchableOpacity
