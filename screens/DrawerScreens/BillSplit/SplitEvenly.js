@@ -7,22 +7,29 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   StatusBar,
-  TextInput,
-  Button,
   Dimensions,
   Image,
   ImageBackground,
   TouchableOpacity,
-  Keyboard
+  Keyboard,
+  FlatList
 } from 'react-native';
+import {
+  ListItem,
+  CheckBox,
+} from 'react-native-elements';
 import CircleCheckBox, {LABEL_POSITION} from 'react-native-circle-checkbox';
 import {TextInputMask} from 'react-native-masked-text';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ButtonComponent from '../../../components/ButtonComponent'
 import TextInputComponent from '../../../components/TextInputComponent'
+import SearchableDropdown from "react-native-searchable-dropdown";
+import * as firebase from "firebase";
 
 let totalEmpty = false;
 let nameEmpty = false;
+let noFriends = '';
+let tempArray = []
 const{width} = Dimensions.get('window')
 
 export default class SplitEvenly extends React.Component {
@@ -33,6 +40,9 @@ export default class SplitEvenly extends React.Component {
       total: 0,
       tip: 0,
       friends: [],
+      selectedFriends: [],
+      selectedFlat: [],
+      first:'',
       checked10: false,
       checked15: false,
       checked18: false,
@@ -43,7 +53,82 @@ export default class SplitEvenly extends React.Component {
     };
     totalEmpty = false;
     nameEmpty = false;
+    noFriends = '';
+    tempArray = []
   }
+
+  //run when page first loads
+  componentDidMount() {
+    // console.log('getting data from database')
+    //get current logged in user
+    var uid = firebase.auth().currentUser.uid;
+    firebase
+      .database()
+      .ref("users/" + uid)
+      .once("value", snapshot => {
+        const nameUser = snapshot.val().firstName;
+        this.setState({
+          first: nameUser
+        });
+        // console.log('got users name')
+      });
+
+    //get users friends
+    firebase
+      .database()
+      .ref("friendslist/" + uid)
+      .child("currentFriends")
+      .once("value")
+      .then((snapshot) => {
+
+        var friendsArray = []
+        // for each friend
+        snapshot.forEach((childSnapShot) => {
+          //save their first name, last name, user id, and username
+          friendsArray.push({
+                              key: childSnapShot.key,
+                              firstName: childSnapShot.val().firstName,
+                              lastName: childSnapShot.val().lastName,
+                              username: childSnapShot.val().username,
+                            })
+
+        });
+        this.setState({friends: friendsArray})
+      })
+  }
+
+  addFriend = index => {
+    const { selectedFriends, friends } = this.state;
+
+    // And put friend in selectedFriends
+    selectedFriends.push(friends[index]);
+
+    // Pull friend out of friends
+    friends.splice(index, 1);
+    tempArray.splice(index, 1);
+
+    // Finally, update our app state
+    this.setState({
+      friends: friends,
+      selectedFriends: selectedFriends
+    });
+  };
+
+  removeFriend = index => {
+    const { friends, selectedFriends } = this.state;
+
+    // And put friend in friends
+    friends.push(selectedFriends[index]);
+
+    // Pull friend out of selectedFriends
+    selectedFriends.splice(index, 1);
+
+    // Finally, update our app state
+    this.setState({
+      friends: friends,
+      selectedFriends: selectedFriends
+    });
+  };
 
   on10Toggle = (checked10) => {
     this.setState(() => ({checked10}));
@@ -192,7 +277,7 @@ export default class SplitEvenly extends React.Component {
   }
 
   //update total entered by user
-  checkTotal(value){
+  checkTotal = value =>{
 
     const numericTotal = this.totalField.getRawValue().toFixed(2);
     if(numericTotal == 0){
@@ -202,10 +287,10 @@ export default class SplitEvenly extends React.Component {
       totalEmpty = false;
     }
     this.setState({total: numericTotal, disable: false});
-  }
+  };
 
   //update bill split name entered by user
-  updateName(value){
+  updateName = value => {
     if(value == ''){
       nameEmpty = true;
     }
@@ -213,44 +298,74 @@ export default class SplitEvenly extends React.Component {
       nameEmpty = false;
     }
     this.setState({name: value, disable: false})
-  }
+  };
 
   //update custom tip entered by user
-  checkCustom(){
+  checkCustom = () => {
     const numericCust = this.tipField.getRawValue().toFixed(2);
     this.setState({tip: numericCust});
-  }
+  };
 
   //function to handle when user clicks review button
-  onSubmitBillSplit(){
+  onSubmitBillSplit = () => {
     if(this.state.name == ''){
       nameEmpty = true;
     }
     if(this.state.total == 0){
       totalEmpty = true;
     }
+    if(this.state.selectedFriends.length == 0){
+      noFriends = 'Add Some Friends!';
+    }
+    if(this.state.selectedFriends.length > 0){
+      noFriends = '';
+    }
 
     this.forceUpdate();
 
-    if(totalEmpty == false && nameEmpty == false){
-      console.log("total: " + this.state.total);
-      console.log("tip: " + this.state.tip)
+    if(totalEmpty == false && nameEmpty == false && noFriends == ''){
+      console.log("first total: " + this.state.total);
+      console.log("first tip: " + this.state.tip)
+      console.log('submitting selected friends: ', this.state.selectedFriends)
+      this.props.navigation.navigate('SplitEvenlyReview', {
+                                                            name: this.state.name,
+                                                            total: this.state.total,
+                                                            tip: this.state.tip,
+                                                            selectedFriends: this.state.selectedFriends
+                                                          })
     }
   }
 
   render() {
-    const isDisabled = this.state.disable;
+    const { disable, selectedFriends, selectedFlat} = this.state;
+    var x;
+    for (x in this.state.friends) {
+      var name1 = this.state.friends[x].firstName + " " + this.state.friends[x].lastName
+      tempArray[x] = { id: x, name: name1 };
+    }
+    console.log('temp array: ', tempArray)
+    var y;
+    for (y in selectedFriends) {
+      var name = selectedFriends[y].firstName + " " + selectedFriends[y].lastName
+      this.state.selectedFlat[y] = { id: y, name: name };
+    }
     return (
+
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../../../assets/group-dinner.jpg')} style={styles.imageContainer}>
+
         <View style={styles.overlay} />
-
-        <KeyboardAwareScrollView contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'space-between'
-        }}>
-
+        <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
           <View style={styles.infoContainer}>
+
+            <View style={styles.receiptScannerContainer}>
+              <ButtonComponent
+                text='RECEIPT SCANNER'
+                onPress={() => this.props.navigation.navigate('ReceiptScanner')}
+                disabled={false}
+                primary={true}
+              />
+            </View>
 
             <View style= {{alignContent:'flex-start'}}>
               <Text style={styles.inputTitle}>Bill Split Name</Text>
@@ -317,7 +432,7 @@ export default class SplitEvenly extends React.Component {
                     />
                   </View>
                   <Text style={styles.btntext}> 18% </Text>
-                  <Text style={styles.tipText}>(${(this.state.total * 0.10).toFixed(2)})</Text>
+                  <Text style={styles.tipText}>(${(this.state.total * 0.18).toFixed(2)})</Text>
                 </View>
 
                 <View style={styles.optionContainer}>
@@ -350,7 +465,7 @@ export default class SplitEvenly extends React.Component {
                     />
                   </View>
                   <Text style={styles.btntext}> 15% </Text>
-                  <Text style={styles.tipText}>(${(this.state.total * 0.10).toFixed(2)})</Text>
+                  <Text style={styles.tipText}>(${(this.state.total * 0.15).toFixed(2)})</Text>
                 </View>
 
                 <View style={styles.optionContainer}>
@@ -365,7 +480,7 @@ export default class SplitEvenly extends React.Component {
                     />
                   </View>
                   <Text style={styles.btntext}> 20% </Text>
-                  <Text style={styles.tipText}>(${(this.state.total * 0.10).toFixed(2)})</Text>
+                  <Text style={styles.tipText}>(${(this.state.total * 0.20).toFixed(2)})</Text>
                 </View>
 
                 <View style={styles.optionContainer}>
@@ -385,30 +500,87 @@ export default class SplitEvenly extends React.Component {
               </View>
             </View>
 
-
             <Text style={styles.inputTitle}>Bill Split Friends:</Text>
 
-            <View style={styles.container}>
+            <View style={styles.friendsContainer}>
+              <View style={{height: selectedFriends.length*50}}>
+                <FlatList
+                  data={this.state.selectedFlat}
+                  extraData={this.state}
+                  renderItem={({item}) =>
+                    <View style={styles.searchboxContainer}>
+                    <Text style={{marginLeft: 25,marginTop: 9,color: '#35b0d2', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>{item.name}</Text>
+                    <CheckBox
+                      right={true}
+                      title='Remove'
+                      iconRight
+                      iconType='material'
+                      containerStyle={{
+                                        backgroundColor: 'transparent',
+                                        height: 40,
+                                        margin: 0,
+                                        borderColor: 'transparent'}}
+                      textStyle={{color: '#35b0d2', fontWeight: 'normal', fontSize: 12}}
+                      uncheckedIcon='clear'
+                      size= {22}
+                      uncheckedColor='red'
+                      checked={false}
+                      onIconPress={() => this.removeFriend(eval(JSON.stringify(item.id)))}
+                    />
+
+                    </View>
+                  }
+                  keyExtractor={item => item.id}
+                />
+              </View>
+                <SearchableDropdown
+                  // onTextChange={(value) => this.searchFriends(value)}
+                  onItemSelect={item =>this.addFriend(eval(JSON.stringify(item.id)))}
+                  containerStyle={{ padding: 5 }}
+                  textInputStyle={{
+                    fontSize: 15,
+                    color:'#fff',
+                    textAlign: 'center',
+                    marginTop: 10,
+                    height: 40,
+                    borderWidth: 2,
+                    borderColor: '#35b0d2',
+                    borderRadius: 20,
+                    width: width/1.2,
+                    backgroundColor: 'rgba(255,255,255,0.2)',
+
+                  }}
+                  itemStyle={{
+                    padding: 10,
+                    marginTop: 2,
+                    backgroundColor: 'rgba(255,255,255,0.2)',
+                    borderColor: 'rgba(255,255,255,0.2)',
+                    borderWidth: 1,
+                    borderRadius: 5
+                  }}
+                  itemTextStyle={{ color: "white", textAlign: 'center', fontSize: 15,}}
+                  itemsContainerStyle={{ maxHeight: 150 }}
+                  items={tempArray}
+                  placeholder="Add friends!"
+                  placeholderTextColor="rgba(255,255,255,0.8)"
+                  autoCorrect= {false}
+                  resetValue={false}
+                  underlineColorAndroid="transparent"
+                />
+
+              <Text style={styles.errorMessage}>{noFriends}</Text>
               <ButtonComponent
-                text='ADD FRIENDS'
+                text='REVIEW'
                 onPress={() => this.onSubmitBillSplit()}
-                disabled={false}
-                primary={false}
+                disabled={disable}
+                primary={true}
               />
             </View>
-
-            <ButtonComponent
-              text='REVIEW'
-              onPress={() => this.onSubmitBillSplit()}
-              disabled={isDisabled}
-              primary={true}
-            />
-
-
           </View>
-        </KeyboardAwareScrollView>
+          </KeyboardAwareScrollView>
         </ImageBackground>
       </SafeAreaView>
+
     );
   }
 }
@@ -417,7 +589,6 @@ export default class SplitEvenly extends React.Component {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    alignItems: 'center',
   },
   errorMessage:{
     color: 'red',
@@ -425,8 +596,25 @@ const styles = StyleSheet.create({
   inputBoxContainer:{
     flex:8,
   },
-  signUpContainer: {
+  flatListContainer:{
+    height: 100,
+  },
+  friendsContainer: {
     flex:1,
+    alignItems: 'center',
+  },
+  searchboxContainer: {
+    flex: 1,
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    width: width/1.15,
+    height: 40,
+    borderColor: '#35b0d2',
+    backgroundColor: 'rgba(255,255,255, 0.8)',
+    borderWidth: 1,
+    borderRadius: 5,
+    flexDirection: 'row',
+    marginBottom: 10,
   },
   checkBoxContainer: {
       height: 150,
@@ -457,6 +645,10 @@ const styles = StyleSheet.create({
     flex: 2,
     width: width,
     padding:20,
+  },
+  receiptScannerContainer: {
+    width: width/2,
+    justifyContent: 'flex-end'
   },
   input: {
     height:40,
