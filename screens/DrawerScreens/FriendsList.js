@@ -64,7 +64,7 @@ export default class FriendsList extends React.Component {
               });
     }
   }
-  //funciton to hide confirmation alert
+  //function to hide confirmation alert
   hideAlert = () => {
     showAlert = false;
     this.forceUpdate();
