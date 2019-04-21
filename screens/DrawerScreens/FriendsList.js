@@ -23,7 +23,9 @@ const { width } = Dimensions.get("window");
 import * as firebase from "firebase";
 import AwesomeAlert from 'react-native-awesome-alerts';
 import SearchableDropdown from "react-native-searchable-dropdown";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ButtonComponent from '../../components/ButtonComponent'
+
 
 let currentFriends = []
 let possibleFriends = []
@@ -167,6 +169,7 @@ export default class FriendsList extends React.Component {
           style={styles.imageContainer}
         >
           <View style={styles.overlay} />
+          <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
           <Header
             style={{ backgroundColor: "transparent", borderBottomWidth: 0 }}
           >
@@ -284,6 +287,7 @@ export default class FriendsList extends React.Component {
               }}
             />
           </View>
+          </KeyboardAwareScrollView>
         </ImageBackground>
       </SafeAreaView>
     );
