@@ -11,7 +11,7 @@ import {
   FlatList,
   Picker
 } from 'react-native';
-import { Dropdown } from 'react-native-material-dropdown';
+import UIStepper from 'react-native-ui-stepper';
 import TextInputComponent from '../../../components/TextInputComponent'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ButtonComponent from '../../../components/ButtonComponent'
@@ -33,6 +33,7 @@ let noItems= '';
 let tempArray = [];
 let tempItemArray = [];
 let itemTotal = 0;
+let tip = 0;
 const{width} = Dimensions.get('window')
 
 export default class SplitByItem extends React.Component {
@@ -41,7 +42,6 @@ export default class SplitByItem extends React.Component {
     this.state = {
       name: '',
       tax: 0,
-      tip: 0,
       subtotal: 0,
       total: 0,
       items: [],
@@ -69,6 +69,7 @@ export default class SplitByItem extends React.Component {
     tempArray = [];
     tempItemArray = [];
     itemTotal = 0;
+    tip = 0;
   }
 
   //run when page first loads
@@ -227,15 +228,24 @@ export default class SplitByItem extends React.Component {
     this.setState({itemPrice: numericPrice})
   }
 
+  //update custom tip entered by user
+  checkCustom = () => {
+    const numericCust = this.tipField.getRawValue().toFixed(2);
+    tip = numericCust;
+  };
+
   on10Toggle = (checked10) => {
     this.setState(() => ({checked10}));
     if(checked10==true){
-      this.setState({tip: (this.state.total * 0.10).toFixed(2)})
-      this.setState({checked15: false});
-      this.setState({checked18: false});
-      this.setState({checked20: false});
-      this.setState({checkedCustom: false});
-      this.setState({checkedNo: false});
+      console.log('assigning 10 tip: ', (this.state.subtotal * 0.10).toFixed(2))
+      tip =  (this.state.subtotal * 0.10).toFixed(2)
+      this.setState({
+        checked15: false,
+        checked18: false,
+        checked20: false,
+        checkedCustom: false,
+        checkedNo: false
+      });
     }
     else{
       if (this.state.checked20 == false
@@ -243,18 +253,22 @@ export default class SplitByItem extends React.Component {
           && this.state.checked18 == false
           && this.state.checkedCustom == false){
             this.setState({checkedNo:true})
+            tip = 0;
           }
     }
   }
   on15Toggle = (checked15) => {
     this.setState(() => ({checked15}));
     if(checked15==true){
-      this.setState({tip: (this.state.total * 0.15).toFixed(2)})
-      this.setState({checked10: false});
-      this.setState({checked18: false});
-      this.setState({checked20: false});
-      this.setState({checkedCustom: false});
-      this.setState({checkedNo: false});
+      console.log('assigning 15 tip: ', (this.state.subtotal * 0.15).toFixed(2))
+      tip =  (this.state.subtotal * 0.15).toFixed(2)
+      this.setState({
+        checked10: false,
+        checked18: false,
+        checked20: false,
+        checkedCustom: false,
+        checkedNo: false
+      });
     }
     else{
       if (this.state.checked10 == false
@@ -262,6 +276,7 @@ export default class SplitByItem extends React.Component {
           && this.state.checked18 == false
           && this.state.checkedCustom == false){
             this.setState({checkedNo:true})
+            tip = 0
           }
     }
   }
@@ -269,12 +284,15 @@ export default class SplitByItem extends React.Component {
   on18Toggle = (checked18) => {
     this.setState(() => ({checked18}));
     if(checked18==true){
-      this.setState({tip: (this.state.total * 0.18).toFixed(2)})
-      this.setState({checked10: false});
-      this.setState({checked15: false});
-      this.setState({checked20: false});
-      this.setState({checkedCustom: false});
-      this.setState({checkedNo: false});
+      console.log('assigning 18 tip: ', (this.state.subtotal * 0.18).toFixed(2))
+      tip = (this.state.subtotal * 0.18).toFixed(2)
+      this.setState({
+        checked10: false,
+        checked15: false,
+        checked20: false,
+        checkedCustom: false,
+        checkedNo: false
+      });
     }
     else{
       if (this.state.checked10 == false
@@ -282,6 +300,7 @@ export default class SplitByItem extends React.Component {
           && this.state.checked20 == false
           && this.state.checkedCustom == false){
             this.setState({checkedNo:true})
+            tip = 0;
           }
     }
   }
@@ -289,12 +308,15 @@ export default class SplitByItem extends React.Component {
   on20Toggle = (checked20) => {
     this.setState(() => ({checked20}));
     if(checked20==true){
-      this.setState({tip: (this.state.total * 0.20).toFixed(2)})
-      this.setState({checked10: false});
-      this.setState({checked15: false});
-      this.setState({checked18: false});
-      this.setState({checkedCustom: false});
-      this.setState({checkedNo: false});
+      console.log('assigning 20 tip: ', (this.state.subtotal * 0.20).toFixed(2))
+      tip = (this.state.subtotal * 0.20).toFixed(2)
+      this.setState({
+        checked10: false,
+        checked15: false,
+        checked18: false,
+        checkedCustom: false,
+        checkedNo: false
+      });
     }
     else{
       if (this.state.checked10 == false
@@ -302,6 +324,7 @@ export default class SplitByItem extends React.Component {
           && this.state.checked18 == false
           && this.state.checkedCustom == false){
             this.setState({checkedNo:true})
+            tip = 0
           }
     }
   }
@@ -309,11 +332,14 @@ export default class SplitByItem extends React.Component {
   onCustomToggle = (checkedCustom) => {
     this.setState(() => ({checkedCustom}));
     if(checkedCustom==true){
-      this.setState({checked10: false});
-      this.setState({checked15: false});
-      this.setState({checked18: false});
-      this.setState({checked20: false});
-      this.setState({checkedNo: false});
+      console.log('assigning custom tip')
+      this.setState({
+        checked10: false,
+        checked15: false,
+        checked18: false,
+        checked20: false,
+        checkedNo: false
+      });
     }
     else{
       if (this.state.checked10 == false
@@ -321,6 +347,7 @@ export default class SplitByItem extends React.Component {
           && this.state.checked18 == false
           && this.state.checked20 == false){
             this.setState({checkedNo:true})
+            tip = 0
           }
     }
   }
@@ -328,12 +355,15 @@ export default class SplitByItem extends React.Component {
   onNoToggle = (checkedNo) => {
     this.setState(() => ({checkedNo}));
     if(checkedNo==true){
-      this.setState({tip: 0});
-      this.setState({checked10: false});
-      this.setState({checked15: false});
-      this.setState({checked18: false});
-      this.setState({checked20: false});
-      this.setState({checkedCustom: false});
+      console.log('assigning no tip')
+      tip = 0;
+      this.setState({
+        checked10: false,
+        checked15: false,
+        checked18: false,
+        checked20: false,
+        checkedCustom: false
+      });
     }
     else{
       if (this.state.checked10 == false
@@ -342,6 +372,7 @@ export default class SplitByItem extends React.Component {
           && this.state.checked20 == false
           && this.state.checkedCustom == false){
             this.setState({checkedNo:true})
+            tip = 0
           }
     }
   }
@@ -359,7 +390,7 @@ export default class SplitByItem extends React.Component {
               unit: '$',
               suffixUnit: ''
             }}
-            value={this.state.tip}
+            value={tip}
             onChangeText={(customTip) => this.checkCustom(customTip)}
             style={[styles.input, {borderColor: '#35b0d2'}]}
             ref={(ref) => this.tipField = ref}
@@ -397,12 +428,25 @@ export default class SplitByItem extends React.Component {
     this.forceUpdate();
 
     if(taxEmpty == false && nameEmpty == false && noFriends == '' && noItems == ''){
-      console.log("first tax: " + this.state.tax);
-      console.log("first tip: " + this.state.tip);
+      if(this.state.checked10){
+        tip = (this.state.subtotal * 0.10).toFixed(2)
+      }
+      if(this.state.checked15){
+        tip = (this.state.subtotal * 0.15).toFixed(2)
+      }
+      if(this.state.checked18){
+        tip = (this.state.subtotal * 0.18).toFixed(2)
+      }
+      if(this.state.checked20){
+        tip = (this.state.subtotal * 0.20).toFixed(2)
+      }
+      console.log("first tax: ",this.state.tax);
+      console.log("first tip: ", tip);
       console.log('submitting selected friends: ', this.state.selectedFriends)
       this.props.navigation.navigate('SplitByItemAssociate', {
                                                             name: this.state.name,
-                                                            tip: this.state.tip,
+                                                            tip: tip,
+                                                            itemTotal: itemTotal,
                                                             tax: this.state.tax,
                                                             selectedFriends: this.state.selectedFriends,
                                                             items: this.state.items
@@ -499,56 +543,71 @@ export default class SplitByItem extends React.Component {
           </View>
 
           <View style={styles.itemContainer}>
-            <View style={{width: width/3, marginRight: 5}}>
-              <TextInputComponent
-                empty = {itemNameEmpty}
-                placeholder="Item Name"
-                onChangeText= {(value) => this.checkItemName(value)}
-                returnKeyType='next'
-                defaultValue={this.state.itemName}
-              />
+            <View style={{flexDirection: 'row', backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 20, height: 40, alignItems: 'center', justifyContent: 'center', borderColor: '#35b0d2', borderWidth: 2}}>
+              <View style={{width: width/2.8, marginLeft: 5, marginRight: 5, marginTop: 4}}>
+                <TextInput
+                  style={[styles.input,{height: 30, borderRadius: 10, borderWidth: 1, margin: 0,
+                    borderColor: itemNameEmpty == true
+                      ? 'red'
+                      : 'transparent',
+                  }]}
+                  placeholder="Item Name"
+                  placeholderTextColor="rgba(255,255,255,0.8)"
+                  onChangeText= {(value) => this.checkItemName(value)}
+                  returnKeyType='next'
+                  defaultValue={this.state.itemName}
+                />
+              </View>
+
+              <View style={{width: width/5, marginTop: 4, marginRight: 5}}>
+                <TextInputMask
+                  type={'money'}
+                  options={{
+                    precision: 2,
+                    separator: '.',
+                    delimiter: ',',
+                    unit: '$',
+                    suffixUnit: ''
+                  }}
+                  value={this.state.itemPrice}
+                  onChangeText={(total) => this.checkItemPrice(total)}
+                  style={[styles.input,{height: 30,width: width/5, borderWidth: 1,borderRadius: 10, margin: 0,
+                    borderColor: itemPriceEmpty == true
+                      ? 'red'
+                      : 'transparent',
+                  }]}
+                  ref={(ref) => this.itemPriceField = ref}
+                  placeholder="Price"
+                  placeholderTextColor="rgba(255,255,255,0.8)"
+                  keyboardType={'numeric'}
+                  returnKeyType='go'
+                />
+              </View>
+
+              <View style={{backgroundColor: "rgba(255,255,255,0.2)", borderRadius: 10, marginRight: 5, height: 30}}>
+                <UIStepper
+                  onValueChange={(value) => { this.setState({quantity: value}) }}
+                  initialValue={1}
+                  value={this.state.quantity}
+                  minimumValue={1}
+                  maximumValue={10}
+                  displayValue = {true}
+                  wraps={true}
+                  tintColor='white'
+                  borderColor='transparent'
+                  borderWidth={2}
+                  textColor='white'
+                  fontSize={14}
+                  width={width/5}
+                  height= {30}
+                />
+              </View>
+
             </View>
 
-            <View style={{width: width/4, marginRight: 5}}>
-              <TextInputMask
-                type={'money'}
-                options={{
-                  precision: 2,
-                  separator: '.',
-                  delimiter: ',',
-                  unit: '$',
-                  suffixUnit: ''
-                }}
-                value={this.state.itemPrice}
-                onChangeText={(total) => this.checkItemPrice(total)}
-                style={[styles.input,{
-                  borderColor: itemPriceEmpty == true
-                    ? 'red'
-                    : '#35b0d2',
-                }]}
-                ref={(ref) => this.itemPriceField = ref}
-                placeholder="Price"
-                placeholderTextColor="rgba(255,255,255,0.8)"
-                keyboardType={'numeric'}
-                returnKeyType='go'
-              />
-            </View>
-
-            <View style={{backgroundColor: 'rgba(255,255,255,0.2)', borderColor: '#35b0d2', borderWidth: 2, borderRadius: 20, width: width/7, justifyContent: 'center', alignContent: 'center'}}>
-              <Dropdown
-                data={quan}
-                containerStyle= {{marginLeft: width/30, width: width/10 , height: 40}}
-                pickerStyle= {{ backgroundColor: '#35b0d2'}}
-                textColor= 'white'
-                value = {this.state.quantity}
-                dropdownOffset= {{top: 7, left: 0}}
-                fontSize = {15}
-                onChangeText = {(value) => this.setState({quantity: parseInt(value)})}
-              />
-            </View>
               <CheckBox
                 center
-                containerStyle={{padding: 0,height: 40,}}
+                containerStyle={{marginLeft: 2, padding: 0,height: 40}}
                 iconType='material'
                 size= {30}
                 uncheckedIcon='add-circle'
@@ -758,7 +817,7 @@ export default class SplitByItem extends React.Component {
 
             <Text style={styles.errorMessage}>{noFriends}</Text>
             <ButtonComponent
-              text='NEXT'
+              text='ASSIGN ITEMS'
               onPress={() => this.onSubmitBillSplit()}
               disabled={disable}
               primary={true}
@@ -834,7 +893,7 @@ const styles = StyleSheet.create({
     padding:20,
   },
   receiptScannerContainer: {
-    width: width/2,
+    width: width/1.9,
     justifyContent: 'flex-end'
   },
   itemContainer: {
