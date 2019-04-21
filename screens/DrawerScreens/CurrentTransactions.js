@@ -41,6 +41,32 @@ export default class CurrentTransactions extends React.Component {
 updateIndex(selectedIndex) {
   this.setState({ selectedIndex });
 }
+
+getUserName = (userUID) =>{
+  var name;
+
+  firebase
+        .database()
+        .ref()
+        .child("users")
+        .once("value")
+        .then ((snapshot) => {
+          // for each user
+          snapshot.forEach((childSnapShot) => {
+            // console.log("comparing...",childSnapShot.key);
+            // console.log("and...",userUID);
+            if(childSnapShot.key==userUID){
+     
+              console.log("found name!!",childSnapShot.val().firstName);
+              name= childSnapShot.val().firstName;
+              
+            }
+          // console.log(name);
+           return (name);
+          });
+});
+}
+
 //function that is called everytime page mounts 
 componentDidMount(){
   var uid = firebase.auth().currentUser.uid;
@@ -68,7 +94,6 @@ componentDidMount(){
     this.forceUpdate();
   
   })
-  console.log(uid,": uid");
 
 }
 
@@ -82,7 +107,7 @@ renderItem = ({item})=> (
   subtitle={item.date }
   subtitleStyle={{color:'white'}}
   rightElement={item.amount}
-  rightTitle={item.paying}
+  rightTitle={() =>this.getUserName(item.charging)}
   rightTitleStyle={{color:'white'}}
   chevronColor="white"
   chevron
@@ -91,9 +116,11 @@ renderItem = ({item})=> (
 )
 
   render() {
-    console.log("hello did this work?");
-    console.log(transactionData);
-    const buttons = ["All", "Current Only", "Past Only"];
+    // var shit = firebase.auth().currentUser.uid;
+    // console.log("shit", shit);
+    // // console.log(transactionData);
+    // console.log("TESTING THIS METHOD:",this.getUserName(shit));
+    const buttons = ["All", "Paying", "Requesting"];
     const { selectedIndex } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -130,7 +157,8 @@ renderItem = ({item})=> (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center"
+    alignItems: "center",
+
   },
   imageContainer: {
     resizeMode: "cover",
@@ -144,7 +172,7 @@ const styles = StyleSheet.create({
     flex: 2,
     width: width,
     padding: 20,
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
   },
   blueButton: {
   	padding:15,
@@ -153,5 +181,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#35b0d2',
     backgroundColor: '#35b0d2',
+    marginTop:10,
+    marginBottom: 10,
   },
 });
