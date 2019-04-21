@@ -7,11 +7,15 @@ import {
   TouchableOpacity,
   ImageBackground,
   SafeAreaView,
-  Dimensions
+  Dimensions,
+  FlatList,
+  Button,
 } from "react-native";
 import { Header, Left, Icon } from "native-base";
+import * as firebase from "firebase";
+
 import ButtonComponent from "../../components/ButtonComponent";
-import { ButtonGroup } from "react-native-elements";
+import { List, ListItem, ButtonGroup } from "react-native-elements";
 
 const { width } = Dimensions.get("window");
 
@@ -30,12 +34,65 @@ export default class CurrentTransactions extends React.Component {
     this.state = {
       selectedIndex: 2
     };
+    transactionData= [],
     this.updateIndex = this.updateIndex.bind(this);
   }
-  updateIndex(selectedIndex) {
-    this.setState({ selectedIndex });
-  }
+//updates the three option menu at the top
+updateIndex(selectedIndex) {
+  this.setState({ selectedIndex });
+}
+//function that is called everytime page mounts 
+componentDidMount(){
+  var uid = firebase.auth().currentUser.uid;
+  firebase
+  .database()
+  .ref()
+  .child("currentTransactions/" + uid)
+  .once("value")
+  .then((snapshot) => {
+
+    // for each friend
+    snapshot.forEach((childSnapShot) => {
+      //save their transaction information
+      transactionData.push({
+                          key: childSnapShot.key,
+                          amount: childSnapShot.val().amount,
+                          charging: childSnapShot.val().charging,
+                          date: childSnapShot.val().date,
+                          name: childSnapShot.val().name,
+                          paying: childSnapShot.val().paying,
+                  
+                        })
+
+    });
+    this.forceUpdate();
+  
+  })
+  console.log(uid,": uid");
+
+}
+
+keyExtractor = (item,index) =>index.toString()
+renderItem = ({item})=> (
+  <ListItem 
+  containerStyle= {styles.blueButton}
+
+  title={item.name}
+  titleStyle={{color:'white', fontWeight:'bold'}}
+  subtitle={item.date }
+  subtitleStyle={{color:'white'}}
+  rightElement={item.amount}
+  rightTitle={item.paying}
+  rightTitleStyle={{color:'white'}}
+  chevronColor="white"
+  chevron
+
+  />
+)
+
   render() {
+    console.log("hello did this work?");
+    console.log(transactionData);
     const buttons = ["All", "Current Only", "Past Only"];
     const { selectedIndex } = this.state;
     return (
@@ -56,24 +113,12 @@ export default class CurrentTransactions extends React.Component {
               />
             </View>
             <View style={styles.infoContainer}>
-              <ButtonComponent
-                text="current transaction #1"
-                // onPress={() => this.props.navigation.navigate('SplitByItem')}
-                disabled={false}
-                primary={true}
-              />
-              <ButtonComponent
-                text="current transaction #1"
-                // onPress={() => this.props.navigation.navigate('SplitByItem')}
-                disabled={false}
-                primary={true}
-              />
-              <ButtonComponent
-                text="current transaction #1"
-                // onPress={() => this.props.navigation.navigate('SplitByItem')}
-                disabled={false}
-                primary={true}
-              />
+     
+            <FlatList style={{flex:1}}
+              keyExtractor={this.keyExtractor}
+              data={transactionData}
+              renderItem={this.renderItem}
+            />
             </View>
           </View>
         </ImageBackground>
@@ -100,5 +145,13 @@ const styles = StyleSheet.create({
     width: width,
     padding: 20,
     justifyContent: "flex-end"
-  }
+  },
+  blueButton: {
+  	padding:15,
+  	backgroundColor: '#202646',
+    borderRadius:10,
+    borderWidth: 1,
+    borderColor: '#35b0d2',
+    backgroundColor: '#35b0d2',
+  },
 });
