@@ -25,6 +25,7 @@ $ npm install --save moment react-moment
 $ npm i react-native-awesome-alerts --save
 $ npm install react-native-circle-checkbox --save
 $ npm install --save react-native-searchable-dropdown
+$ npm install --save react-native-material-dropdown
 ```
 5. Fix errors within react-native-vector-icons
 ```
