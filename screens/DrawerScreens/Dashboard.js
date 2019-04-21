@@ -16,27 +16,28 @@ import {
 import { Constants } from 'expo';
 import * as firebase from 'firebase';
 import { StackActions, NavigationActions } from 'react-navigation';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Avatar } from 'react-native-elements';
 
 export default class Dashboard extends React.Component {
   static navigationOptions ={
     drawerIcon: (tintColor) =>(
-      <Icon name="check-circle" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
+      <Icon name="check-circle" type="FontAwesome" style={{fontSize:24, color:tintColor}}/>
     )
   }
   constructor(props) {
     super(props)
-
     this.state = {
       message: '',
       messages: [],
-      first:''
+      firstName:'',
+      lastName:'',
+      username:''
     }
     this.addItem = this.addItem.bind(this);
   }
+
     componentDidMount() {
-      //clear stack Navigator
-
-
       firebase
         .database()
         .ref()
@@ -69,18 +70,17 @@ export default class Dashboard extends React.Component {
         })
 
       var uid  = firebase.auth().currentUser.uid;
-      // let usersRef = firebase.database().ref('/users/'+ uid);
       firebase.database().ref('users/'+uid).once("value", snapshot => {
-        const nameUser = snapshot.val().firstName;
+        const fName = snapshot.val().firstName;
+        const lName = snapshot.val().lastName;
+        const user = snapshot.val().username;
         this.setState({
-          first: nameUser
-
+          firstName: fName,
+          initials: fName.charAt(0) + lName.charAt(0),
+          username: user
         })
 
       });
-      // usersRef.once('value').then(snapshot => {
-      // this.setState({ names: snapshot.val() });}
-      // );
     }
     addItem(){
       if(!this.state.message) return;
@@ -94,27 +94,38 @@ export default class Dashboard extends React.Component {
     const { names,message } = this.state;
     return (
       <View style={styles.container}>
-      <Header>
-        <Left>
-          <Icon name="bars" type="FontAwesome" onPress={()=>this.props.navigation.openDrawer()}/>
-        </Left>
-      </Header>
-      <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-      <TextInput placeholder = 'enter your message' onChangeText={(text)=> this.setState({message:text})}
-      style={styles.txtInput}/>
+        <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
+          <Header>
+            <Left>
+              <Icon name="bars" type="FontAwesome" onPress={()=>this.props.navigation.openDrawer()}/>
+            </Left>
+          </Header>
 
-      <Button title='Send' onPress={this.addItem}/>
-      <Text style={styles.nameItem}>Welcome back {this.state.first}</Text>
-      <Text> Dashboard</Text>
-      </View>
-      <FlatList data={this.state.messages}
-      renderItem={({item}) =>
-      <View style={styles.listItemContainer}>
-        <Text style={styles.listItem}>
-          {item}
-        </Text>
-      </View>}
-      />
+          <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+
+            <Avatar
+              size = "xlarge"
+              rounded title = {this.state.initials}
+            />
+
+            <Text style={styles.text}>Welcome {this.state.firstName}</Text>
+            <Text style={styles.text}>{this.state.username}</Text>
+
+
+
+
+            <Text style={styles.text}>Your Recent Activity:</Text>
+          </View>
+          
+          <FlatList data={this.state.messages}
+            renderItem={({item}) =>
+            <View style={styles.listItemContainer}>
+              <Text style={styles.listItem}>
+                {item}
+              </Text>
+            </View>}
+          />
+        </KeyboardAwareScrollView>
       </View>
     );
   }
@@ -126,14 +137,6 @@ container:{
   backgroundColor: '#eee',
   marginTop: Constants.statusBarHeight
 },
-msgBox:{
-  flexDirection:'row',
-  padding:20,
-  backgroundColor:'#fff'
-},
-txtInput:{
-  flex: 1
-},
 listItemContainer:{
   backgroundColor: '#fff',
   margin: 5,
@@ -141,11 +144,9 @@ listItemContainer:{
 },
 listItem:{
   fontSize:20,
-  padding: 10
+  padding: 10,
 },
-nameItem:{
-  fontSize: 30,
-
-}
-
+text:{
+  fontSize: 25,
+},
 });
