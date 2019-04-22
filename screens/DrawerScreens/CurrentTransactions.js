@@ -17,8 +17,11 @@ import * as firebase from "firebase";
 import ButtonComponent from "../../components/ButtonComponent";
 import { List, ListItem, ButtonGroup } from "react-native-elements";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
+
+let transactionData =[]
+let tempArray =[]
 export default class CurrentTransactions extends React.Component {
   static navigationOptions = {
     drawerIcon: tintColor => (
@@ -29,43 +32,125 @@ export default class CurrentTransactions extends React.Component {
       />
     )
   };
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      selectedIndex: 2
+      selectedIndex: 0,
+      first: '',
+      name:'',
     };
     transactionData= [],
+    tempArray =[],
+    isPaid= false,
+    sameName = false,
     this.updateIndex = this.updateIndex.bind(this);
-  }
+  };
 //updates the three option menu at the top
 updateIndex(selectedIndex) {
   this.setState({ selectedIndex });
-}
+};
 
 getUserName = (userUID) =>{
   var name;
+  var uid = firebase.auth().currentUser.uid;
 
-  firebase
-        .database()
-        .ref()
-        .child("users")
-        .once("value")
-        .then ((snapshot) => {
-          // for each user
-          snapshot.forEach((childSnapShot) => {
-            // console.log("comparing...",childSnapShot.key);
-            // console.log("and...",userUID);
-            if(childSnapShot.key==userUID){
-     
-              console.log("found name!!",childSnapShot.val().firstName);
-              name= childSnapShot.val().firstName;
-              
-            }
-          // console.log(name);
-           return (name);
-          });
-});
+
+};
+
+
+renderMain(item)
+{
+  const {selectedIndex}= this.state;
+  var uid = firebase.auth().currentUser.uid;
+  var name;
+
+  if(selectedIndex==0){
+  if(item.paying==uid){
+    for(var x in tempArray){
+      if(tempArray[x].key==item.charging){
+      name=tempArray[x].first;
+      }
+    };  
+    return <ListItem 
+    containerStyle= {styles.blueButton}
+    title={item.name}
+    titleStyle={{color:'white', fontWeight:'bold'}}
+    subtitle={item.date }
+    subtitleStyle={{color:'white'}}
+    rightElement={item.amount}
+    rightTitle={"Paying "+name}
+    rightTitleStyle={{color:'white'}}
+    chevronColor="white"
+    chevron
+  
+    />;  }
+  else if(item.charging==uid)
+  {
+    for(var x in tempArray){
+      if(tempArray[x].key==item.paying){
+      name=tempArray[x].first;
+      }
+    };
+    return <ListItem 
+    containerStyle= {styles.redButton}   
+    title={item.name}
+    titleStyle={{color:'white', fontWeight:'bold'}}
+    subtitle={item.date }
+    subtitleStyle={{color:'white'}}
+    rightElement={item.amount}
+    rightTitle={"Charging "+name}
+    rightTitleStyle={{color:'white'}}
+    chevronColor="white"
+    chevron
+  
+    />
+  }
 }
+if(selectedIndex==1){
+  if(item.paying==uid){
+    for(var x in tempArray){
+      if(tempArray[x].key==item.charging){
+      name=tempArray[x].first;
+      }
+    };
+  
+    return <ListItem 
+    containerStyle= {styles.blueButton}
+    title={item.name}
+    titleStyle={{color:'white', fontWeight:'bold'}}
+    subtitle={item.date }
+    subtitleStyle={{color:'white'}}
+    rightElement={item.amount}
+    rightTitle={"Paying "+name}
+    rightTitleStyle={{color:'white'}}
+    chevronColor="white"
+    chevron
+  
+    />;  }
+}
+else if(selectedIndex==2){
+  if(item.charging==uid){
+    for(var x in tempArray){
+      if(tempArray[x].key==item.paying){
+      name=tempArray[x].first;
+      }
+    };
+    return <ListItem 
+    containerStyle= {styles.redButton}   
+    title={item.name}
+    titleStyle={{color:'white', fontWeight:'bold'}}
+    subtitle={item.date }
+    subtitleStyle={{color:'white'}}
+    rightElement={item.amount}
+    rightTitle={"Charging "+name}
+    rightTitleStyle={{color:'white'}}
+    chevronColor="white"
+    chevron
+  
+    />  }
+}
+
+};
 
 //function that is called everytime page mounts 
 componentDidMount(){
@@ -91,6 +176,29 @@ componentDidMount(){
                         })
 
     });
+
+    firebase
+    .database()
+    .ref()
+    .child("users")
+    .once("value")
+    .then ((snapshot) => {
+      // for each user
+      snapshot.forEach((childSnapShot) => {
+       
+          tempArray.push({
+            key: childSnapShot.key,
+            first: childSnapShot.val().firstName,
+          })
+          this.setState(
+            {
+              tempArray:tempArray
+            }
+          )
+        });
+        });
+
+   
     this.forceUpdate();
   
   })
@@ -98,30 +206,15 @@ componentDidMount(){
 }
 
 keyExtractor = (item,index) =>index.toString()
-renderItem = ({item})=> (
-  <ListItem 
-  containerStyle= {styles.blueButton}
-
-  title={item.name}
-  titleStyle={{color:'white', fontWeight:'bold'}}
-  subtitle={item.date }
-  subtitleStyle={{color:'white'}}
-  rightElement={item.amount}
-  rightTitle={() =>this.getUserName(item.charging)}
-  rightTitleStyle={{color:'white'}}
-  chevronColor="white"
-  chevron
-
-  />
+renderItem = ({item})=> ( 
+this.renderMain(item)
 )
 
   render() {
-    // var shit = firebase.auth().currentUser.uid;
-    // console.log("shit", shit);
-    // // console.log(transactionData);
-    // console.log("TESTING THIS METHOD:",this.getUserName(shit));
+    
     const buttons = ["All", "Paying", "Requesting"];
     const { selectedIndex } = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground
@@ -129,18 +222,16 @@ renderItem = ({item})=> (
           style={styles.imageContainer}
         >
           <View style={styles.overlay} />
-          <View style={styles.container}>
-            <View style={styles.infoContainer}>
-              <Text> current transactions</Text>
+          <View style={styles.mainContainer}>
+          <Text style={{color:'white', fontWeight:'bold'}}> Current Transactions</Text>
               <ButtonGroup
                 onPress={this.updateIndex}
                 selectedIndex={selectedIndex}
                 buttons={buttons}
                 containerStyle={{ height: 30 }}
               />
-            </View>
-            <View style={styles.infoContainer}>
-     
+                 <View style={styles.infoContainer}>
+
             <FlatList style={{flex:1}}
               keyExtractor={this.keyExtractor}
               data={transactionData}
@@ -158,6 +249,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+  },
+  mainContainer:{
+    flex: 1 ,
+    alignItems: "center",
+    justifyContent:"center",
+    position:"relative",
+    width:width,
+    height: height,
+    marginTop:50,
 
   },
   imageContainer: {
@@ -170,9 +270,12 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flex: 2,
-    width: width,
     padding: 20,
     justifyContent: "flex-end",
+    width:width,
+    marginTop:20,
+
+
   },
   blueButton: {
   	padding:15,
@@ -184,4 +287,14 @@ const styles = StyleSheet.create({
     marginTop:10,
     marginBottom: 10,
   },
+  redButton: {
+    padding:15,
+  	backgroundColor: '#202646',
+    borderRadius:10,
+    borderWidth: 1,
+    borderColor: 'coral',
+    backgroundColor: 'coral',
+    marginTop:10,
+    marginBottom: 10,
+  }
 });
