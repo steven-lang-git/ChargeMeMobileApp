@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from 'react-navigation';
 import BillSplit from '../screens/DrawerScreens/BillSplit/BillSplit';
 import SplitByItem from '../screens/DrawerScreens/BillSplit/SplitByItem';
+import SplitByItemPricing from '../screens/DrawerScreens/BillSplit/SplitByItemPricing';
 import SplitByItemReview from '../screens/DrawerScreens/BillSplit/SplitByItemReview';
 import SplitByItemAssociate from '../screens/DrawerScreens/BillSplit/SplitByItemAssociate';
 import SplitEvenly from '../screens/DrawerScreens/BillSplit/SplitEvenly';
@@ -14,6 +15,7 @@ const BillSplitStack = createStackNavigator({
     BillSplit: { screen: BillSplit, navigationOptions: {header: null}},
     SplitByItem: { screen: SplitByItem},
     SplitByItemAssociate: { screen: SplitByItemAssociate},
+    SplitByItemPricing: {screen: SplitByItemPricing},
     SplitByItemReview: { screen: SplitByItemReview},
     SplitEvenly: { screen: SplitEvenly},
     SplitEvenlyReview: { screen: SplitEvenlyReview},

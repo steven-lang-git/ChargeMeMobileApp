@@ -18,17 +18,19 @@ class TextInputComponent extends Component {
       autoCapitalize,
       secureTextEntry,
       onSubmitEditing,
+			style,
+			placeholderTextColor,
     } = this.props;
     return(
       <TextInput
-        style={[styles.input,{
+        style={[style ,{
           borderColor: empty == true || error != ''
             ? 'red'
             : '#35b0d2',
         }]}
         placeholder={placeholder}
         defaultValue={defaultValue}
-        placeholderTextColor="rgba(255,255,255,0.8)"
+        placeholderTextColor= {placeholderTextColor}
         onChangeText={(text) => onChangeText(text)}
         returnKeyType={returnKeyType}
         ref={inputRef}
@@ -44,8 +46,10 @@ class TextInputComponent extends Component {
 //check the type of the props and if they are required
 TextInputComponent.propTypes = {
   empty: PropTypes.bool.isRequired,
+	style: PropTypes.object,
   error: PropTypes.string,
   placeholder: PropTypes.string.isRequired,
+	placeholder: PropTypes.string,
   onChangeText: PropTypes.func.isRequired,
   returnKeyType: PropTypes.string.isRequired,
   autoCapitalize: PropTypes.string,
@@ -61,6 +65,16 @@ TextInputComponent.defaultProps = {
   autoCorrect: false,
   secureTextEntry: false,
   onSubmitEditing: () => {},
+	style: {
+    height:40,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    color:'#fff',
+    marginBottom: 5,
+    paddingHorizontal:10,
+    borderWidth: 2,
+    borderRadius: 20,
+  },
+	placeholderTextColor: "rgba(255,255,255,0.8)",
 }
 
 const styles = StyleSheet.create({
