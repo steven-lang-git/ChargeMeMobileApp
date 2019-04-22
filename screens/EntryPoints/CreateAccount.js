@@ -20,6 +20,7 @@ import {TextInputMask} from 'react-native-masked-text';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { StackActions, NavigationActions } from 'react-navigation';
 
+const{width} = Dimensions.get('window')
 let firstNameError = false;
 let lastNameError = false;
 let phoneError = false;
@@ -34,7 +35,6 @@ let birthdayErrorMessage = '';
 let usernameErrorMessage = '';
 let phoneErrorMessage = '';
 
-const{width} = Dimensions.get('window')
 
 const resetToLogin = StackActions.reset({
   index: 0,

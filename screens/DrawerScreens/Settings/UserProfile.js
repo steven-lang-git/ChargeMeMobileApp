@@ -28,10 +28,14 @@ let usernameEmpty = false;
 let firstNameEmpty = false;
 let lastNameEmpty = false;
 let phoneEmpty = false;
+let showAlert = false;
 let usernameMessage = '';
 let firstnameMessage = '';
 let lastnameMessage = '';
 let phoneMessage = '';
+
+//new
+let usernameErrorMessage = '';
 
 export default class UserProfile extends React.Component {
   constructor(props){
@@ -43,16 +47,14 @@ export default class UserProfile extends React.Component {
         birthday: '',
         profilePic: '',
         uid: '',
-        loading: false,
         disable: true,
         showAlert: false
       };
   }
 
   hideAlert = () => {
-    this.setState({
-      showAlert: false
-    });
+    showAlert = false;
+    this.forceUpdate();
   };
 
   //function that executes when page loads
@@ -92,12 +94,15 @@ export default class UserProfile extends React.Component {
          lastname : snapshot.val().lastName,
          phone : snapshot.val().phone,
          username : snapshot.val().username,
-         birthday : snapshot.val().birthday
+         birthday : snapshot.val().birthday,
+         email : snapshot.val().email,
        })
     });
   }
 
   handleUsername(value){
+    this.setState({disable: false});
+    usernameErrorMessage = ''
     if(value == ''){
       usernameEmpty = true;
     }
@@ -105,9 +110,9 @@ export default class UserProfile extends React.Component {
       usernameEmpty = false;
     }
     //clear out any existing errors
-    usernameMessage = '';
+    //usernameMessage = '';
     //enable buttons
-    this.setState({disable: false});
+    //this.setState({disable: false});
     //update username
     this.setState({username: value});
   }
@@ -170,6 +175,8 @@ export default class UserProfile extends React.Component {
     //check that all fields have been filled out
     if(this.state.username == ''){
       usernameMessage = 'Please enter a username';
+      //new
+      //usernameEmpty = true;
     }
     if(this.state.firstname == ''){
       firstnameMessage = 'Please enter a first name';
@@ -185,8 +192,18 @@ export default class UserProfile extends React.Component {
     this.forceUpdate();
 
     //check that there are no errors
-    if(usernameMessage == '' && firstnameMessage == '' && lastnameMessage == '' && phoneMessage == '' ){
-      //get user id
+    if(usernameEmpty == false && usernameMessage == '' && firstnameMessage == '' && lastnameMessage == '' && phoneMessage == '' && usernameErrorMessage == ''){
+
+      //new
+      this.makeUsernameUnique()
+      showAlert = true;
+    }
+
+  }
+
+  //function to create user
+  updateUsername(){
+    //get user id
       var uid = firebase.auth().currentUser.uid;
 
       //format phone
@@ -209,11 +226,37 @@ export default class UserProfile extends React.Component {
       //disable the buttons again
       this.setState({disable: true});
     }
+
+  //function to check if entered username already exists
+  makeUsernameUnique(){
+    //save the username entered
+    var currentUsername = this.state.username;
+
+    //save the root reference to the database
+    var ref = firebase.database().ref();
+
+    //find all users that have the current username
+    ref.child('users').orderByChild('username').equalTo(currentUsername).once('value', snapshot => {
+      let result = snapshot.val();
+
+      //if the username does not exist in the database
+      if(!result){
+        //clear username error
+        usernameErrorMessage = '';
+        //call create user function
+        this.updateUsername();
+      }
+      //if username is already taken
+      else{
+        //set username error message
+        usernameErrorMessage= 'Username is taken';
+        this.forceUpdate();
+      }
+    });
   }
 
-
   render() {
-    const showAlert  = this.state.showAlert;
+    //const showAlert  = this.state.showAlert;
     const username = this.state.username;
     const isDisabled  = this.state.disable;
     return (
@@ -260,6 +303,11 @@ export default class UserProfile extends React.Component {
             </View>
 
             <TextInputComponent
+              style={[styles.input,{
+                borderColor: usernameEmpty == true || usernameErrorMessage != ''
+                  ? 'red'
+                  : '#35b0d2',
+              }]}
               empty= {usernameEmpty}
               error= {usernameMessage}
               placeholder="Username"
@@ -269,6 +317,8 @@ export default class UserProfile extends React.Component {
               returnKeyType='next'
               onChangeText={(username) => this.handleUsername(username)}
             />
+            <Text style = {styles.errorMessage}>{usernameErrorMessage}</Text>
+
             <Text/>
 
             <TextInputMask
@@ -317,7 +367,6 @@ export default class UserProfile extends React.Component {
               />
             </View>
           </View>
-
           <AwesomeAlert
           show={showAlert}
           showProgress={false}
