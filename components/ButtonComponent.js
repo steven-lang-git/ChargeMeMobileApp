@@ -6,14 +6,14 @@ import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 //button component that incorporates making the button dim when it is disabled
 class ButtonComponent extends Component {
 	render() {
-		const { text, onPress, disabled, primary} = this.props;
+		const { text, onPress, disabled, primary, blueButton, redButton, textStyle } = this.props;
 		return (
       <View style={disabled?styles.disabled:styles.enabled}>
-  		  <TouchableOpacity style={primary?styles.blueButton:styles.redButton}
+  		  <TouchableOpacity style={primary? blueButton: redButton}
   			   onPress={() => onPress()}
            disabled={disabled}
   		  >
-  			 <Text style={styles.textStyle}>{text}</Text>
+  			 <Text style={textStyle}>{text}</Text>
   		  </TouchableOpacity>
       </View>
 		);
@@ -26,6 +26,33 @@ ButtonComponent.propTypes = {
   onPress: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
 	primary: PropTypes.bool.isRequired,
+	blueButton: PropTypes.object,
+	redButton: PropTypes.object,
+	textStyle: PropTypes.object,
+};
+
+ButtonComponent.defaultProps = {
+ blueButton: {
+	 padding:15,
+	 backgroundColor: '#202646',
+	 borderRadius:10,
+	 borderWidth: 1,
+	 borderColor: '#35b0d2',
+	 backgroundColor: '#35b0d2',
+ },
+	redButton: {
+		padding:15,
+  	backgroundColor: '#202646',
+    borderRadius:10,
+    borderWidth: 1,
+    borderColor: 'coral',
+    backgroundColor: 'coral',
+	},
+	textStyle: {
+    fontSize:18,
+  	color: 'white',
+  	textAlign: 'center'
+  },
 };
 
 const styles = StyleSheet.create({
@@ -36,7 +63,6 @@ const styles = StyleSheet.create({
   },
   blueButton: {
   	padding:15,
-  	backgroundColor: '#202646',
     borderRadius:10,
     borderWidth: 1,
     borderColor: '#35b0d2',
@@ -44,7 +70,6 @@ const styles = StyleSheet.create({
   },
 	redButton: {
 		padding:15,
-  	backgroundColor: '#202646',
     borderRadius:10,
     borderWidth: 1,
     borderColor: 'coral',
