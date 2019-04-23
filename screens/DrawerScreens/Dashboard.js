@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
+  SafeAreaView,
+  ImageBackground,
 } from 'react-native';
 import {
   Header,
@@ -80,24 +82,26 @@ export default class Dashboard extends React.Component {
     renderItem = ({item})=> (
     <ListItem
     containerStyle= {styles.blueButton}
-
     title={item.name}
     titleStyle={{color:'white', fontWeight:'bold'}}
     subtitle={item.date }
     subtitleStyle={{color:'white'}}
     rightElement={item.amount}
-    rightTitle={item.paying}
+    rightTitle={"Paying "+ item.charging}
     rightTitleStyle={{color:'white'}}
     chevronColor="white"
     chevron
-
     />
   )
 
 
   render() {
-    console.log(currentTransactions);
     return (
+      <SafeAreaView style={styles.container}>
+        <ImageBackground source={require('../../assets/blue.jpg')} style={styles.imageContainer}>
+          <View style={styles.overlay} />
+
+
       <View style={styles.container}>
         <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
           <Header>
@@ -133,6 +137,8 @@ export default class Dashboard extends React.Component {
           </View>
         </KeyboardAwareScrollView>
       </View>
+      </ImageBackground>
+    </SafeAreaView>
     );
   }
 }
@@ -140,8 +146,7 @@ export default class Dashboard extends React.Component {
 const styles = StyleSheet.create({
 container:{
   flex: 1,
-  backgroundColor: '#eee',
-  marginTop: Constants.statusBarHeight
+  alignItems: "center",
 },
 listItemContainer:{
   backgroundColor: '#fff',
@@ -154,18 +159,30 @@ listItem:{
 },
 text:{
   fontSize: 25,
+  color: "white",
 },
 infoContainer:{
-    flex: 2,
-    width: width,
-    padding: 10,
+  flex: 2,
+  padding: 20,
+  justifyContent: "flex-end",
+  width:width,
+  marginTop:20,
 },
-blueButton: {
-  	padding:15,
-  	backgroundColor: '#202646',
-    borderRadius:10,
-    borderWidth: 1,
-    borderColor: '#35b0d2',
-    backgroundColor: '#35b0d2',
+blueButton:{
+  padding:15,
+  backgroundColor: '#202646',
+  borderRadius:10,
+  borderWidth: 1,
+  borderColor: '#35b0d2',
+  backgroundColor: '#35b0d2',
+  marginTop:10,
+},
+overlay:{
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(69,85,117,0.7)',
+},
+imageContainer:{
+    resizeMode:'cover',
+    flex:1,
 },
 });
