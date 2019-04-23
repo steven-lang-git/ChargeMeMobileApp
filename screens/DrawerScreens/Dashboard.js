@@ -37,8 +37,10 @@ export default class Dashboard extends React.Component {
       firstName:'',
       lastName:'',
       username:''
+
     }
     currentTransactions=[]
+    tempArray=[]
   }
 
     componentDidMount() {
@@ -61,6 +63,27 @@ export default class Dashboard extends React.Component {
                               paying: childSnapShot.val().paying,
                             })
         });
+        firebase
+        .database()
+        .ref()
+        .child("users")
+        .once("value")
+        .then ((snapshot) => {
+          // for each user
+          snapshot.forEach((childSnapShot) => {
+           
+              tempArray.push({
+                key: childSnapShot.key,
+                first: childSnapShot.val().firstName,
+              })
+              this.setState(
+                {
+                  tempArray:tempArray
+                }
+              )
+            });
+            });
+    
         this.forceUpdate();
       })
 
@@ -79,22 +102,62 @@ export default class Dashboard extends React.Component {
     }
 
 
-    renderItem = ({item})=> (
-    <ListItem
+
+  renderMain(item)
+{
+  const {selectedIndex}= this.state;
+  var uid = firebase.auth().currentUser.uid;
+  var name;
+
+  if(item.paying==uid){
+    for(var x in tempArray){
+      if(tempArray[x].key==item.charging){
+      name=tempArray[x].first;
+      }
+    };  
+    return <ListItem 
     containerStyle= {styles.blueButton}
     title={item.name}
     titleStyle={{color:'white', fontWeight:'bold'}}
     subtitle={item.date }
     subtitleStyle={{color:'white'}}
     rightElement={item.amount}
-    rightTitle={"Paying "+ item.charging}
+    rightTitle={"Paying "+name}
     rightTitleStyle={{color:'white'}}
     chevronColor="white"
     chevron
+  
+    />;  }
+  else if(item.charging==uid)
+  {
+    for(var x in tempArray){
+      if(tempArray[x].key==item.paying){
+      name=tempArray[x].first;
+      }
+    };
+    return <ListItem 
+    containerStyle= {styles.redButton}   
+    title={item.name}
+    titleStyle={{color:'white', fontWeight:'bold'}}
+    subtitle={item.date }
+    subtitleStyle={{color:'white'}}
+    rightElement={item.amount}
+    rightTitle={"Charging "+name}
+    rightTitleStyle={{color:'white'}}
+    chevronColor="white"
+    chevron
+  
     />
-  )
+  }
+};
 
 
+
+
+
+  renderItem = ({item})=> ( 
+    this.renderMain(item)
+    )
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -143,6 +206,7 @@ export default class Dashboard extends React.Component {
   }
 }
 
+
 const styles = StyleSheet.create({
 container:{
   flex: 1,
@@ -176,6 +240,16 @@ blueButton:{
   borderColor: '#35b0d2',
   backgroundColor: '#35b0d2',
   marginTop:10,
+},
+redButton: {
+  padding:15,
+  backgroundColor: '#202646',
+  borderRadius:10,
+  borderWidth: 1,
+  borderColor: 'coral',
+  backgroundColor: 'coral',
+  marginTop:10,
+  marginBottom: 10,
 },
 overlay:{
     ...StyleSheet.absoluteFillObject,
