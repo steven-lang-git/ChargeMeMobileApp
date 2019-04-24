@@ -329,7 +329,7 @@ export default class SplitByItem extends React.Component {
             <View style={styles.infoContainer}>
 
 
-          <Text style={[styles.inputTitle,{marginTop: 10}]}>Tax</Text>
+          <Text style={[styles.inputTitle,{marginTop: 10}]}>Total Tax</Text>
 
           <TextInputMask
             type={'money'}
@@ -457,7 +457,7 @@ export default class SplitByItem extends React.Component {
 
             <View style={{marginTop: 20, width: width-40}}>
               <ButtonComponent
-                text='REVIEW BILL SPLIT'
+                text='NEXT'
                 onPress={() => this.onSubmitBillSplit()}
                 disabled={false}
                 primary={true}

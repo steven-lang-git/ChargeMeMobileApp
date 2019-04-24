@@ -26,7 +26,7 @@ import TextInputComponent from '../../../components/TextInputComponent'
 import SearchableDropdown from "react-native-searchable-dropdown";
 import * as firebase from "firebase";
 
-let totalEmpty = false;
+
 let nameEmpty = false;
 let noFriends = '';
 let tempArray = []
@@ -43,12 +43,8 @@ export default class SplitByAmount extends React.Component {
       selectedFriends: [],
       selectedFlat: [],
       first:'',
-      checked10: false,
-      checked15: false,
-      checked18: false,
-      checked20: false,
-      checkedCustom: false,
-      checkedNo: true,
+      checkedEven: true,
+      checkedAmount: false,
       disable: true,
     };
 
@@ -56,8 +52,6 @@ export default class SplitByAmount extends React.Component {
 
   //run when page first loads
   componentDidMount() {
-
-    totalEmpty = false;
     nameEmpty = false;
     noFriends = '';
     tempArray = []
@@ -100,6 +94,20 @@ export default class SplitByAmount extends React.Component {
       })
   }
 
+  generateSelectedFlat = (selectedFriends) => {
+    let selectedFlat = this.state;
+
+    selectedFlat = []
+    var y;
+    for (y in selectedFriends) {
+      var name = selectedFriends[y].firstName + " " + selectedFriends[y].lastName
+      selectedFlat[y] = { id: y, name: name };
+    }
+    this.setState({selectedFlat: selectedFlat});
+    this.forceUpdate();
+
+  }
+
   addFriend = index => {
     const { selectedFriends, friends } = this.state;
 
@@ -109,6 +117,8 @@ export default class SplitByAmount extends React.Component {
     // Pull friend out of friends
     friends.splice(index, 1);
     tempArray.splice(index, 1);
+
+    this.generateSelectedFlat(selectedFriends)
 
     // Finally, update our app state
     this.setState({
@@ -127,128 +137,29 @@ export default class SplitByAmount extends React.Component {
     selectedFriends.splice(index, 1);
 
     // Finally, update our app state
+    this.generateSelectedFlat(selectedFriends)
     this.setState({
       friends: friends,
       selectedFriends: selectedFriends
     });
   };
 
-  on10Toggle = (checked10) => {
-    this.setState(() => ({checked10}));
-    if(checked10==true){
-      this.setState({tip: (this.state.total * 0.10).toFixed(2)})
-      this.setState({checked15: false});
-      this.setState({checked18: false});
-      this.setState({checked20: false});
-      this.setState({checkedCustom: false});
-      this.setState({checkedNo: false});
+  onEvenToggle = (checkedEven) => {
+    this.setState(() => ({checkedEven}));
+    if(checkedEven==true){
+      this.setState({checkedAmount: false});
     }
     else{
-      if (this.state.checked20 == false
-          && this.state.checked15 == false
-          && this.state.checked18 == false
-          && this.state.checkedCustom == false){
-            this.setState({checkedNo:true})
-          }
+      this.setState({checkedAmount: true});
     }
   }
-  on15Toggle = (checked15) => {
-    this.setState(() => ({checked15}));
-    if(checked15==true){
-      this.setState({tip: (this.state.total * 0.15).toFixed(2)})
-      this.setState({checked10: false});
-      this.setState({checked18: false});
-      this.setState({checked20: false});
-      this.setState({checkedCustom: false});
-      this.setState({checkedNo: false});
+  onAmountToggle = (checkedAmount) => {
+    this.setState(() => ({checkedAmount}));
+    if(checkedAmount==true){
+      this.setState({checkedEven: false});
     }
     else{
-      if (this.state.checked10 == false
-          && this.state.checked20 == false
-          && this.state.checked18 == false
-          && this.state.checkedCustom == false){
-            this.setState({checkedNo:true})
-          }
-    }
-  }
-
-  on18Toggle = (checked18) => {
-    this.setState(() => ({checked18}));
-    if(checked18==true){
-      this.setState({tip: (this.state.total * 0.18).toFixed(2)})
-      this.setState({checked10: false});
-      this.setState({checked15: false});
-      this.setState({checked20: false});
-      this.setState({checkedCustom: false});
-      this.setState({checkedNo: false});
-    }
-    else{
-      if (this.state.checked10 == false
-          && this.state.checked15 == false
-          && this.state.checked20 == false
-          && this.state.checkedCustom == false){
-            this.setState({checkedNo:true})
-          }
-    }
-  }
-
-  on20Toggle = (checked20) => {
-    this.setState(() => ({checked20}));
-    if(checked20==true){
-      this.setState({tip: (this.state.total * 0.20).toFixed(2)})
-      this.setState({checked10: false});
-      this.setState({checked15: false});
-      this.setState({checked18: false});
-      this.setState({checkedCustom: false});
-      this.setState({checkedNo: false});
-    }
-    else{
-      if (this.state.checked10 == false
-          && this.state.checked15 == false
-          && this.state.checked18 == false
-          && this.state.checkedCustom == false){
-            this.setState({checkedNo:true})
-          }
-    }
-  }
-
-  onCustomToggle = (checkedCustom) => {
-    this.setState(() => ({checkedCustom}));
-    if(checkedCustom==true){
-      this.setState({checked10: false});
-      this.setState({checked15: false});
-      this.setState({checked18: false});
-      this.setState({checked20: false});
-      this.setState({checkedNo: false});
-    }
-    else{
-      if (this.state.checked10 == false
-          && this.state.checked15 == false
-          && this.state.checked18 == false
-          && this.state.checked20 == false){
-            this.setState({checkedNo:true})
-          }
-    }
-  }
-
-  onNoToggle = (checkedNo) => {
-    this.setState(() => ({checkedNo}));
-    if(checkedNo==true){
-      this.setState({tip: 0});
-      this.setState({checked10: false});
-      this.setState({checked15: false});
-      this.setState({checked18: false});
-      this.setState({checked20: false});
-      this.setState({checkedCustom: false});
-    }
-    else{
-      if (this.state.checked10 == false
-          && this.state.checked15 == false
-          && this.state.checked18 == false
-          && this.state.checked20 == false
-          && this.state.checkedCustom == false){
-            this.setState({checkedNo:true})
-          }
+      this.setState({checkedEven: true});
     }
   }
 
@@ -279,18 +190,6 @@ export default class SplitByAmount extends React.Component {
     }
   }
 
-  //update total entered by user
-  checkTotal = value =>{
-
-    const numericTotal = this.totalField.getRawValue().toFixed(2);
-    if(numericTotal == 0){
-      totalEmpty = true;
-    }
-    else{
-      totalEmpty = false;
-    }
-    this.setState({total: numericTotal, disable: false});
-  };
 
   //update bill split name entered by user
   updateName = value => {
@@ -311,11 +210,9 @@ export default class SplitByAmount extends React.Component {
 
   //function to handle when user clicks review button
   onSubmitBillSplit = () => {
+    console.log("CLICK")
     if(this.state.name == ''){
       nameEmpty = true;
-    }
-    if(this.state.total == 0){
-      totalEmpty = true;
     }
     if(this.state.selectedFriends.length == 0){
       noFriends = 'Add Some Friends!';
@@ -326,16 +223,28 @@ export default class SplitByAmount extends React.Component {
 
     this.forceUpdate();
 
-    if(totalEmpty == false && nameEmpty == false && noFriends == ''){
-      console.log("first total: " + this.state.total);
-      console.log("first tip: " + this.state.tip)
+    if(nameEmpty == false && noFriends == ''){
+      
       console.log('submitting selected friends: ', this.state.selectedFriends)
-      this.props.navigation.navigate('SplitEvenly', {
-                                                            name: this.state.name,
-                                                            total: this.state.total,
-                                                            tip: this.state.tip,
-                                                            friends: this.state.selectedFriends
-                                                          })
+
+      if(this.state.checkedEven == true){
+        this.props.navigation.navigate('SplitEvenly', {
+                                                              name: this.state.name,
+                                                              // total: this.state.total,
+                                                              // tip: this.state.tip,
+                                                              friends: this.state.selectedFriends
+                                                            })
+      }
+
+      if(this.state.checkedAmount == true){
+        this.props.navigation.navigate('SplitByCustomAmount', {
+                                                              name: this.state.name,
+                                                              // total: this.state.total,
+                                                              // tip: this.state.tip,
+                                                              friends: this.state.selectedFriends
+                                                            })
+      }
+
     }
   }
 
@@ -358,6 +267,40 @@ export default class SplitByAmount extends React.Component {
         <ImageBackground source={require('../../../assets/group-dinner.jpg')} style={styles.imageContainer}>
 
         <View style={styles.overlay} />
+        <View style={{ width: width/1.2, padding:20, paddingBottom: 0}}>
+
+          <View style = {{flexDirection: 'row', alignItems: 'center',justifyContent: 'space-between', marginLeft: (width-(width/2.1))/2 - 20,width: width/2.1,}}>
+
+            <TouchableOpacity style = {styles.progressButton}
+              disabled = {true}
+              >
+              <Text style={styles.stepLabel}>1</Text>
+            </TouchableOpacity>
+
+            <View style={[styles.line, {backgroundColor: 'rgba(225,225,225,0.2)'}]}/>
+
+            <TouchableOpacity style = {[styles.progressButton, {backgroundColor: 'rgba(225,225,225,0.2)'}]}
+              disabled = {true}
+              >
+              <Text style={[styles.stepLabel, {color: 'rgba(225,225,225,0.2)'}]}>2</Text>
+            </TouchableOpacity>
+
+            <View style={[styles.line, {backgroundColor: 'rgba(225,225,225,0.2)'}]}/>
+
+            <TouchableOpacity style = {[styles.progressButton, {backgroundColor: 'rgba(225,225,225,0.2)'}]}
+              disabled = {true}
+              >
+              <Text style={[styles.stepLabel, {color: 'rgba(225,225,225,0.2)'}]}>3</Text>
+            </TouchableOpacity>
+
+          </View>
+
+          <View style = {{flexDirection: 'row', alignItems: 'center',marginLeft: width/5.2,width: width/1.2,}}>
+            <Text style={{marginLeft: width/28, marginRight: width/12, color: 'white', fontSize: 15}}>Info</Text>
+            <Text style={{marginRight: width/17, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Amount</Text>
+            <Text style={{color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Review</Text>
+          </View>
+        </View>
         <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
           <View style={styles.infoContainer}>
 
@@ -374,7 +317,7 @@ export default class SplitByAmount extends React.Component {
               returnKeyType='next'
             />
 
-            <Text style={styles.inputTitle}>Bill Split Friends:</Text>
+            <Text style={styles.inputTitle}>Friends</Text>
 
             <View style={styles.friendsContainer}>
               <View style={{height: selectedFriends.length*50}}>
@@ -446,145 +389,37 @@ export default class SplitByAmount extends React.Component {
               <Text style={styles.errorMessage}>{noFriends}</Text>
             </View>
 
-            <Text style={styles.inputTitle}>Total (including tax)</Text>
-            <TextInputMask
-              type={'money'}
-              options={{
-                precision: 2,
-                separator: '.',
-                delimiter: ',',
-                unit: '$',
-                suffixUnit: ''
-              }}
-              value={this.state.total}
-              onChangeText={(total) => this.checkTotal(total)}
-              style={[styles.input,{
-                borderColor: totalEmpty == true
-                  ? 'red'
-                  : '#35b0d2',
-              }]}
-              ref={(ref) => this.totalField = ref}
-              placeholder="$0"
-              placeholderTextColor="rgba(255,255,255,0.8)"
-              keyboardType={'numeric'}
-              returnKeyType='go'
-            />
-
-            <View style={styles.receiptScannerContainer}>
-              <ButtonComponent
-                text='RECEIPT SCANNER'
-                onPress={() => this.props.navigation.navigate('ReceiptScanner')}
-                disabled={false}
-                primary={false}
-                redButton= {styles.redButton}
-                textStyle={styles.redbtntext}
-              />
+            <View style={styles.optionContainer}>
+              <View style={styles.circleContainer}>
+                <CircleCheckBox
+                  checked={this.state.checkedEven}
+                  onToggle={this.onEvenToggle}
+                  outerColor='#35b0d2'
+                  innerColor='#35b0d2'
+                  filterSize= {20}
+                  innerSize= {15}
+                />
+              </View>
+              <Text style={styles.btntext}> Split Evenly </Text>
             </View>
 
-            <Text style={styles.inputTitle}>Tip:</Text>
-
-            <View style={styles.customCheckBoxContainer}>
-              <View style = {styles.checkBoxContainer}>
-                <View style={styles.optionContainer}>
-                  <View style={styles.circleContainer}>
-                    <CircleCheckBox
-                      checked={this.state.checked10}
-                      onToggle={this.on10Toggle}
-                      outerColor='#35b0d2'
-                      innerColor='#35b0d2'
-                      filterSize= {20}
-                      innerSize= {15}
-                    />
-                  </View>
-                  <Text style={styles.btntext}> 10% </Text>
-                  <Text style={styles.tipText}>(${(this.state.total * 0.10).toFixed(2)})</Text>
-                </View>
-
-                <View style={styles.optionContainer}>
-                  <View style={styles.circleContainer}>
-                    <CircleCheckBox
-                      checked={this.state.checked18}
-                      onToggle={this.on18Toggle}
-                      outerColor='#35b0d2'
-                      innerColor='#35b0d2'
-                      filterSize= {20}
-                      innerSize= {15}
-                    />
-                  </View>
-                  <Text style={styles.btntext}> 18% </Text>
-                  <Text style={styles.tipText}>(${(this.state.total * 0.18).toFixed(2)})</Text>
-                </View>
-
-                <View style={styles.optionContainer}>
-                  <View style={styles.circleContainer}>
-                    <CircleCheckBox
-                      checked={this.state.checkedNo}
-                      onToggle={this.onNoToggle}
-                      outerColor='#35b0d2'
-                      innerColor='#35b0d2'
-                      filterSize= {20}
-                      innerSize= {15}
-                    />
-                  </View>
-                  <Text style={styles.btntext}> No Tip </Text>
-                </View>
-
+            <View style={styles.optionContainer}>
+              <View style={styles.circleContainer}>
+                <CircleCheckBox
+                  checked={this.state.checkedAmount}
+                  onToggle={this.onAmountToggle}
+                  outerColor='#35b0d2'
+                  innerColor='#35b0d2'
+                  filterSize= {20}
+                  innerSize= {15}
+                />
               </View>
-
-              <View style={styles.checkBoxContainer}>
-
-                <View style={styles.optionContainer}>
-                  <View style={styles.circleContainer}>
-                    <CircleCheckBox
-                      checked={this.state.checked15}
-                      onToggle={this.on15Toggle}
-                      outerColor='#35b0d2'
-                      innerColor='#35b0d2'
-                      filterSize= {20}
-                      innerSize= {15}
-                    />
-                  </View>
-                  <Text style={styles.btntext}> 15% </Text>
-                  <Text style={styles.tipText}>(${(this.state.total * 0.15).toFixed(2)})</Text>
-                </View>
-
-                <View style={styles.optionContainer}>
-                  <View style={styles.circleContainer}>
-                    <CircleCheckBox
-                      checked={this.state.checked20}
-                      onToggle={this.on20Toggle}
-                      outerColor='#35b0d2'
-                      innerColor='#35b0d2'
-                      filterSize= {20}
-                      innerSize= {15}
-                    />
-                  </View>
-                  <Text style={styles.btntext}> 20% </Text>
-                  <Text style={styles.tipText}>(${(this.state.total * 0.20).toFixed(2)})</Text>
-                </View>
-
-                <View style={styles.optionContainer}>
-                  <View style={styles.circleContainer}>
-                    <CircleCheckBox
-                      checked={this.state.checkedCustom}
-                      onToggle={this.onCustomToggle}
-                      outerColor='#35b0d2'
-                      innerColor='#35b0d2'
-                      filterSize= {20}
-                      innerSize= {15}
-                    />
-                  </View>
-                  <Text style={styles.btntext}> Custom: </Text>
-                  {this.showCustomField()}
-                </View>
-              </View>
+              <Text style={styles.btntext}> Split By Amount </Text>
             </View>
-
-
 
               <View style={{marginTop: 20, width: width-40}}>
                 <ButtonComponent
-                  text='REVIEW'
+                  text='NEXT'
                   onPress={() => this.onSubmitBillSplit()}
                   disabled={disable}
                   primary={true}
@@ -625,7 +460,7 @@ const styles = StyleSheet.create({
     width: width/1.15,
     height: 40,
     borderColor: '#35b0d2',
-    backgroundColor: 'rgba(255,255,255, 0.8)',
+    backgroundColor: 'rgba(255,255,255, 1)',
     borderWidth: 1,
     borderRadius: 5,
     flexDirection: 'row',
@@ -646,7 +481,8 @@ const styles = StyleSheet.create({
   },
   optionContainer:{
     flexDirection:'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 20,
   },
   imageContainer: {
       resizeMode:'cover',
@@ -715,4 +551,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end'
   },
+  progressButton: {
+    margin: 0,
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    backgroundColor: '#35b0d2',
+  },
+  line: {
+    width: width/12 ,
+    height: 3,
+    backgroundColor: '#35b0d2'
+  },
+  stepLabel: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 16
+  }
 });

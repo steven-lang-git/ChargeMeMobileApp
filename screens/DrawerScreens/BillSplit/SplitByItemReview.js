@@ -290,7 +290,7 @@ export default class SplitEvenlyReview extends React.Component{
 
             <View style={styles.buttonContainer}>
               <ButtonComponent
-                text='SUBMIT CHARGES'
+                text='SUBMIT BILL SPLIT'
                 onPress={() => this.showOptionAlert()}
                 disabled={false}
                 primary={true}

@@ -165,7 +165,7 @@ export default class SplitEvenlyReview extends React.Component{
     const total = parseFloat(navigation.getParam('total'))
     const tip = parseFloat(navigation.getParam('tip'))
     const finalTotal = parseFloat((total + tip).toFixed(2))
-    const selectedFriends = navigation.getParam('selectedFriends');
+    const selectedFriends = navigation.getParam('friends');
     const payEach = parseFloat((finalTotal/(selectedFriends.length + 1)).toFixed(2))
     // console.log('name: ', name)
     // console.log('total: ', total)
@@ -206,9 +206,9 @@ export default class SplitEvenlyReview extends React.Component{
                 </View>
                 <Text style={styles.sectionTitle}>Who's Paying What:</Text>
 
-                <View style={[styles.searchboxContainer, {borderColor: 'coral'}] }>
-                  <Text style={{marginLeft: 25,marginTop: 9,color: 'coral', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>Me</Text>
-                  <Text style={{marginRight: 25,marginTop: 9,color: 'coral', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>${payEach.toFixed(2)}</Text>
+                <View style={[styles.searchboxContainer, {borderColor: 'coral', backgroundColor: 'coral'}] }>
+                  <Text style={{marginLeft: 25,marginTop: 9,color: 'white', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>Me</Text>
+                  <Text style={{marginRight: 25,marginTop: 9,color: 'white', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>${payEach.toFixed(2)}</Text>
                 </View>
 
                 <FlatList
@@ -216,8 +216,8 @@ export default class SplitEvenlyReview extends React.Component{
                   extraData={this.state}
                   renderItem={({item}) =>
                     <View style={styles.searchboxContainer}>
-                      <Text style={{marginLeft: 25,marginTop: 9,color: '#35b0d2', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>{item.name}</Text>
-                      <Text style={{marginRight: 25,marginTop: 9,color: '#35b0d2', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>${payEach.toFixed(2)}</Text>
+                      <Text style={{marginLeft: 25,marginTop: 9,color: 'white', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>{item.name}</Text>
+                      <Text style={{marginRight: 25,marginTop: 9,color: 'white', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>${payEach.toFixed(2)}</Text>
                     </View>
                   }
                   keyExtractor={item => item.id}
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 40,
     borderColor: '#35b0d2',
-    backgroundColor: 'rgba(255,255,255, 0.8)',
+    backgroundColor: '#35b0d2',
     borderWidth: 2,
     borderRadius: 5,
     flexDirection: 'row',

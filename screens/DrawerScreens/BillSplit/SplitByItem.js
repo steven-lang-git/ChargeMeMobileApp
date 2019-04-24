@@ -541,7 +541,7 @@ export default class SplitByItem extends React.Component {
 
             <View style={{marginTop: 60, width: width-40}}>
               <ButtonComponent
-                text='ASSIGN ITEMS'
+                text='NEXT'
                 onPress={() => this.onSubmitBillSplit()}
                 disabled={disable}
                 primary={true}

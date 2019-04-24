@@ -289,7 +289,7 @@ export default class SplitByItemAssociate extends React.Component{
 
           <View style={{marginTop: 40}}>
             <ButtonComponent
-              text='BILL SPLIT PRICING'
+              text='NEXT'
               onPress={() => this.onSubmitBillSplit()}
               disabled={false}
               primary={true}
