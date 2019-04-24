@@ -27,12 +27,10 @@ import ButtonComponent from '../../components/ButtonComponent'
 
 const {width} = Dimensions.get('window')
 
+let activity=''
+
 export default class Dashboard extends React.Component {
-  static navigationOptions ={
-    drawerIcon: (tintColor) =>(
-      <Icon name="check-circle" type="FontAwesome" style={{fontSize:24, color:tintColor}}/>
-    )
-  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -44,6 +42,8 @@ export default class Dashboard extends React.Component {
     pastTransactions=[]
     tempArray=[]
     currFriends=[]
+    currTransCount = 0
+
   }
 
     componentDidMount() {
@@ -52,8 +52,9 @@ export default class Dashboard extends React.Component {
       // gets Current Transactions
       firebase
       .database()
-      .ref()
-      .child("currentTransactions/" + uid)
+      .ref("currentTransactions/" + uid)
+      .orderByKey()
+      .limitToLast(3)
       .once("value")
       .then((snapshot) => {
         snapshot.forEach((childSnapShot) => {
@@ -67,49 +68,45 @@ export default class Dashboard extends React.Component {
                             })
         });
 
-        // gets all users
+        //get current transaction count
         firebase
         .database()
-        .ref()
-        .child("users")
+        .ref("currentTransactions/" + uid)
+        .once("value")
+        .then((snapshot) => {
+          currTransCount = snapshot.numChildren()
+          if(currTransCount == 0){
+
+            activity = '... no recent activity :('
+            this.forceUpdate();
+          }
+        })
+
+
+
+
+
+        // gets all current friends
+        firebase
+        .database()
+        .ref("friendslist/" + uid)
+        .child("currentFriends")
         .once("value")
         .then ((snapshot) => {
           // for each user
           snapshot.forEach((childSnapShot) => {
 
-              tempArray.push({
+              currFriends.push({
                 key: childSnapShot.key,
                 first: childSnapShot.val().firstName,
               })
               this.setState(
                 {
-                  tempArray:tempArray
+                  currFriends:currFriends
                 }
               )
             });
             });
-
-            // gets all current friends
-            firebase
-            .database()
-            .ref("friendslist/" + uid)
-            .child("currentFriends")
-            .once("value")
-            .then ((snapshot) => {
-              // for each user
-              snapshot.forEach((childSnapShot) => {
-
-                  currFriends.push({
-                    key: childSnapShot.key,
-                    first: childSnapShot.val().firstName,
-                  })
-                  this.setState(
-                    {
-                      currFriends:currFriends
-                    }
-                  )
-                });
-                });
 
         this.forceUpdate();
       })
@@ -123,7 +120,6 @@ export default class Dashboard extends React.Component {
           firstName: fName,
           initials: fName.charAt(0) + lName.charAt(0),
           username: user,
-          nCurrent: tempArray.length
         })
 
       });
@@ -136,9 +132,9 @@ export default class Dashboard extends React.Component {
   var uid = firebase.auth().currentUser.uid;
   var name;
     if(item.paying==uid){
-      for(var x in tempArray){
-        if(tempArray[x].key==item.charging){
-        name=tempArray[x].first;
+      for(var x in currFriends){
+        if(currFriends[x].key==item.charging){
+        name=currFriends[x].first;
         }
       };
       return <ListItem
@@ -147,18 +143,17 @@ export default class Dashboard extends React.Component {
       titleStyle={{color:'white', fontWeight:'bold'}}
       subtitle={item.date }
       subtitleStyle={{color:'white'}}
-      rightElement={"$" + item.amount}
+      rightElement={"$" + (item.amount).toFixed(2)}
       rightTitle={"Paying "+name}
-      rightTitleStyle={{color:'white'}}
-      chevronColor="white"
-      chevron
+      rightTitleStyle={{color:'white', width: 70}}
+
 
       />;  }
     else if(item.charging==uid)
     {
-      for(var x in tempArray){
-        if(tempArray[x].key==item.paying){
-        name=tempArray[x].first;
+      for(var x in currFriends){
+        if(currFriends[x].key==item.paying){
+        name=currFriends[x].first;
         }
       };
       return <ListItem
@@ -167,11 +162,9 @@ export default class Dashboard extends React.Component {
       titleStyle={{color:'white', fontWeight:'bold'}}
       subtitle={item.date }
       subtitleStyle={{color:'white'}}
-      rightElement={"$" + item.amount}
+      rightElement={"$" + (item.amount).toFixed(2)}
       rightTitle={"Charging "+name}
-      rightTitleStyle={{color:'white'}}
-      chevronColor="white"
-      chevron
+      rightTitleStyle={{color:'white', width: 70}}
 
       />
     }
@@ -185,6 +178,7 @@ export default class Dashboard extends React.Component {
     this.renderMain(item)
     )
   render() {
+    
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../../assets/blue.jpg')} style={styles.imageContainer}>
@@ -218,29 +212,41 @@ export default class Dashboard extends React.Component {
 
             <View style={styles.userContainer}>
 
-              <View style={styles.button}>
-                <Button
+
+                <ButtonComponent
                   onPress={() => this.props.navigation.navigate('FriendsList')}
-                  title={currFriends.length + " Friends"}
-                  color="white"
+                  text={"\n" +"Friends:"}
+                  textStyle= {{textAlign: 'center', fontSize: 14, color: 'white'}}
+                  secondText={String(currFriends.length)}
+                  secondTextStyle={{marginTop: width/50, fontWeight: 'bold',textAlign: 'center', fontSize: 20, color: 'white'}}
+                  disabled={false}
+                  primary={true}
+                  blueButton={{paddingTop: width/40,height: width/3.8, borderRadius: 100, width: width/3.8, backgroundColor: 'rgba(225,225,225,0.3)'}}
                 />
-              </View>
 
-              <View style={styles.button}>
-                <Button
+
+                <ButtonComponent
                   onPress={() => this.props.navigation.navigate('PastTransactions')}
-                  title={pastTransactions.length + " Past Trans-actions"}
-                  color="white"
+                  text={"Past" + "\n" + "Transactions:"  }
+                  textStyle= {{textAlign: 'center', fontSize: 14, color: 'white'}}
+                  secondText={String(pastTransactions.length)}
+                  secondTextStyle={{marginTop: width/50, fontWeight: 'bold',textAlign: 'center', fontSize: 20, color: 'white'}}
+                  disabled={false}
+                  primary={true}
+                  blueButton={{paddingTop: width/40,height: width/3.8, borderRadius: 100, width: width/3.8, backgroundColor: 'rgba(225,225,225,0.3)'}}
                 />
-              </View>
 
-              <View style={styles.button}>
-                <Button
+                <ButtonComponent
                   onPress={() => this.props.navigation.navigate('CurrentTransactions')}
-                  title={currentTransactions.length + " Curr. Trans-actions"}
-                  color="white"
+                  text={"Current" + "\n" + "Transactions:" }
+                  textStyle= {{textAlign: 'center', fontSize: 14, color: 'white'}}
+                  secondText={String(currTransCount)}
+                  secondTextStyle={{marginTop: width/50, fontWeight: 'bold',textAlign: 'center', fontSize: 20, color: 'white'}}
+                  disabled={false}
+                  primary={true}
+                  blueButton={{paddingTop: width/40,height: width/3.8, borderRadius: 100, width: width/3.8, backgroundColor: 'rgba(225,225,225,0.3)'}}
                 />
-              </View>
+
 
             </View>
 
@@ -248,6 +254,7 @@ export default class Dashboard extends React.Component {
 
             <View style={styles.infoContainer}>
               <Text style={styles.text}>Your Recent Activity:</Text>
+              <Text style ={{marginTop: 15, color:'white', textAlign: 'center', fontSize: 18}}>{activity}</Text>
               <FlatList style={{flex:1}}
                 keyExtractor={this.keyExtractor}
                 data={currentTransactions}
