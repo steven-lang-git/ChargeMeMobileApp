@@ -11,6 +11,8 @@ import {StyleSheet,
     Button,
     TouchableHighlight} from 'react-native';
 import Modal from "react-native-modal";
+import ButtonComponent from '../../components/ButtonComponent'
+const { width } = Dimensions.get("window");
 
 export default class MyModal extends Component {    
     render() {
@@ -31,8 +33,19 @@ export default class MyModal extends Component {
                   <View style={styles.container}>
                   <View style={styles.innerContainer}>
                         <Text style={styles.title}>Item Detail</Text>
-
+                        <Text style={styles.description}>Charging...</Text>
+                        <Text style={styles.description}>{this.props.selectedItem.charging}</Text>
+                        <Text style={styles.description}>Paying...</Text>
+                        <Text style={styles.description}>{this.props.selectedItem.paying}</Text>
                         <Text style={styles.description}>{this.props.selectedItem.name}</Text>
+                        <Text style={styles.description}>{this.props.selectedItem.date}</Text>
+                        <Text style={styles.description}>{this.props.selectedItem.amount}</Text>
+
+                        <TouchableHighlight
+                            style={styles.blueButton}
+                            >
+                        <Text style={styles.buttonText}>Pay</Text> 
+                        </TouchableHighlight>
                         <TouchableHighlight
                             style={styles.buttonContainer}
                             onPress={this.props.hideModal}>
@@ -79,5 +92,15 @@ export default class MyModal extends Component {
             textAlign: 'center',
             color: '#ecf0f1',
             fontWeight: '700'
+        },
+        blueButton: {
+            padding:15,
+            backgroundColor: '#202646',
+          borderRadius:10,
+          borderWidth: 1,
+          borderColor: '#35b0d2',
+          backgroundColor: '#35b0d2',
+          marginTop:10,
+          marginBottom: 10,
         },
     });

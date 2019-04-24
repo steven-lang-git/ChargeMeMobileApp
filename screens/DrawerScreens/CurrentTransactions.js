@@ -27,9 +27,13 @@ class MyItem extends React.Component {
   _onPress = () => { 
       this.props.onPressItem(this.props.item); 
   }; 
-
-  _renderPaying = () =>{
+  main =() =>{
+    this.props.renderMain(this.props.item);
+  }
+  _renderP = () =>{
  
+    // return this.props.renderPay(this.props.item);
+  
    return <ListItem 
     {...this.props}
     onPress={this._onPress}
@@ -39,7 +43,7 @@ class MyItem extends React.Component {
       subtitle={this.props.item.date }
       subtitleStyle={{color:'white'}}
       rightElement={this.props.item.amount}
-      rightTitle={"Charging "}
+      rightTitle={"Charging "+this.props.item.paying}
       rightTitleStyle={{color:'white'}}
       chevronColor="white"
       chevron
@@ -47,14 +51,19 @@ class MyItem extends React.Component {
       />
   }
 
+  _renderC = () =>{
+    return this.props.renderCharge(this.props.item);
+  }
+
+
   render() { 
+    // console.log("temp?",this.props.temp);
+    console.log("uid??"+this.props.uid);
       return(
 
           // this.props._renderCharging(this.props.item)
-         
-          this._renderPaying()
-       
-      ) 
+        
+this._renderP()      ) 
   } 
 }
 
@@ -62,7 +71,7 @@ class MyItem extends React.Component {
 
 
 
-
+let uid;
 let transactionData =[]
 let tempArray =[]
 export default class CurrentTransactions extends React.Component {
@@ -82,10 +91,11 @@ export default class CurrentTransactions extends React.Component {
       first: '',
       name:'',
       isModalVisible: false,
-      selectedItem:null
+      selectedItem:null,
     };
     transactionData= [],
     tempArray =[],
+    uid='123',
     this.updateIndex = this.updateIndex.bind(this);
   };
 
@@ -99,7 +109,7 @@ updateIndex(selectedIndex) {
 renderMain(item)
 {
   const {selectedIndex}= this.state;
-  var uid = firebase.auth().currentUser.uid;
+  uid = firebase.auth().currentUser.uid;
   var name;
 
   if(selectedIndex==0){
@@ -158,7 +168,8 @@ _showModal = (item) => this.setState({ isModalVisible: true, selectedItem: item 
 
 _hideModal = () => this.setState({isModalVisible:false})
 
-_renderPaying = (item,name) => (
+_renderPaying = (item) => (
+
   <ListItem 
     onPress={this._onPressItem(item)}
     containerStyle= {styles.blueButton}
@@ -167,7 +178,7 @@ _renderPaying = (item,name) => (
     subtitle={item.date }
     subtitleStyle={{color:'white'}}
     rightElement={item.amount}
-    rightTitle={"Paying "+name}
+    rightTitle={"Paying "}
     rightTitleStyle={{color:'white'}}
     chevronColor="white"
     chevron
@@ -175,7 +186,7 @@ _renderPaying = (item,name) => (
     />
 );
 
-_renderCharging = (item,name) => (
+_renderCharging = (item) => (
   <ListItem 
   onPress={this._onPressItem(item)}
   containerStyle= {styles.redButton}   
@@ -184,7 +195,7 @@ _renderCharging = (item,name) => (
     subtitle={item.date }
     subtitleStyle={{color:'white'}}
     rightElement={item.amount}
-    rightTitle={"Charging "+name}
+    rightTitle={"Charging "}
     rightTitleStyle={{color:'white'}}
     chevronColor="white"
     chevron
@@ -195,6 +206,7 @@ _renderCharging = (item,name) => (
 //function that is called everytime page mounts 
 componentDidMount(){
   var uid = firebase.auth().currentUser.uid;
+  this.setState({uid});
   firebase
   .database()
   .ref()
@@ -266,11 +278,18 @@ keyExtractor = (item,index) =>index.toString()
 renderItem = ({item})=> ( 
 //
 
-// this.renderMain(item)
-  <MyItem 
-  item={item}
-  onPressItem={()=>this._onPressItem(item)}
-  />
+this.renderMain(item)
+  // <MyItem 
+  // item={item}
+  // paying={item.paying}
+  // charging={item.charging}
+  // uid = {uid}
+  // temp={tempArray}
+  // renderCharge ={()=>this._renderCharging(item)}
+  // renderPay={()=>this._renderPaying(item)}
+  // onPressItem={()=>this._onPressItem(item)}
+  // renderMain={()=>this.renderMain(item)}
+  // />
 );
 
   render() {
