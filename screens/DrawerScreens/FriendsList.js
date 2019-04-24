@@ -187,7 +187,7 @@ export default class FriendsList extends React.Component {
           <Button
             color="white"
             title="Back to home"
-            onPress={() => this.props.navigation.navigate("PastTransactions")}
+            onPress={() => this.props.navigation.navigate("Dashboard")}
           />
 
           <View style={styles.container}>

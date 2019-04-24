@@ -70,19 +70,19 @@ renderMain(item)
       if(tempArray[x].key==item.charging){
       name=tempArray[x].first;
       }
-    };  
-    return <ListItem 
+    };
+    return <ListItem
     containerStyle= {styles.blueButton}
     title={item.name}
     titleStyle={{color:'white', fontWeight:'bold'}}
     subtitle={item.date }
     subtitleStyle={{color:'white'}}
-    rightElement={item.amount}
+    rightElement={"$" + (item.amount).toFixed(2)}
     rightTitle={"Paying "+name}
-    rightTitleStyle={{color:'white'}}
+    rightTitleStyle={{color:'white', width: 70}}
     chevronColor="white"
     chevron
-  
+
     />;  }
   else if(item.charging==uid)
   {
@@ -91,18 +91,18 @@ renderMain(item)
       name=tempArray[x].first;
       }
     };
-    return <ListItem 
-    containerStyle= {styles.redButton}   
+    return <ListItem
+    containerStyle= {styles.redButton}
     title={item.name}
     titleStyle={{color:'white', fontWeight:'bold'}}
     subtitle={item.date }
     subtitleStyle={{color:'white'}}
-    rightElement={item.amount}
+    rightElement={"$" + (item.amount).toFixed(2)}
     rightTitle={"Charging "+name}
-    rightTitleStyle={{color:'white'}}
+    rightTitleStyle={{color:'white', width: 70}}
     chevronColor="white"
     chevron
-  
+
     />
   }
 }
@@ -113,19 +113,19 @@ if(selectedIndex==1){
       name=tempArray[x].first;
       }
     };
-  
-    return <ListItem 
+
+    return <ListItem
     containerStyle= {styles.blueButton}
     title={item.name}
     titleStyle={{color:'white', fontWeight:'bold'}}
     subtitle={item.date }
     subtitleStyle={{color:'white'}}
-    rightElement={item.amount}
+    rightElement={"$" + (item.amount).toFixed(2)}
     rightTitle={"Paying "+name}
-    rightTitleStyle={{color:'white'}}
+    rightTitleStyle={{color:'white', width: 70}}
     chevronColor="white"
     chevron
-  
+
     />;  }
 }
 else if(selectedIndex==2){
@@ -135,24 +135,24 @@ else if(selectedIndex==2){
       name=tempArray[x].first;
       }
     };
-    return <ListItem 
-    containerStyle= {styles.redButton}   
+    return <ListItem
+    containerStyle= {styles.redButton}
     title={item.name}
     titleStyle={{color:'white', fontWeight:'bold'}}
     subtitle={item.date }
     subtitleStyle={{color:'white'}}
     rightElement={item.amount}
     rightTitle={"Charging "+name}
-    rightTitleStyle={{color:'white'}}
+    rightTitleStyle={{color:'white', width: 70}}
     chevronColor="white"
     chevron
-  
+
     />  }
 }
 
 };
 
-//function that is called everytime page mounts 
+//function that is called everytime page mounts
 componentDidMount(){
   var uid = firebase.auth().currentUser.uid;
   firebase
@@ -172,7 +172,7 @@ componentDidMount(){
                           date: childSnapShot.val().date,
                           name: childSnapShot.val().name,
                           paying: childSnapShot.val().paying,
-                  
+
                         })
 
     });
@@ -185,7 +185,7 @@ componentDidMount(){
     .then ((snapshot) => {
       // for each user
       snapshot.forEach((childSnapShot) => {
-       
+
           tempArray.push({
             key: childSnapShot.key,
             first: childSnapShot.val().firstName,
@@ -198,20 +198,20 @@ componentDidMount(){
         });
         });
 
-   
+
     this.forceUpdate();
-  
+
   })
 
 }
 
 keyExtractor = (item,index) =>index.toString()
-renderItem = ({item})=> ( 
+renderItem = ({item})=> (
 this.renderMain(item)
 )
 
   render() {
-    
+
     const buttons = ["All", "Paying", "Requesting"];
     const { selectedIndex } = this.state;
 

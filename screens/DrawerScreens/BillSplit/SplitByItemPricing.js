@@ -73,12 +73,6 @@ export default class SplitByItem extends React.Component {
   checkTax = value => {
 
     const numericTax = this.taxField.getRawValue().toFixed(2);
-    if(numericTax == 0){
-      taxEmpty = true;
-    }
-    else{
-      taxEmpty = false;
-    }
     this.setState({tax: numericTax, disable: false, subtotal: itemTotal + parseInt(numericTax)});
   };
 
@@ -249,11 +243,6 @@ export default class SplitByItem extends React.Component {
 
   //function to handle when user clicks review button
   onSubmitBillSplit = () => {
-    if(this.state.tax == 0){
-      taxEmpty = true;
-    }
-
-    this.forceUpdate();
 
     if(taxEmpty == false){
       const { subtotal } = this.state
@@ -470,7 +459,7 @@ export default class SplitByItem extends React.Component {
               <ButtonComponent
                 text='REVIEW BILL SPLIT'
                 onPress={() => this.onSubmitBillSplit()}
-                disabled={disable}
+                disabled={false}
                 primary={true}
               />
             </View>
