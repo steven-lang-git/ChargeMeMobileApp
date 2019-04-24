@@ -41,22 +41,12 @@ export default class CurrentTransactions extends React.Component {
     };
     transactionData= [],
     tempArray =[],
-    isPaid= false,
-    sameName = false,
     this.updateIndex = this.updateIndex.bind(this);
   };
 //updates the three option menu at the top
 updateIndex(selectedIndex) {
   this.setState({ selectedIndex });
 };
-
-getUserName = (userUID) =>{
-  var name;
-  var uid = firebase.auth().currentUser.uid;
-
-
-};
-
 
 renderMain(item)
 {
