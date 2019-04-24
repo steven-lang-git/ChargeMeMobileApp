@@ -16,8 +16,51 @@ import * as firebase from "firebase";
 
 import ButtonComponent from "../../components/ButtonComponent";
 import { List, ListItem, ButtonGroup } from "react-native-elements";
-
+import Modal from "react-native-modal";
+import MyModal from './MyModal';
 const { width, height } = Dimensions.get("window");
+
+
+
+
+class MyItem extends React.Component { 
+  _onPress = () => { 
+      this.props.onPressItem(this.props.item); 
+  }; 
+
+  _renderPaying = () =>{
+ 
+   return <ListItem 
+    {...this.props}
+    onPress={this._onPress}
+    containerStyle= {styles.redButton}   
+    title={this.props.item.name}
+      titleStyle={{color:'white', fontWeight:'bold'}}
+      subtitle={this.props.item.date }
+      subtitleStyle={{color:'white'}}
+      rightElement={this.props.item.amount}
+      rightTitle={"Charging "}
+      rightTitleStyle={{color:'white'}}
+      chevronColor="white"
+      chevron
+    
+      />
+  }
+
+  render() { 
+      return(
+
+          // this.props._renderCharging(this.props.item)
+         
+          this._renderPaying()
+       
+      ) 
+  } 
+}
+
+
+
+
 
 
 let transactionData =[]
@@ -38,11 +81,16 @@ export default class CurrentTransactions extends React.Component {
       selectedIndex: 0,
       first: '',
       name:'',
+      isModalVisible: false,
+      selectedItem:null
     };
     transactionData= [],
     tempArray =[],
     this.updateIndex = this.updateIndex.bind(this);
   };
+
+
+  
 //updates the three option menu at the top
 updateIndex(selectedIndex) {
   this.setState({ selectedIndex });
@@ -61,7 +109,58 @@ renderMain(item)
       name=tempArray[x].first;
       }
     };  
-    return <ListItem 
+    return this._renderPaying(item,name)
+    }
+  else if(item.charging==uid)
+  {
+    for(var x in tempArray){
+      if(tempArray[x].key==item.paying){
+      name=tempArray[x].first;
+      }
+    };
+    return this._renderCharging(item,name)
+  
+  }
+}
+if(selectedIndex==1){
+  if(item.paying==uid){
+    for(var x in tempArray){
+      if(tempArray[x].key==item.charging){
+      name=tempArray[x].first;
+      }
+    };
+  
+    return this._renderPaying(item,name)
+  }
+}
+else if(selectedIndex==2){
+  if(item.charging==uid){
+    for(var x in tempArray){
+      if(tempArray[x].key==item.paying){
+      name=tempArray[x].first;
+      }
+    };
+    return this._renderCharging(item,name)
+  }
+}
+
+};
+
+_onPressItem = (item) => { 
+  this._showModal(item);
+};
+
+//to close modal
+_toggleModal = () =>
+this.setState({ isModalVisible: !this.state.isModalVisible });
+
+_showModal = (item) => this.setState({ isModalVisible: true, selectedItem: item });
+
+_hideModal = () => this.setState({isModalVisible:false})
+
+_renderPaying = (item,name) => (
+  <ListItem 
+    onPress={this._onPressItem(item)}
     containerStyle= {styles.blueButton}
     title={item.name}
     titleStyle={{color:'white', fontWeight:'bold'}}
@@ -73,16 +172,13 @@ renderMain(item)
     chevronColor="white"
     chevron
   
-    />;  }
-  else if(item.charging==uid)
-  {
-    for(var x in tempArray){
-      if(tempArray[x].key==item.paying){
-      name=tempArray[x].first;
-      }
-    };
-    return <ListItem 
-    containerStyle= {styles.redButton}   
+    />
+);
+
+_renderCharging = (item,name) => (
+  <ListItem 
+  onPress={this._onPressItem(item)}
+  containerStyle= {styles.redButton}   
     title={item.name}
     titleStyle={{color:'white', fontWeight:'bold'}}
     subtitle={item.date }
@@ -94,53 +190,7 @@ renderMain(item)
     chevron
   
     />
-  }
-}
-if(selectedIndex==1){
-  if(item.paying==uid){
-    for(var x in tempArray){
-      if(tempArray[x].key==item.charging){
-      name=tempArray[x].first;
-      }
-    };
-  
-    return <ListItem 
-    containerStyle= {styles.blueButton}
-    title={item.name}
-    titleStyle={{color:'white', fontWeight:'bold'}}
-    subtitle={item.date }
-    subtitleStyle={{color:'white'}}
-    rightElement={item.amount}
-    rightTitle={"Paying "+name}
-    rightTitleStyle={{color:'white'}}
-    chevronColor="white"
-    chevron
-  
-    />;  }
-}
-else if(selectedIndex==2){
-  if(item.charging==uid){
-    for(var x in tempArray){
-      if(tempArray[x].key==item.paying){
-      name=tempArray[x].first;
-      }
-    };
-    return <ListItem 
-    containerStyle= {styles.redButton}   
-    title={item.name}
-    titleStyle={{color:'white', fontWeight:'bold'}}
-    subtitle={item.date }
-    subtitleStyle={{color:'white'}}
-    rightElement={item.amount}
-    rightTitle={"Charging "+name}
-    rightTitleStyle={{color:'white'}}
-    chevronColor="white"
-    chevron
-  
-    />  }
-}
-
-};
+)
 
 //function that is called everytime page mounts 
 componentDidMount(){
@@ -194,11 +244,34 @@ componentDidMount(){
   })
 
 }
+_renderButton = (text, onPress) => (
+  <TouchableOpacity onPress={onPress}>
+    <View style={styles.button}>
+      <Text>{text}</Text>
+    </View>
+  </TouchableOpacity>
+);
+
+
+_renderModalContent = () => (
+  <View style={styles.modalContent}>
+    <Text>work?</Text>
+    {this._renderButton('Close', this._toggleModal)}
+</View>
+  );
 
 keyExtractor = (item,index) =>index.toString()
+
+
 renderItem = ({item})=> ( 
-this.renderMain(item)
-)
+//
+
+// this.renderMain(item)
+  <MyItem 
+  item={item}
+  onPressItem={()=>this._onPressItem(item)}
+  />
+);
 
   render() {
     
@@ -227,6 +300,9 @@ this.renderMain(item)
               data={transactionData}
               renderItem={this.renderItem}
             />
+
+        { this.state.isModalVisible && <MyModal selectedItem={this.state.selectedItem} modalVisible={this.state.isModalVisible} hideModal={this._toggleModal} /> }
+
             </View>
           </View>
         </ImageBackground>
@@ -286,5 +362,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'coral',
     marginTop:10,
     marginBottom: 10,
-  }
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  button: {
+    backgroundColor: 'lightblue',
+    padding: 12,
+    margin: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
 });
