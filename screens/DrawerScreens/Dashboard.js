@@ -26,11 +26,7 @@ import { Avatar, ListItem } from 'react-native-elements';
 const {width} = Dimensions.get('window')
 
 export default class Dashboard extends React.Component {
-  static navigationOptions ={
-    drawerIcon: (tintColor) =>(
-      <Icon name="check-circle" type="FontAwesome" style={{fontSize:24, color:tintColor}}/>
-    )
-  }
+
   constructor(props) {
     super(props)
     this.state = {

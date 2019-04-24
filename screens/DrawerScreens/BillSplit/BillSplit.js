@@ -44,8 +44,8 @@ export default class BillSplit extends React.Component {
 
             <View style={styles.topContainer}>
               <ButtonComponent
-                text='SPLIT EVENLY'
-                onPress={() => this.props.navigation.navigate('SplitEvenly')}
+                text='SPLIT BY AMOUNT'
+                onPress={() => this.props.navigation.navigate('SplitByAmount')}
                 disabled={false}
                 primary={true}
               />
