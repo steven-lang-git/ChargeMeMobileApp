@@ -21,6 +21,8 @@ import * as firebase from 'firebase';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Avatar, ListItem } from 'react-native-elements';
+import ButtonComponent from '../../components/ButtonComponent'
+
 
 
 const {width} = Dimensions.get('window')
@@ -37,10 +39,11 @@ export default class Dashboard extends React.Component {
       firstName:'',
       lastName:'',
       username:''
-
     }
     currentTransactions=[]
+    pastTransactions=[]
     tempArray=[]
+    currFriends=[]
   }
 
     componentDidMount() {
@@ -63,6 +66,8 @@ export default class Dashboard extends React.Component {
                               paying: childSnapShot.val().paying,
                             })
         });
+
+        // gets all users
         firebase
         .database()
         .ref()
@@ -71,7 +76,7 @@ export default class Dashboard extends React.Component {
         .then ((snapshot) => {
           // for each user
           snapshot.forEach((childSnapShot) => {
-           
+
               tempArray.push({
                 key: childSnapShot.key,
                 first: childSnapShot.val().firstName,
@@ -83,7 +88,29 @@ export default class Dashboard extends React.Component {
               )
             });
             });
-    
+
+            // gets all current friends
+            firebase
+            .database()
+            .ref("friendslist/" + uid)
+            .child("currentFriends")
+            .once("value")
+            .then ((snapshot) => {
+              // for each user
+              snapshot.forEach((childSnapShot) => {
+
+                  currFriends.push({
+                    key: childSnapShot.key,
+                    first: childSnapShot.val().firstName,
+                  })
+                  this.setState(
+                    {
+                      currFriends:currFriends
+                    }
+                  )
+                });
+                });
+
         this.forceUpdate();
       })
 
@@ -95,7 +122,8 @@ export default class Dashboard extends React.Component {
         this.setState({
           firstName: fName,
           initials: fName.charAt(0) + lName.charAt(0),
-          username: user
+          username: user,
+          nCurrent: tempArray.length
         })
 
       });
@@ -103,59 +131,57 @@ export default class Dashboard extends React.Component {
 
 
 
-  renderMain(item)
-{
+  renderMain(item){
   const {selectedIndex}= this.state;
   var uid = firebase.auth().currentUser.uid;
   var name;
+    if(item.paying==uid){
+      for(var x in tempArray){
+        if(tempArray[x].key==item.charging){
+        name=tempArray[x].first;
+        }
+      };
+      return <ListItem
+      containerStyle= {styles.blueButton}
+      title={item.name}
+      titleStyle={{color:'white', fontWeight:'bold'}}
+      subtitle={item.date }
+      subtitleStyle={{color:'white'}}
+      rightElement={"$" + item.amount}
+      rightTitle={"Paying "+name}
+      rightTitleStyle={{color:'white'}}
+      chevronColor="white"
+      chevron
 
-  if(item.paying==uid){
-    for(var x in tempArray){
-      if(tempArray[x].key==item.charging){
-      name=tempArray[x].first;
-      }
-    };  
-    return <ListItem 
-    containerStyle= {styles.blueButton}
-    title={item.name}
-    titleStyle={{color:'white', fontWeight:'bold'}}
-    subtitle={item.date }
-    subtitleStyle={{color:'white'}}
-    rightElement={item.amount}
-    rightTitle={"Paying "+name}
-    rightTitleStyle={{color:'white'}}
-    chevronColor="white"
-    chevron
-  
-    />;  }
-  else if(item.charging==uid)
-  {
-    for(var x in tempArray){
-      if(tempArray[x].key==item.paying){
-      name=tempArray[x].first;
-      }
-    };
-    return <ListItem 
-    containerStyle= {styles.redButton}   
-    title={item.name}
-    titleStyle={{color:'white', fontWeight:'bold'}}
-    subtitle={item.date }
-    subtitleStyle={{color:'white'}}
-    rightElement={item.amount}
-    rightTitle={"Charging "+name}
-    rightTitleStyle={{color:'white'}}
-    chevronColor="white"
-    chevron
-  
-    />
-  }
+      />;  }
+    else if(item.charging==uid)
+    {
+      for(var x in tempArray){
+        if(tempArray[x].key==item.paying){
+        name=tempArray[x].first;
+        }
+      };
+      return <ListItem
+      containerStyle= {styles.redButton}
+      title={item.name}
+      titleStyle={{color:'white', fontWeight:'bold'}}
+      subtitle={item.date }
+      subtitleStyle={{color:'white'}}
+      rightElement={"$" + item.amount}
+      rightTitle={"Charging "+name}
+      rightTitleStyle={{color:'white'}}
+      chevronColor="white"
+      chevron
+
+      />
+    }
 };
 
 
 
 
 
-  renderItem = ({item})=> ( 
+  renderItem = ({item})=> (
     this.renderMain(item)
     )
   render() {
@@ -166,7 +192,7 @@ export default class Dashboard extends React.Component {
 
 
       <View style={styles.container}>
-        <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
+
           <Header>
             <Left>
               <Icon name="bars" type="FontAwesome" onPress={()=>this.props.navigation.openDrawer()}/>
@@ -174,31 +200,63 @@ export default class Dashboard extends React.Component {
           </Header>
 
           <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+            <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
 
-            <Avatar
-              size = "xlarge"
-              rounded title = {this.state.initials}
-            />
+            <View style={styles.userContainer}>
+              <Avatar
+                size = "xlarge"
+                rounded title = {this.state.initials}
+                containerStyle={{marginLeft: 10, marginTop: 10}}
+              />
 
-            <Text style={styles.text}>Welcome {this.state.firstName}</Text>
-            <Text style={styles.text}>{this.state.username}</Text>
+              <View style={styles.nameContainer}>
+                <Text style={styles.name}>Welcome {this.state.firstName}</Text>
+                <Text style={styles.username}>@{this.state.username}</Text>
+              </View>
+            </View>
 
 
+            <View style={styles.userContainer}>
 
+              <View style={styles.button}>
+                <Button
+                  onPress={() => this.props.navigation.navigate('FriendsList')}
+                  title={currFriends.length + " Friends"}
+                  color="white"
+                />
+              </View>
 
-            <Text style={styles.text}>Your Recent Activity:</Text>
+              <View style={styles.button}>
+                <Button
+                  onPress={() => this.props.navigation.navigate('PastTransactions')}
+                  title={pastTransactions.length + " Past Trans-actions"}
+                  color="white"
+                />
+              </View>
+
+              <View style={styles.button}>
+                <Button
+                  onPress={() => this.props.navigation.navigate('CurrentTransactions')}
+                  title={currentTransactions.length + " Curr. Trans-actions"}
+                  color="white"
+                />
+              </View>
+
+            </View>
+
 
 
             <View style={styles.infoContainer}>
+              <Text style={styles.text}>Your Recent Activity:</Text>
               <FlatList style={{flex:1}}
                 keyExtractor={this.keyExtractor}
                 data={currentTransactions}
                 renderItem={this.renderItem}
               />
             </View>
-
+            </KeyboardAwareScrollView>
           </View>
-        </KeyboardAwareScrollView>
+
       </View>
       </ImageBackground>
     </SafeAreaView>
@@ -210,7 +268,11 @@ export default class Dashboard extends React.Component {
 const styles = StyleSheet.create({
 container:{
   flex: 1,
-  alignItems: "center",
+},
+nameContainer:{
+  flex: 1,
+  alignItems: 'center',
+  paddingBottom: 20,
 },
 listItemContainer:{
   backgroundColor: '#fff',
@@ -221,16 +283,40 @@ listItem:{
   fontSize:20,
   padding: 10,
 },
+name:{
+  fontSize: 40,
+  color: "white",
+  textAlign: 'center',
+},
+username:{
+  fontSize: 20,
+  color: "white",
+  textAlign: 'center',
+},
 text:{
   fontSize: 25,
   color: "white",
+},
+userContainer:{
+  flex: 1,
+  flexDirection: 'row',
+  padding: 10,
+  alignItems: 'flex-end',
+  justifyContent: 'space-evenly',
 },
 infoContainer:{
   flex: 2,
   padding: 20,
   justifyContent: "flex-end",
   width:width,
-  marginTop:20,
+},
+button:{
+  height: 100,
+  width: 100,
+  borderRadius: 50,
+  backgroundColor: "rgba(255,255,255,0.2)",
+  justifyContent: 'center',
+  alignItems: 'center',
 },
 blueButton:{
   padding:15,
@@ -249,7 +335,6 @@ redButton: {
   borderColor: 'coral',
   backgroundColor: 'coral',
   marginTop:10,
-  marginBottom: 10,
 },
 overlay:{
     ...StyleSheet.absoluteFillObject,
