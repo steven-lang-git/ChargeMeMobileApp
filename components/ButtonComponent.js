@@ -6,7 +6,7 @@ import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 //button component that incorporates making the button dim when it is disabled
 class ButtonComponent extends Component {
 	render() {
-		const { text, onPress, disabled, primary, blueButton, redButton, textStyle } = this.props;
+		const { text, secondText, onPress, disabled, primary, blueButton, redButton, textStyle, secondTextStyle } = this.props;
 		return (
       <View style={disabled?styles.disabled:styles.enabled}>
   		  <TouchableOpacity style={primary? blueButton: redButton}
@@ -14,6 +14,7 @@ class ButtonComponent extends Component {
            disabled={disabled}
   		  >
   			 <Text style={textStyle}>{text}</Text>
+				 <Text style={secondTextStyle}>{secondText}</Text>
   		  </TouchableOpacity>
       </View>
 		);
@@ -28,7 +29,9 @@ ButtonComponent.propTypes = {
 	primary: PropTypes.bool.isRequired,
 	blueButton: PropTypes.object,
 	redButton: PropTypes.object,
+	secondText: PropTypes.string,
 	textStyle: PropTypes.object,
+	secondTextStyle: PropTypes.object,
 };
 
 ButtonComponent.defaultProps = {
