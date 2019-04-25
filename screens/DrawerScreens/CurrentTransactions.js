@@ -27,14 +27,29 @@ class MyItem extends React.Component {
   _onPress = () => { 
       this.props.onPressItem(this.props.item); 
   }; 
-  main =() =>{
-    this.props.renderMain(this.props.item);
-  }
-  _renderP = () =>{
- 
-    // return this.props.renderPay(this.props.item);
+
+  _renderPaid = () =>{
+    
+  <ListItem 
+    {...this.props}
+    onPress={this._onPress}
+    containerStyle= {styles.blueButton}
+    title={this.props.item.name}
+    titleStyle={{color:'white', fontWeight:'bold'}}
+    subtitle={this.props.item.date }
+    subtitleStyle={{color:'white'}}
+    rightElement={this.props.item.amount}
+    rightTitle={"Paying "+this.props.item.paying}
+    rightTitleStyle={{color:'white'}}
+    chevronColor="white"
+    chevron
   
-   return <ListItem 
+    />
+  }
+
+  _renderCharged = () =>{
+    
+    <ListItem 
     {...this.props}
     onPress={this._onPress}
     containerStyle= {styles.redButton}   
@@ -43,13 +58,114 @@ class MyItem extends React.Component {
       subtitle={this.props.item.date }
       subtitleStyle={{color:'white'}}
       rightElement={this.props.item.amount}
-      rightTitle={"Charging "+this.props.item.paying}
+      rightTitle={"Charging "+this.props.item.charging}
       rightTitleStyle={{color:'white'}}
       chevronColor="white"
       chevron
     
       />
   }
+
+  _renderMain = () =>{
+ 
+    console.log(this.props.selectedIdx);
+    // return this.props.renderPay(this.props.item);
+  if(this.props.selectedIdx==0){
+    if(this.props.item.charging==uid){
+        return <ListItem 
+        {...this.props}
+        onPress={this._onPress}
+        containerStyle= {styles.blueButton}
+        title={this.props.item.name}
+        titleStyle={{color:'white', fontWeight:'bold'}}
+        subtitle={this.props.item.date }
+        subtitleStyle={{color:'white'}}
+        rightElement={this.props.item.amount}
+        rightTitle={"Paying "+this.props.item.paying}
+        rightTitleStyle={{color:'white'}}
+        chevronColor="white"
+        chevron
+      
+        />  }
+        if(this.props.item.paying==uid){
+        return <ListItem 
+        {...this.props}
+        onPress={this._onPress}
+        containerStyle= {styles.redButton}   
+        title={this.props.item.name}
+          titleStyle={{color:'white', fontWeight:'bold'}}
+          subtitle={this.props.item.date }
+          subtitleStyle={{color:'white'}}
+          rightElement={this.props.item.amount}
+          rightTitle={"Charging "+this.props.item.charging}
+          rightTitleStyle={{color:'white'}}
+          chevronColor="white"
+          chevron
+        
+          />
+        }
+      
+  }
+    if(this.props.selectedIdx==1){
+        // console.log(this.props.selectedIdx);
+      if(this.props.item.charging==uid){
+        return <ListItem 
+          {...this.props}
+          onPress={this._onPress}
+          containerStyle= {styles.blueButton}
+          title={this.props.item.name}
+          titleStyle={{color:'white', fontWeight:'bold'}}
+          subtitle={this.props.item.date }
+          subtitleStyle={{color:'white'}}
+          rightElement={this.props.item.amount}
+          rightTitle={"Paying "+this.props.item.paying}
+          rightTitleStyle={{color:'white'}}
+          chevronColor="white"
+          chevron
+        
+          />  }
+          else{
+            return(
+              <Text></Text>
+        
+            )
+          }
+    }
+    if(this.props.selectedIdx==2){
+      // console.log(this.props.selectedIdx);
+      if(this.props.item.paying==uid){
+        return <ListItem 
+        {...this.props}
+        onPress={this._onPress}
+        containerStyle= {styles.redButton}   
+        title={this.props.item.name}
+          titleStyle={{color:'white', fontWeight:'bold'}}
+          subtitle={this.props.item.date }
+          subtitleStyle={{color:'white'}}
+          rightElement={this.props.item.amount}
+          rightTitle={"Charging "+this.props.item.charging}
+          rightTitleStyle={{color:'white'}}
+          chevronColor="white"
+          chevron
+        
+          />
+        }
+        else{
+          return(
+            <Text></Text>
+      
+          )
+        }
+    }
+    else{
+      return(
+        <Text>Thats all folks...</Text>
+  
+      )
+    }
+
+  
+}
 
   _renderC = () =>{
     return this.props.renderCharge(this.props.item);
@@ -58,12 +174,12 @@ class MyItem extends React.Component {
 
   render() { 
     // console.log("temp?",this.props.temp);
-    console.log("uid??"+this.props.uid);
       return(
 
           // this.props._renderCharging(this.props.item)
-        
-this._renderP()      ) 
+this._renderMain()  
+      )
+// this.props.renderM(this.props.item)   ) 
   } 
 }
 
@@ -95,7 +211,7 @@ export default class CurrentTransactions extends React.Component {
     };
     transactionData= [],
     tempArray =[],
-    uid='123',
+    uid=firebase.auth().currentUser.uid,
     this.updateIndex = this.updateIndex.bind(this);
   };
 
@@ -108,49 +224,51 @@ updateIndex(selectedIndex) {
 
 renderMain(item)
 {
+
+  // console.log("hullo");
   const {selectedIndex}= this.state;
   uid = firebase.auth().currentUser.uid;
   var name;
 
   if(selectedIndex==0){
   if(item.paying==uid){
-    for(var x in tempArray){
-      if(tempArray[x].key==item.charging){
-      name=tempArray[x].first;
-      }
-    };  
-    return this._renderPaying(item,name)
+    // for(var x in tempArray){
+    //   if(tempArray[x].key==item.charging){
+    //   name=tempArray[x].first;
+    //   }
+    // };  
+    return this._renderPaying(item)
     }
   else if(item.charging==uid)
   {
-    for(var x in tempArray){
-      if(tempArray[x].key==item.paying){
-      name=tempArray[x].first;
-      }
-    };
-    return this._renderCharging(item,name)
+    // for(var x in tempArray){
+    //   if(tempArray[x].key==item.paying){
+    //   name=tempArray[x].first;
+    //   }
+    // };
+    return this._renderCharging(item)
   
   }
 }
 if(selectedIndex==1){
   if(item.paying==uid){
-    for(var x in tempArray){
-      if(tempArray[x].key==item.charging){
-      name=tempArray[x].first;
-      }
-    };
+    // for(var x in tempArray){
+    //   if(tempArray[x].key==item.charging){
+    //   name=tempArray[x].first;
+    //   }
+    // };
   
-    return this._renderPaying(item,name)
+    return this._renderPaying(item)
   }
 }
 else if(selectedIndex==2){
   if(item.charging==uid){
-    for(var x in tempArray){
-      if(tempArray[x].key==item.paying){
-      name=tempArray[x].first;
-      }
-    };
-    return this._renderCharging(item,name)
+    // for(var x in tempArray){
+    //   if(tempArray[x].key==item.paying){
+    //   name=tempArray[x].first;
+    //   }
+    // };
+    return this._renderCharging(item)
   }
 }
 
@@ -205,8 +323,9 @@ _renderCharging = (item) => (
 
 //function that is called everytime page mounts 
 componentDidMount(){
-  var uid = firebase.auth().currentUser.uid;
-  this.setState({uid});
+  var uid = firebase.auth().currentUser.uid
+  this.setState({uid:uid})
+  
   firebase
   .database()
   .ref()
@@ -278,18 +397,19 @@ keyExtractor = (item,index) =>index.toString()
 renderItem = ({item})=> ( 
 //
 
-this.renderMain(item)
-  // <MyItem 
-  // item={item}
-  // paying={item.paying}
-  // charging={item.charging}
-  // uid = {uid}
-  // temp={tempArray}
-  // renderCharge ={()=>this._renderCharging(item)}
-  // renderPay={()=>this._renderPaying(item)}
-  // onPressItem={()=>this._onPressItem(item)}
-  // renderMain={()=>this.renderMain(item)}
-  // />
+// this.renderMain(item)
+  <MyItem 
+  item={item}
+  paying={item.paying}
+  charging={item.charging}
+  uid = {uid}
+  temp={tempArray}
+  selectedIdx ={this.state.selectedIndex}
+  renderCharge ={()=>this._renderCharging(item)}
+  renderPay={()=>this._renderPaying(item)}
+  onPressItem={()=>this._onPressItem(item)}
+  renderM={()=>this.renderMain(item)}
+  />
 );
 
   render() {
