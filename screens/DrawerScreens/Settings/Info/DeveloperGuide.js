@@ -75,13 +75,44 @@ export default class DeveloperGuide extends React.Component {
             </Text>
 
             <Text style={styles.bullets}>
-              <Strong>1.</Strong> The user must first download the app from the app store on their mobile device {'\n\n'}
-              <Strong>2.</Strong> Once the app is downloaded, the first thing the user will see after clicking on the app is
-              the Home Screen {'\n\n'}
-              <Strong>3.</Strong> If the user is a first-time user, click “Create Account” {'\n\n'}
-              <Strong>4.</Strong> If the user already has an account, type their credentials and click “Login” {'\n\n'}
-              <Strong>5.</Strong> Once logged into their account users may create a new transaction, complete a transaction,
-              edit their profile and settings, and much more
+              <Strong>1.</Strong> Download the Project from GitHub
+              {'\n\t'} <Strong>a.</Strong> Open a web browser
+              {'\n\t'} <Strong>b.</Strong> Go to the following GitHub link:
+              {'\n\t'}<Text style={styles.hyperlink} onPress={() => Linking.openURL
+                ('https://github.com/scubaastev/ChargeMeMobileApp')}>
+                  https://github.com/scubaastev/ChargeMeMobileApp
+              </Text>
+              {'\n\t'} <Strong>c.</Strong> Click the ‘Download’ button and save all the files into a single folder
+
+              {'\n\n'}
+              <Strong>2.</Strong> Open the Project and Download all Dependencies
+              {'\n\t'} <Strong>a.</Strong> Open a web browser
+              {'\n\t\t'} <Strong>i.</Strong> Go to the following GitHub link:
+              {'\n\t\t'}<Text style={styles.hyperlink} onPress={() => Linking.openURL
+                ('https://github.com/steven-lang-git/ChargeMeMobileApp/blob/master/README.md')}>
+                  https://github.com/steven-lang-git/ChargeMeMobileApp/blob/master/README.md
+              </Text>
+              {'\n\t'} <Strong>b.</Strong> Open a Terminal Window
+              {'\n\t\t'} <Strong>i.</Strong> cd into the project directory
+              {'\n\t\t'} <Strong>ii.</Strong> Follow the README.md directions from the web browser
+              {'\n\t\t\t'} <Strong>1.</Strong> Install React Native and all necessary dependencies
+
+              {'\n\n'}
+              <Strong>3.</Strong> Compile and Run Project
+              {'\n\t'} <Strong>a.</Strong> Open a Terminal Window
+              {'\n\t'} <Strong>b.</Strong> cd into the project directory
+              {'\n\t'} <Strong>c.</Strong> Run the following command in the folder
+              {'\n\t\t'} <Strong>i.</Strong> expo start
+
+
+              {'\n\n'}
+              <Strong>4.</Strong> Emulate on iOS
+              {'\n\t'} <Strong>a.</Strong> Download the Expo Client App
+              {'\n\t'} <Strong>b.</Strong> Set the QR code is on Tunnel
+              {'\n\t'} <Strong>c.</Strong> Scan QR code through QR code scanner or iOS camera
+              {'\n\t'} <Strong>d.</Strong> Open application through Expo Client
+
+
             </Text>
 
 
