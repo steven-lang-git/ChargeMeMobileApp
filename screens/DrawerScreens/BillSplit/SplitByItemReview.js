@@ -66,24 +66,24 @@ export default class SplitEvenlyReview extends React.Component{
 
       }
       friendItems[a] = ({title: friendItems[a].title, data: friendItems[a].data, total: itemTotal + payEach })
-      console.log('itemTotal: ', itemTotal)
+      //console.log('itemTotal: ', itemTotal)
     }
 
-    console.log('update friends items: ', friendItems)
+    //console.log('update friends items: ', friendItems)
 
     //make sure bools reset every time page is loaded
     showOptionAlert = false;
     showLoadingAlert = false;
     showConfirmedAlert = false;
 
-    console.log('reached review screen')
+    //console.log('reached review screen')
   }
 
   //function to show option alert
   showOptionAlert =() => {
-    console.log('SUBMITTING')
-    console.log('friends', friends)
-    console.log('friendItems', friendItems)
+    //console.log('SUBMITTING')
+    //console.log('friends', friends)
+    //console.log('friendItems', friendItems)
     showOptionAlert = true;
     this.forceUpdate();
   }
@@ -134,16 +134,16 @@ export default class SplitEvenlyReview extends React.Component{
     const today = moment().format("MMM Do YY");
 
 
-    console.log('friendItems: ', friendItems )
+    //console.log('friendItems: ', friendItems )
 
     //get current user's uid
     var uid = firebase.auth().currentUser.uid
 
     for (let i = 0; i < friends.length; i++){
       const unique = moment()
-      console.log('unique: ', unique)
-      console.log('total amount: ', parseFloat(friendItems[i].total.toFixed(2))),
-      console.log('paying: ', friends[i].key)
+      //console.log('unique: ', unique)
+      //console.log('total amount: ', parseFloat(friendItems[i].total.toFixed(2))),
+      //console.log('paying: ', friends[i].key)
 
 
 
@@ -236,8 +236,8 @@ export default class SplitEvenlyReview extends React.Component{
 
           <View style = {{flexDirection: 'row', alignItems: 'center',marginLeft: width/10,width: width/1.2,}}>
             <Text style={{marginLeft: width/30, marginRight: width/11, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Info</Text>
-            <Text style={{marginRight: width/15, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Assign</Text>
-            <Text style={{marginRight: width/15, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Shared</Text>
+            <Text style={{marginRight: width/16, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Assign</Text>
+            <Text style={{marginRight: width/15, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Tip/Tax</Text>
             <Text style={{color: 'white', fontSize: 15}}>Review</Text>
           </View>
 
@@ -250,21 +250,12 @@ export default class SplitEvenlyReview extends React.Component{
             <Text style={styles.pageTitle}>{name}</Text>
             <View style={styles.borderContainer}>
               <View style={styles.infoContainer}>
-                <Text style={styles.sectionTitle}>Shared Tax: </Text>
 
+                <Text style={styles.sectionTitle}>Tip: </Text>
                 <View style={styles.valueContainer}>
-                  <Text style={{textAlign: 'center', color: 'rgba(0,0,0,0.6)', fontSize: 18}}>${tax.toFixed(2)}</Text>
+                  <Text style={{textAlign: 'center', color: 'rgba(0,0,0,0.6)', fontSize: 18}}>{tip}%</Text>
                 </View>
 
-                <Text style={styles.sectionTitle}>Shared Tip: </Text>
-                <View style={styles.valueContainer}>
-                  <Text style={{textAlign: 'center', color: 'rgba(0,0,0,0.6)', fontSize: 18}}>${tip.toFixed(2)}</Text>
-                </View>
-
-                <Text style={styles.sectionTitle}>Shared Total:</Text>
-                <View style={styles.valueContainer}>
-                  <Text style={{textAlign: 'center', color: 'rgba(0,0,0,0.6)', fontSize: 18}}>${finalshared.toFixed(2)}</Text>
-                </View>
                 <Text style={styles.sectionTitle}>Who's Paying What:</Text>
 
                 <SectionList
@@ -389,7 +380,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
     margin: 10,
-    width: width/2.5,
+    width: width/3,
   },
   buttonContainer: {
     marginLeft: 20,

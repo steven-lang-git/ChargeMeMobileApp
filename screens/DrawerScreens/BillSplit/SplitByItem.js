@@ -109,7 +109,7 @@ export default class SplitByItem extends React.Component {
     for (z in items) {
       tempItemArray[z] = { id: z, name: items[z].name, price: items[z].price };
     }
-    console.log('temp item array: ', tempItemArray)
+    //console.log('temp item array: ', tempItemArray)
 
     this.forceUpdate();
   }
@@ -128,7 +128,9 @@ export default class SplitByItem extends React.Component {
 
   }
 
-  addFriend = index => {
+  addFriend = item => {
+    index = eval(JSON.stringify(item.id))
+    item.name = "",
     noFriends = ''
     this.forceUpdate();
     const { selectedFriends, friends } = this.state;
@@ -167,11 +169,11 @@ export default class SplitByItem extends React.Component {
 
   //function to handle pressing remove item button
   removeItem = (index) => {
-    console.log('removing ')
-    console.log('index: ', index)
+    //console.log('removing ')
+    //console.log('index: ', index)
     const{ items } = this.state;
 
-    console.log(items[index].price)
+    //console.log(items[index].price)
 
     items.splice(index,1);
 
@@ -184,7 +186,7 @@ export default class SplitByItem extends React.Component {
   addItem = () => {
     noItems = ''
     this.forceUpdate();
-    console.log('quantity: ', this.state.quantity)
+    //console.log('quantity: ', this.state.quantity)
     if(this.state.itemName == ''){
       itemNameEmpty = true
     }
@@ -204,7 +206,7 @@ export default class SplitByItem extends React.Component {
       this.generateTempItemArray()
 
       this.setState({itemName: '', itemPrice: 0, quantity: 1})
-      console.log('items: ', this.state.items)
+      //console.log('items: ', this.state.items)
     }
   }
 
@@ -269,7 +271,7 @@ export default class SplitByItem extends React.Component {
     var x;
     for (x in this.state.friends) {
       var name1 = this.state.friends[x].firstName + " " + this.state.friends[x].lastName
-      tempArray[x] = { id: x, name: name1 };
+      tempArray[x] = { id: x, name: name1};
     }
     // console.log('temp array: ', tempArray)
     var y;
@@ -318,8 +320,8 @@ export default class SplitByItem extends React.Component {
 
             <View style = {{flexDirection: 'row', alignItems: 'center',marginLeft: width/10,width: width/1.2,}}>
               <Text style={{marginLeft: width/30, marginRight: width/11, color: 'white', fontSize: 15}}>Info</Text>
-              <Text style={{marginRight: width/15, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Assign</Text>
-              <Text style={{marginRight: width/15, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Shared</Text>
+              <Text style={{marginRight: width/16, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Assign</Text>
+              <Text style={{marginRight: width/15, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Tip/Tax</Text>
               <Text style={{color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Review</Text>
             </View>
           </View>
@@ -376,7 +378,7 @@ export default class SplitByItem extends React.Component {
 
             <SearchableDropdown
               // onTextChange={(value) => this.searchFriends(value)}
-              onItemSelect={item =>this.addFriend(eval(JSON.stringify(item.id)))}
+              onItemSelect={item => this.addFriend(item)}
 
               textInputStyle={{
                 fontSize: 15,

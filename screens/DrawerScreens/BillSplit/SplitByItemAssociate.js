@@ -199,8 +199,8 @@ export default class SplitByItemAssociate extends React.Component{
 
           <View style = {{flexDirection: 'row', alignItems: 'center',marginLeft: width/10,width: width/1.2,}}>
             <Text style={{marginLeft: width/30, marginRight: width/11, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Info</Text>
-            <Text style={{marginRight: width/15, color: 'white', fontSize: 15}}>Assign</Text>
-            <Text style={{marginRight: width/15, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Shared</Text>
+            <Text style={{marginRight: width/16, color: 'white', fontSize: 15}}>Assign</Text>
+            <Text style={{marginRight: width/15, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Tip/Tax</Text>
             <Text style={{color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Review</Text>
           </View>
           </View>

@@ -108,7 +108,9 @@ export default class SplitByAmount extends React.Component {
 
   }
 
-  addFriend = index => {
+  addFriend = item => {
+    index = eval(JSON.stringify(item.id))
+    item.name = ""
     const { selectedFriends, friends } = this.state;
 
     // And put friend in selectedFriends
@@ -224,7 +226,7 @@ export default class SplitByAmount extends React.Component {
     this.forceUpdate();
 
     if(nameEmpty == false && noFriends == ''){
-      
+
       console.log('submitting selected friends: ', this.state.selectedFriends)
 
       if(this.state.checkedEven == true){
@@ -353,7 +355,7 @@ export default class SplitByAmount extends React.Component {
               </View>
                 <SearchableDropdown
                   // onTextChange={(value) => this.searchFriends(value)}
-                  onItemSelect={item =>this.addFriend(eval(JSON.stringify(item.id)))}
+                  onItemSelect={item =>this.addFriend(item)}
                   containerStyle={{ padding: 5 }}
                   textInputStyle={{
                     fontSize: 15,
