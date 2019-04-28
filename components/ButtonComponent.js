@@ -28,7 +28,9 @@ ButtonComponent.propTypes = {
 	primary: PropTypes.bool.isRequired,
 	blueButton: PropTypes.object,
 	redButton: PropTypes.object,
+	secondText: PropTypes.string,
 	textStyle: PropTypes.object,
+	secondTextStyle: PropTypes.object,
 };
 
 ButtonComponent.defaultProps = {

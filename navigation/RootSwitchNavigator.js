@@ -4,7 +4,6 @@ import Loading from '../screens/EntryPoints/Loading';
 import LoginStackScreen from './LoginStackScreen';
 import UserDrawerScreen from './UserDrawerScreen';
 
-console.log('switch navigator')
 const RootSwitch = createSwitchNavigator(
   {
     AuthLoading: Loading,

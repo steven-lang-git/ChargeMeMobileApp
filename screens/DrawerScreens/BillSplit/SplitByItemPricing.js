@@ -73,12 +73,6 @@ export default class SplitByItem extends React.Component {
   checkTax = value => {
 
     const numericTax = this.taxField.getRawValue().toFixed(2);
-    if(numericTax == 0){
-      taxEmpty = true;
-    }
-    else{
-      taxEmpty = false;
-    }
     this.setState({tax: numericTax, disable: false, subtotal: itemTotal + parseInt(numericTax)});
   };
 
@@ -249,29 +243,26 @@ export default class SplitByItem extends React.Component {
 
   //function to handle when user clicks review button
   onSubmitBillSplit = () => {
-    if(this.state.tax == 0){
-      taxEmpty = true;
-    }
-
-    this.forceUpdate();
 
     if(taxEmpty == false){
       const { subtotal } = this.state
       if(this.state.checked10){
-        tip = (subtotal * 0.10).toFixed(2)
+        tip = 10
       }
       if(this.state.checked15){
-        tip = (subtotal * 0.15).toFixed(2)
+        tip = 15
       }
       if(this.state.checked18){
-        tip = (subtotal * 0.18).toFixed(2)
+        tip = 18
       }
       if(this.state.checked20){
-        tip = (subtotal * 0.20).toFixed(2)
+        tip = 20
       }
       if(this.state.checkedNo){
         tip = 0
       }
+
+      const { navigation } = this.props
       console.log("first tax: ",this.state.tax);
       console.log("first tip: ", tip);
       console.log('submitting selected friends: ', this.state.friends)
@@ -281,6 +272,7 @@ export default class SplitByItem extends React.Component {
                                                             tax: this.state.tax,
                                                             friends: this.state.friends,
                                                             friendItems: this.state.friendItems,
+                                                            itemTotal: navigation.getParam('itemTotal'),
                                                           })
     }
   }
@@ -329,8 +321,8 @@ export default class SplitByItem extends React.Component {
 
           <View style = {{flexDirection: 'row', alignItems: 'center',marginLeft: width/10,width: width/1.2,}}>
             <Text style={{marginLeft: width/30, marginRight: width/11, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Info</Text>
-            <Text style={{marginRight: width/15, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Assign</Text>
-            <Text style={{marginRight: width/15, color: 'white', fontSize: 15}}>Shared</Text>
+            <Text style={{marginRight: width/16, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Assign</Text>
+            <Text style={{marginRight: width/15, color: 'white', fontSize: 15}}>Tip/Tax</Text>
             <Text style={{color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Review</Text>
           </View>
 
@@ -340,7 +332,7 @@ export default class SplitByItem extends React.Component {
             <View style={styles.infoContainer}>
 
 
-          <Text style={[styles.inputTitle,{marginTop: 10}]}>Tax</Text>
+          <Text style={[styles.inputTitle,{marginTop: 10}]}>Total Tax</Text>
 
           <TextInputMask
             type={'money'}
@@ -381,7 +373,6 @@ export default class SplitByItem extends React.Component {
                   />
                 </View>
                 <Text style={styles.btntext}> 10% </Text>
-                <Text style={styles.tipText}>(${(subtotal * 0.10).toFixed(2)})</Text>
               </View>
 
               <View style={styles.optionContainer}>
@@ -396,7 +387,6 @@ export default class SplitByItem extends React.Component {
                   />
                 </View>
                 <Text style={styles.btntext}> 18% </Text>
-                <Text style={styles.tipText}>(${(subtotal * 0.18).toFixed(2)})</Text>
               </View>
 
               <View style={styles.optionContainer}>
@@ -429,7 +419,6 @@ export default class SplitByItem extends React.Component {
                   />
                 </View>
                 <Text style={styles.btntext}> 15% </Text>
-                <Text style={styles.tipText}>(${(subtotal * 0.15).toFixed(2)})</Text>
               </View>
 
               <View style={styles.optionContainer}>
@@ -444,7 +433,6 @@ export default class SplitByItem extends React.Component {
                   />
                 </View>
                 <Text style={styles.btntext}> 20% </Text>
-                <Text style={styles.tipText}>(${(subtotal * 0.20).toFixed(2)})</Text>
               </View>
 
               <View style={styles.optionContainer}>
@@ -468,9 +456,9 @@ export default class SplitByItem extends React.Component {
 
             <View style={{marginTop: 20, width: width-40}}>
               <ButtonComponent
-                text='REVIEW BILL SPLIT'
+                text='NEXT'
                 onPress={() => this.onSubmitBillSplit()}
-                disabled={disable}
+                disabled={false}
                 primary={true}
               />
             </View>

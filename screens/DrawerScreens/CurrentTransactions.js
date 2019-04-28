@@ -232,6 +232,7 @@ renderMain(item)
 
   if(selectedIndex==0){
   if(item.paying==uid){
+
     // for(var x in tempArray){
     //   if(tempArray[x].key==item.charging){
     //   name=tempArray[x].first;
@@ -248,10 +249,12 @@ renderMain(item)
     // };
     return this._renderCharging(item)
   
+=
   }
 }
 if(selectedIndex==1){
   if(item.paying==uid){
+
     // for(var x in tempArray){
     //   if(tempArray[x].key==item.charging){
     //   name=tempArray[x].first;
@@ -290,11 +293,13 @@ _renderPaying = (item) => (
 
   <ListItem 
     onPress={this._onPressItem(item)}
+
     containerStyle= {styles.blueButton}
     title={item.name}
     titleStyle={{color:'white', fontWeight:'bold'}}
     subtitle={item.date }
     subtitleStyle={{color:'white'}}
+
     rightElement={item.amount}
     rightTitle={"Paying "}
     rightTitleStyle={{color:'white'}}
@@ -308,11 +313,13 @@ _renderCharging = (item) => (
   <ListItem 
   onPress={this._onPressItem(item)}
   containerStyle= {styles.redButton}   
+
     title={item.name}
     titleStyle={{color:'white', fontWeight:'bold'}}
     subtitle={item.date }
     subtitleStyle={{color:'white'}}
     rightElement={item.amount}
+
     rightTitle={"Charging "}
     rightTitleStyle={{color:'white'}}
     chevronColor="white"
@@ -321,7 +328,8 @@ _renderCharging = (item) => (
     />
 )
 
-//function that is called everytime page mounts 
+
+//function that is called everytime page mounts
 componentDidMount(){
   var uid = firebase.auth().currentUser.uid
   this.setState({uid:uid})
@@ -343,7 +351,7 @@ componentDidMount(){
                           date: childSnapShot.val().date,
                           name: childSnapShot.val().name,
                           paying: childSnapShot.val().paying,
-                  
+
                         })
 
     });
@@ -356,7 +364,7 @@ componentDidMount(){
     .then ((snapshot) => {
       // for each user
       snapshot.forEach((childSnapShot) => {
-       
+
           tempArray.push({
             key: childSnapShot.key,
             first: childSnapShot.val().firstName,
@@ -369,9 +377,9 @@ componentDidMount(){
         });
         });
 
-   
+
     this.forceUpdate();
-  
+
   })
 
 }
@@ -413,7 +421,7 @@ renderItem = ({item})=> (
 );
 
   render() {
-    
+
     const buttons = ["All", "Paying", "Requesting"];
     const { selectedIndex } = this.state;
 

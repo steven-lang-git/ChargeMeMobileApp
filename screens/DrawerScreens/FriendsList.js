@@ -73,7 +73,9 @@ export default class FriendsList extends React.Component {
   };
 
   //function to add friend to current friends
-  addFriend = index => {
+  addFriend = item => {
+    index = eval(JSON.stringify(item.id))
+    item.name = ""
     // And put friend in currentFriends
     currentFriends.push(possibleFriends[index]);
 
@@ -187,16 +189,14 @@ export default class FriendsList extends React.Component {
           <Button
             color="white"
             title="Back to home"
-            onPress={() => this.props.navigation.navigate("PastTransactions")}
+            onPress={() => this.props.navigation.navigate("Dashboard")}
           />
 
           <View style={styles.container}>
             <View style={styles.infoContainer}>
               <SearchableDropdown
                 //  onTextChange={text => alert(text)}
-                onItemSelect={item =>
-                  this.addFriend(eval(JSON.stringify(item.id)))
-                }
+                onItemSelect={item => this.addFriend(item)}
                 containerStyle={{ padding: 5 }}
                 textInputStyle={{
                   fontSize: 15,
@@ -259,6 +259,7 @@ export default class FriendsList extends React.Component {
                   color="white"
                   key={friend.username}
                   title={`Add ${friend.firstName + " " + friend.lastName}`}
+                  key={friend.username}
                   onPress={() => this.addFriend(index)}
                 />
               ))}
