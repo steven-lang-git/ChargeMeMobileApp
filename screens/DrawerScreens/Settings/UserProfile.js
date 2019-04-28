@@ -47,10 +47,6 @@ export default class UserProfile extends React.Component {
         disable: true,
         showAlert: false
       };
-      //usernameMessage = '';
-      //firstnameMessage = '';
-      //lastnameMessage = '';
-      //phoneMessage = '';
     }
 
   hideAlert = () => {
