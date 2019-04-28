@@ -31,6 +31,7 @@ let noFriends = '';
 let noItems= '';
 let tempArray = [];
 let tempItemArray = [];
+let itemTotal = 0;
 
 const{width} = Dimensions.get('window')
 
@@ -49,16 +50,18 @@ export default class SplitByItem extends React.Component {
       itemPrice: 0,
       quantity: 1,
     };
+
+  }
+
+  //run when page first loads
+  componentDidMount() {
     nameEmpty = false;
     itemNameEmpty = false;
     itemPriceEmpty = false
     noFriends = '';
     noItems = '';
     tempArray = [];
-  }
-
-  //run when page first loads
-  componentDidMount() {
+    itemTotal = 0;
 
     this.generateTempItemArray()
     const { selectedFriends } = this.state;
@@ -255,13 +258,19 @@ export default class SplitByItem extends React.Component {
     this.forceUpdate();
 
     if(nameEmpty == false && noFriends == '' && noItems == ''){
+      var y;
+      for (y in this.state.items){
+        itemTotal += this.state.items[y].price
+      }
       console.log('SUBMITTING')
+      console.log("item total", itemTotal)
       console.log('submitting selected friends: ', this.state.selectedFriends)
       console.log('submitting items: ', this.state.items)
       this.props.navigation.navigate('SplitByItemAssociate', {
                                                             name: this.state.name,
                                                             selectedFriends: this.state.selectedFriends,
-                                                            items: this.state.items
+                                                            items: this.state.items,
+                                                            itemTotal: itemTotal
                                                           })
     }
   }

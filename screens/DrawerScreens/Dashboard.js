@@ -143,7 +143,7 @@ export default class Dashboard extends React.Component {
       titleStyle={{color:'white', fontWeight:'bold'}}
       subtitle={item.date }
       subtitleStyle={{color:'white'}}
-      rightElement={"$" + (item.amount).toFixed(2)}
+      rightElement={"$" + (item.amount)}
       rightTitle={"Paying "+name}
       rightTitleStyle={{color:'white', width: 70}}
 
@@ -162,7 +162,7 @@ export default class Dashboard extends React.Component {
       titleStyle={{color:'white', fontWeight:'bold'}}
       subtitle={item.date }
       subtitleStyle={{color:'white'}}
-      rightElement={"$" + (item.amount).toFixed(2)}
+      rightElement={"$" + (item.amount)}
       rightTitle={"Charging "+name}
       rightTitleStyle={{color:'white', width: 70}}
 

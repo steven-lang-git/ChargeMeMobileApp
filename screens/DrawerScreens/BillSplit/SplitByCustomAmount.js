@@ -28,18 +28,64 @@ import SearchableDropdown from "react-native-searchable-dropdown";
 import * as firebase from "firebase";
 
 const{width} = Dimensions.get('window')
+let friendAmounts = []
+let emptyAmount = ''
 
 export default class SplitByCustomAmount extends React.Component{
   constructor(props){
     super(props);
+    const { navigation } = this.props;
     this.state= {
-
+      name: navigation.getParam('name'),
+      friends: navigation.getParam('friends'),
     }
   }
 
+  componentDidMount(){
+    const { friends } = this.state;
+    console.log('friends: ', friends)
+    friendAmounts = []
+    var x;
+    for(x in friends){
+      friendAmounts[x] = ({friend: friends[x], amount: 0, index: x})
+    }
+    emptyAmount= ''
+    this.forceUpdate();
+  }
 
+  checkAmount = (amount, index) => {
+    friendAmounts[index].amount = amount.replace(/\$/g,'');
+    console.log("changinf amount", friendAmounts)
+    emptyAmount = ''
+    this.forceUpdate();
+  }
+
+  //function to handle when user clicks review button
+  onSubmitBillSplit = () => {
+
+    var y;
+    for (y in friendAmounts){
+      console.log('amount: ', friendAmounts[y].amount)
+      if(friendAmounts[y].amount ==  0){
+        emptyAmount = 'Enter an amount for each friend'
+      }
+    }
+
+    this.forceUpdate();
+
+    if(emptyAmount == ''){
+
+      console.log('sending friendamounts: ', friendAmounts)
+
+      this.props.navigation.navigate('SplitByCustomAmountReview', {
+                                                            name: this.state.name,
+                                                            friendAmounts: friendAmounts
+                                                          })
+    }
+  }
 
   render(){
+
     return(
 
       <SafeAreaView style={styles.container}>
@@ -82,7 +128,67 @@ export default class SplitByCustomAmount extends React.Component{
         <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
           <View style={styles.infoContainer}>
 
-          <Text>HELLO</Text>
+          <Text style={[styles.inputTitle, {marginTop: 10}]}>Enter Amounts:</Text>
+
+          <FlatList
+            data = {friendAmounts}
+            extraData={this.state}
+            renderItem={({item}) =>
+
+              <View style={{
+                            height: 50,
+                            flexDirection: 'row',
+                            borderColor: 'transparent',
+                            justifyContent: 'space-between',
+                            backgroundColor: 'rgba(255,255,255, 1)',
+                            borderWidth: 2,
+                            borderRadius: 5,
+                            paddingLeft: width/20,
+                            paddingRight: width/20,
+                            marginTop: 5,
+                            marginBottom: 5
+                          }}>
+
+              <Text style={{marginTop: 13,color: 'rgba(0,0,0,0.6)', fontWeight: 'bold',fontSize: 15}}>{item.friend.firstName} {item.friend.lastName}</Text>
+
+                <TextInputMask
+                  type={'money'}
+                  options={{
+                    precision: 2,
+                    separator: '.',
+                    delimiter: ',',
+                    unit: '$',
+                    suffixUnit: ''
+                  }}
+                  value={item.amount}
+                  onChangeText={(amount, index) => this.checkAmount(amount, item.index)}
+                  style={[styles.input,{
+                    borderColor: '#35b0d2',
+                    marginTop: 3,
+                    width: width/4
+                  }]}
+                  ref={(ref) => this.totalField = ref}
+                  placeholder="$0"
+                  placeholderTextColor="rgba(255,255,255,0.8)"
+                  keyboardType={'numeric'}
+                  returnKeyType='go'
+                />
+
+              </View>
+            }
+            keyExtractor={item => item.index}
+            />
+            <Text style={styles.errorMessage}>{emptyAmount}</Text>
+
+
+            <View style={{marginTop: 40, width: width-40}}>
+              <ButtonComponent
+                text='NEXT'
+                onPress={() => this.onSubmitBillSplit()}
+                disabled={false}
+                primary={true}
+              />
+            </View>
 
           </View>
           </KeyboardAwareScrollView>

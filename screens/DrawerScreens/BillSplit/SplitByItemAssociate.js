@@ -15,6 +15,7 @@ import {
 import { Dropdown } from 'react-native-material-dropdown';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ButtonComponent from '../../../components/ButtonComponent'
+import { MaterialIcons } from '@expo/vector-icons';
 import {
   ListItem,
   CheckBox,
@@ -31,6 +32,7 @@ let count = 0;
 let friendItems = [{title: 'Me', data: []}];
 let looseItems = ''
 let emptyFriend = ''
+let friendSimple = []
 
 export default class SplitByItemAssociate extends React.Component{
   constructor(props){
@@ -41,10 +43,12 @@ export default class SplitByItemAssociate extends React.Component{
     this.state = {
        name: navigation.getParam('name'),
        friends: navigation.getParam('selectedFriends'),
+       value: ''
     };
   }
 
   componentDidMount(){
+    console.log("MOUNTED")
     const { navigation } = this.props;
 
     console.log('items in associate screen: ', navigation.getParam('items'))
@@ -82,6 +86,7 @@ export default class SplitByItemAssociate extends React.Component{
   associate = (value, index, selected) =>{
     emptyFriend = ''
     looseItems = ''
+    friendSimple[index].value=''
     console.log('friend name: ',value)
     console.log('friend index: ', index)
     console.log('item index: ', selected)
@@ -91,6 +96,7 @@ export default class SplitByItemAssociate extends React.Component{
 
     unassocItems.splice(selected,1);
     this.generateTempItemArray()
+    this.forceUpdate();
   }
 
   unassociate = (item) =>{
@@ -139,6 +145,7 @@ export default class SplitByItemAssociate extends React.Component{
                                                             friends: this.state.friends,
                                                             friendItems: friendItems,
                                                             items: items,
+                                                            itemTotal: navigation.getParam('itemTotal'),
                                                           })
     }
   }
@@ -150,12 +157,20 @@ export default class SplitByItemAssociate extends React.Component{
     const { friends } = this.state;
 
 
-    var friendSimple = [{value: 'Me'}]
+    friendSimple = [{value: 'Me'}]
     var x;
     for (x in friends){
       var name = friends[x].firstName + " " + friends[x].lastName
       friendSimple.push({value: name})
     }
+    console.log('friends simple', friendSimple)
+
+    const data = [
+      { value: 'Upgrade' },
+      { value: 'Settings' },
+      { value: 'About' },
+      { value: 'Sign out' }
+    ];
 
     return(
       <SafeAreaView style={styles.container}>
@@ -208,36 +223,49 @@ export default class SplitByItemAssociate extends React.Component{
           <KeyboardAwareScrollView keyboardShouldPersistTaps='always'contentContainerStyle={styles.contentContainer}>
           <View style={{ width: width, padding:20, paddingBottom: 0}}>
 
-
-          <Text style={[styles.inputTitle, {marginTop: 10}]}>Unassociated Items:</Text>
+          <Text style={[styles.inputTitle, {marginTop: 10}]}>Unassigned Items:</Text>
 
 
             <FlatList
               data={tempItemArray}
               extraData={unassocItems}
               renderItem={({item}) =>
-                <View style={styles.searchboxContainer}>
-                  <View>
-                    <Text style={{marginTop: 9,color: 'rgba(0,0,0,0.6)', fontWeight: 'bold',fontSize: 15}}>{item.name}</Text>
-                  </View>
+              <Dropdown
+                data={friendSimple}
+                renderBase={() => (
 
-                  <View style={{flexDirection: 'row' }}>
-                    <Text style={{marginTop: 10, marginRight: 25, color: 'rgba(0,0,0,0.6)',fontSize: 13,}}>${(item.price).toFixed(2)}</Text>
-                    <Text style={{marginTop: 10,color: 'rgba(0,0,0,0.6)',fontSize: 13}}>Assign</Text>
-                    <Dropdown
-                      data={friendSimple}
-                      containerStyle= {{width: width/20 , height: 40, marginRight: 7}}
-                      pickerStyle= {{ backgroundColor: 'white', width: width/2.5}}
-                      textColor= '#35b0d2'
-                      baseColor= '#35b0d2'
-                      itemColor = '#35b0d2'
-                      dropdownOffset= {{top: 7, left: -width/3.5}}
-                      fontSize = {15}
-                      onChangeText = {(value, index, selected) => this.associate(value, index, eval(JSON.stringify(item.id)))}
-                    />
-                  </View>
+                    <View style = {{
+                                    flexDirection: 'row',
+                                    height: 40,
+                                    borderColor: 'transparent',
+                                    justifyContent: 'space-between',
+                                    backgroundColor: 'rgba(255,255,255, 1)',
+                                    borderWidth: 2,
+                                    borderRadius: 5,
+                                    paddingLeft: width/20,
+                                    marginTop: 5
+                                  }}>
+                      <Text style={{marginTop: 9,color: 'rgba(0,0,0,0.6)', fontWeight: 'bold',fontSize: 15}}>{item.name}</Text>
+                      <Text style={{marginTop: 10, marginRight: 25, color: 'rgba(0,0,0,0.6)',fontSize: 13,}}>${item.price}</Text>
+                    </View>
+                )}
 
-                </View>
+                rippleInsets={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                containerStyle={{height: 45}}
+                overlayStyle={{backgroundColor: 'rgba(1,1,1,0.4)'}}
+                dropdownPosition={1}
+                itemColor="rgba(0, 0, 0, .87)"
+                onChangeText = {(value, index, selected) => this.associate(value, index, eval(JSON.stringify(item.id)))}
+                pickerStyle={{
+                  width: 128,
+
+                  left: null,
+                  right: 0,
+
+                  marginRight: 8,
+                  marginTop: 24
+                }}
+              />
               }
               keyExtractor={item => item.id}
             />

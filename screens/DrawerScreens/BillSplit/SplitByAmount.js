@@ -232,8 +232,6 @@ export default class SplitByAmount extends React.Component {
       if(this.state.checkedEven == true){
         this.props.navigation.navigate('SplitEvenly', {
                                                               name: this.state.name,
-                                                              // total: this.state.total,
-                                                              // tip: this.state.tip,
                                                               friends: this.state.selectedFriends
                                                             })
       }
@@ -241,8 +239,6 @@ export default class SplitByAmount extends React.Component {
       if(this.state.checkedAmount == true){
         this.props.navigation.navigate('SplitByCustomAmount', {
                                                               name: this.state.name,
-                                                              // total: this.state.total,
-                                                              // tip: this.state.tip,
                                                               friends: this.state.selectedFriends
                                                             })
       }

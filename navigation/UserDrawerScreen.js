@@ -18,7 +18,7 @@ const AppDrawerNavigator = createDrawerNavigator({
     SettingsStackScreen: {screen: SettingsStackScreen},
   },
   {
-    initialRouteName: 'BillSplitStackScreen',
+    initialRouteName: 'Dashboard',
     contentComponent: DrawerMenu,
     contentOptions: {
     activeTintColor: '#35b0d2'

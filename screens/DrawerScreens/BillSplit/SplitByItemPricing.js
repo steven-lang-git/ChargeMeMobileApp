@@ -261,6 +261,8 @@ export default class SplitByItem extends React.Component {
       if(this.state.checkedNo){
         tip = 0
       }
+
+      const { navigation } = this.props
       console.log("first tax: ",this.state.tax);
       console.log("first tip: ", tip);
       console.log('submitting selected friends: ', this.state.friends)
@@ -270,6 +272,7 @@ export default class SplitByItem extends React.Component {
                                                             tax: this.state.tax,
                                                             friends: this.state.friends,
                                                             friendItems: this.state.friendItems,
+                                                            itemTotal: navigation.getParam('itemTotal'),
                                                           })
     }
   }
