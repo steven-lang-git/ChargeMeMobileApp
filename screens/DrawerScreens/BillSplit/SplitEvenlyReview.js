@@ -24,6 +24,7 @@ import {
   ListItem,
   Icon
 } from 'react-native-elements';
+import DatePicker from 'react-native-datepicker'
 
 //get dimensions of screen
 const{width, } = Dimensions.get('window')
@@ -31,22 +32,32 @@ const{width, } = Dimensions.get('window')
 let showOptionAlert = false;
 let showLoadingAlert = false;
 let showConfirmedAlert = false;
+let pickDate = ''
 
 export default class SplitEvenlyReview extends React.Component{
   constructor(props){
     super(props);
+    this.state = {
+      date: '',
+    }
 
     //make sure bools reset every time page is loaded
     showOptionAlert = false;
     showLoadingAlert = false;
     showConfirmedAlert = false;
+    pickDate = ''
 
     console.log('reached review screen')
   }
 
   //function to show option alert
   showOptionAlert =() => {
-    showOptionAlert = true;
+    if(this.state.date != ''){
+      showOptionAlert = true;
+    }
+    if(this.state.date == ''){
+      pickDate = 'Please select a date'
+    }
     this.forceUpdate();
   }
   //function to show loading alert
@@ -98,7 +109,6 @@ export default class SplitEvenlyReview extends React.Component{
     const finalTotal = parseFloat((total + tip).toFixed(2))
     const selectedFriends = navigation.getParam('selectedFriends');
     const payEach = parseFloat((finalTotal/(selectedFriends.length + 1)).toFixed(2))
-    const today = moment().format("MMM Do YY");
 
 
     console.log('todays date: ', today )
@@ -120,7 +130,7 @@ export default class SplitEvenlyReview extends React.Component{
               paying: selectedFriends[i].key,
               amount: payEach,
               name: name,
-              date: today
+              date: this.state.date
         });
 
         //dispatch charge to database under friend
@@ -158,6 +168,12 @@ export default class SplitEvenlyReview extends React.Component{
     </View>
   );
 
+  changeDate = (date) => {
+    this.setState({date: date});
+    pickDate = '';
+    this.forceUpdate();
+  }
+
   render(){
     const { navigation } = this.props;
 
@@ -165,14 +181,8 @@ export default class SplitEvenlyReview extends React.Component{
     const total = parseFloat(navigation.getParam('total'))
     const tip = parseFloat(navigation.getParam('tip'))
     const finalTotal = parseFloat((total + tip).toFixed(2))
-    const selectedFriends = navigation.getParam('selectedFriends');
+    const selectedFriends = navigation.getParam('friends');
     const payEach = parseFloat((finalTotal/(selectedFriends.length + 1)).toFixed(2))
-    // console.log('name: ', name)
-    // console.log('total: ', total)
-    // console.log('tip: ', tip)
-    // console.log('final total', finalTotal)
-    // console.log('selectedFriends', selectedFriends)
-    // console.log('each pays: ', payEach)
     let selectedFlat = []
     var y;
     for (y in selectedFriends) {
@@ -184,31 +194,103 @@ export default class SplitEvenlyReview extends React.Component{
         <ImageBackground source={require('../../../assets/group-dinner.jpg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
 
-          <Text style={styles.pageTitle}>{name}</Text>
+          <View style={{ width: width/1.2, padding:20, paddingBottom: 0}}>
+
+            <View style = {{flexDirection: 'row', alignItems: 'center',justifyContent: 'space-between', marginLeft: (width-(width/2.1))/2 - 20,width: width/2.1,}}>
+
+              <TouchableOpacity style = {styles.progressButton}
+                disabled = {true}
+                >
+                <Icon name = 'check' color='white' size = {24}/>
+              </TouchableOpacity>
+
+              <View style={styles.line}/>
+
+              <TouchableOpacity style = {styles.progressButton}
+                disabled = {true}
+                >
+                <Icon name = 'check' color='white' size = {24}/>
+              </TouchableOpacity>
+
+              <View style={styles.line}/>
+
+              <TouchableOpacity style = {styles.progressButton}
+                disabled = {true}
+                >
+                <Text style={styles.stepLabel}>3</Text>
+              </TouchableOpacity>
+
+            </View>
+
+            <View style = {{flexDirection: 'row', alignItems: 'center',marginLeft: width/5.2,width: width/1.2,}}>
+              <Text style={{marginLeft: width/28, marginRight: width/12, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Info</Text>
+              <Text style={{marginRight: width/17, color: 'rgba(225,225,225,0.2)', fontSize: 15}}>Amount</Text>
+              <Text style={{color: 'white', fontSize: 15}}>Review</Text>
+            </View>
+          </View>
 
           <KeyboardAwareScrollView keyboardShouldPersistTaps='always'contentContainerStyle={styles.contentContainer}>
+            <Text style={styles.pageTitle}>{name}</Text>
             <View style={styles.borderContainer}>
               <View style={styles.infoContainer}>
-                <Text style={styles.sectionTitle}>Subtotal: </Text>
 
-                <View style={styles.valueContainer}>
-                  <Text style={{textAlign: 'center', color: 'white', fontSize: 18}}>${total.toFixed(2)}</Text>
+              <DatePicker
+                  style={{width: width/2.3, height: 30, marginBottom:5, padding: 0}}
+                  showIcon = {true }
+                  date={this.state.date}
+                  mode="date"
+                  placeholder="select date"
+                  format="MM-DD-YYYY"
+                  maxDate= {moment().format("MM-DD-YYYY")}
+                  confirmBtnText="Confirm"
+                  cancelBtnText="Cancel"
+                  customStyles={{
+                    dateIcon: {
+                      position: 'absolute',
+                      left: 0,
+                      marginLeft: 0
+                    },
+                    dateInput: {
+                      backgroundColor: "white",
+                      marginLeft: width/6.7,
+                      borderColor: 'rgba(255,255,255,1)',
+                      borderWidth: 2,
+                      borderRadius: 5,
+                      height: 30,
+                      width: width/3.5
+                    },
+                    dateText: {
+                      color: 'rgba(1,1,1,0.6)',
+                      fontWeight: 'bold'
+                    },
+                    placeholderText:{
+                      color: "rgba(1,1,1,0.6)"
+                    }
+                    // ... You can check the source to find the other keys.
+                  }}
+                  onDateChange={(date) => {this.changeDate(date)}}
+                />
+                <Text style={styles.errorMessage}>{pickDate}</Text>
+
+                <View style = {{flexDirection: 'row', marginBottom: 7}}>
+                  <Text style={[styles.sectionTitle, {marginTop: 8}]}>Tip: </Text>
+                  <View style={[styles.valueContainer, {marginLeft: width/20}]}>
+                    <Text style={{textAlign: 'center', fontWeight: 'bold', color: 'rgba(1,1,1,0.6)', fontSize: 15}}>${tip.toFixed(2)}</Text>
+                  </View>
                 </View>
 
-                <Text style={styles.sectionTitle}>Tip Selected: </Text>
-                <View style={styles.valueContainer}>
-                  <Text style={{textAlign: 'center', color: 'white', fontSize: 18}}>${tip.toFixed(2)}</Text>
+                <View style = {{flexDirection: 'row'}}>
+                  <Text style={[styles.sectionTitle, {marginTop: 8}]}>Total:</Text>
+                  <View style={[styles.valueContainer, {marginLeft: width/50}]}>
+                    <Text style={{textAlign: 'center', fontWeight: 'bold', color: 'rgba(1,1,1,0.6)', fontSize: 15}}>${finalTotal.toFixed(2)}</Text>
+                  </View>
                 </View>
 
-                <Text style={styles.sectionTitle}>Final Total:</Text>
-                <View style={styles.valueContainer}>
-                  <Text style={{textAlign: 'center', color: 'white', fontSize: 18}}>${finalTotal.toFixed(2)}</Text>
-                </View>
-                <Text style={styles.sectionTitle}>Who's Paying What:</Text>
+                <Text style={[styles.sectionTitle, {marginTop: 7}]}>Who's Paying What:</Text>
 
-                <View style={[styles.searchboxContainer, {borderColor: 'coral'}] }>
-                  <Text style={{marginLeft: 25,marginTop: 9,color: 'coral', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>Me</Text>
-                  <Text style={{marginRight: 25,marginTop: 9,color: 'coral', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>${payEach.toFixed(2)}</Text>
+                <View style={[styles.searchboxContainer, {borderColor: 'coral', backgroundColor: 'coral'}] }>
+                  <Text style={{marginLeft: 25,marginTop: 9,color: 'white', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>Me</Text>
+                  <Text style={{marginRight: 25,marginTop: 9,color: 'white', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>${payEach.toFixed(2)}</Text>
                 </View>
 
                 <FlatList
@@ -216,8 +298,8 @@ export default class SplitEvenlyReview extends React.Component{
                   extraData={this.state}
                   renderItem={({item}) =>
                     <View style={styles.searchboxContainer}>
-                      <Text style={{marginLeft: 25,marginTop: 9,color: '#35b0d2', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>{item.name}</Text>
-                      <Text style={{marginRight: 25,marginTop: 9,color: '#35b0d2', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>${payEach.toFixed(2)}</Text>
+                      <Text style={{marginLeft: 25,marginTop: 9,color: 'white', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>{item.name}</Text>
+                      <Text style={{marginRight: 25,marginTop: 9,color: 'white', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>${payEach.toFixed(2)}</Text>
                     </View>
                   }
                   keyExtractor={item => item.id}
@@ -310,7 +392,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 40,
     borderColor: '#35b0d2',
-    backgroundColor: 'rgba(255,255,255, 0.8)',
+    backgroundColor: '#35b0d2',
     borderWidth: 2,
     borderRadius: 5,
     flexDirection: 'row',
@@ -319,13 +401,12 @@ const styles = StyleSheet.create({
   valueContainer: {
     alignContent: 'center',
     justifyContent: 'center',
-    height: 40,
-    borderColor: '#35b0d2',
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    height: 30,
+    borderColor: 'white',
+    backgroundColor: 'rgba(255,255,255,1)',
     borderWidth: 2,
     borderRadius: 5,
-    margin: 10,
-    width: width/2.5,
+    width: width/3.5,
   },
   buttonContainer: {
     marginLeft: 20,
@@ -336,7 +417,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 40,
+    marginTop: 30,
   },
   sectionTitle: {
     textAlign: 'left',
@@ -351,5 +432,27 @@ const styles = StyleSheet.create({
     width: width/3,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  progressButton: {
+    margin: 0,
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    backgroundColor: '#35b0d2',
+  },
+  line: {
+    width: width/12 ,
+    height: 3,
+    backgroundColor: '#35b0d2'
+  },
+  stepLabel: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 16
+  },
+  errorMessage:{
+    color: 'red',
+    marginBottom: 5
   },
 });

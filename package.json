@@ -18,6 +18,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-awesome-alerts": "^1.2.0",
     "react-native-circle-checkbox": "^0.1.6",
+    "react-native-datepicker": "^1.7.2",
     "react-native-elements": "^1.1.0",
     "react-native-form-validator": "^0.2.0",
     "react-native-masked-text": "^1.11.1",

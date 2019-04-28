@@ -21,7 +21,7 @@ import * as firebase from 'firebase';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Avatar, ListItem } from 'react-native-elements';
-import ButtonComponent from '../../components/ButtonComponent'
+import DashboardStatComponent from '../../components/DashboardStatComponent'
 
 
 
@@ -143,7 +143,7 @@ export default class Dashboard extends React.Component {
       titleStyle={{color:'white', fontWeight:'bold'}}
       subtitle={item.date }
       subtitleStyle={{color:'white'}}
-      rightElement={"$" + (item.amount).toFixed(2)}
+      rightElement={"$" + (item.amount)}
       rightTitle={"Paying "+name}
       rightTitleStyle={{color:'white', width: 70}}
 
@@ -162,7 +162,7 @@ export default class Dashboard extends React.Component {
       titleStyle={{color:'white', fontWeight:'bold'}}
       subtitle={item.date }
       subtitleStyle={{color:'white'}}
-      rightElement={"$" + (item.amount).toFixed(2)}
+      rightElement={"$" + (item.amount)}
       rightTitle={"Charging "+name}
       rightTitleStyle={{color:'white', width: 70}}
 
@@ -178,7 +178,7 @@ export default class Dashboard extends React.Component {
     this.renderMain(item)
     )
   render() {
-    
+
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../../assets/blue.jpg')} style={styles.imageContainer}>
@@ -204,7 +204,7 @@ export default class Dashboard extends React.Component {
               />
 
               <View style={styles.nameContainer}>
-                <Text style={styles.name}>Welcome {this.state.firstName}</Text>
+                <Text style={styles.name}>Welcome, {this.state.firstName}</Text>
                 <Text style={styles.username}>@{this.state.username}</Text>
               </View>
             </View>
@@ -213,38 +213,23 @@ export default class Dashboard extends React.Component {
             <View style={styles.userContainer}>
 
 
-                <ButtonComponent
+                <DashboardStatComponent
                   onPress={() => this.props.navigation.navigate('FriendsList')}
                   text={"\n" +"Friends:"}
-                  textStyle= {{textAlign: 'center', fontSize: 14, color: 'white'}}
                   secondText={String(currFriends.length)}
-                  secondTextStyle={{marginTop: width/50, fontWeight: 'bold',textAlign: 'center', fontSize: 20, color: 'white'}}
-                  disabled={false}
-                  primary={true}
-                  blueButton={{paddingTop: width/40,height: width/3.8, borderRadius: 100, width: width/3.8, backgroundColor: 'rgba(225,225,225,0.3)'}}
                 />
 
 
-                <ButtonComponent
+                <DashboardStatComponent
                   onPress={() => this.props.navigation.navigate('PastTransactions')}
                   text={"Past" + "\n" + "Transactions:"  }
-                  textStyle= {{textAlign: 'center', fontSize: 14, color: 'white'}}
                   secondText={String(pastTransactions.length)}
-                  secondTextStyle={{marginTop: width/50, fontWeight: 'bold',textAlign: 'center', fontSize: 20, color: 'white'}}
-                  disabled={false}
-                  primary={true}
-                  blueButton={{paddingTop: width/40,height: width/3.8, borderRadius: 100, width: width/3.8, backgroundColor: 'rgba(225,225,225,0.3)'}}
                 />
 
-                <ButtonComponent
+                <DashboardStatComponent
                   onPress={() => this.props.navigation.navigate('CurrentTransactions')}
                   text={"Current" + "\n" + "Transactions:" }
-                  textStyle= {{textAlign: 'center', fontSize: 14, color: 'white'}}
                   secondText={String(currTransCount)}
-                  secondTextStyle={{marginTop: width/50, fontWeight: 'bold',textAlign: 'center', fontSize: 20, color: 'white'}}
-                  disabled={false}
-                  primary={true}
-                  blueButton={{paddingTop: width/40,height: width/3.8, borderRadius: 100, width: width/3.8, backgroundColor: 'rgba(225,225,225,0.3)'}}
                 />
 
 
