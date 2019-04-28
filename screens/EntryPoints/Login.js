@@ -19,6 +19,7 @@ import {
 import CreateAccount from './CreateAccount';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { StackActions, NavigationActions } from 'react-navigation';
+import TextInputComponent from '../../components/TextInputComponent.js'
 
 console.log('login page')
 
@@ -169,14 +170,8 @@ export default class Login extends React.Component {
 
                     <View style={styles.inputBoxContainer}>
 
-                      <TextInput
-                          style={[styles.input,{
-                            borderColor: emailEmpty == true
-                              ? 'red'
-                              : '#35b0d2',
-                          }]}
+                      <TextInputComponent
                           placeholder="Enter email"
-                          placeholderTextColor="rgba(255,255,255,0.8)"
                           onChangeText={(email) => this.updateEmail(email)}
                           keyboardType='email-address'
                           returnKeyType='next'
@@ -185,14 +180,8 @@ export default class Login extends React.Component {
                           onSubmitEditing={()=> this.refs.txtPassword.focus()}
                       />
 
-                      <TextInput
-                          style={[styles.input,{
-                            borderColor: passwordEmpty == true
-                              ? 'red'
-                              : '#35b0d2',
-                          }]}
+                      <TextInputComponent
                           placeholder="Enter password"
-                          placeholderTextColor="rgba(255,255,255,0.8)"
                           keyboardType='default'
                           returnKeyType='go'
                           onChangeText={(password) => this.updatePassword(password)}

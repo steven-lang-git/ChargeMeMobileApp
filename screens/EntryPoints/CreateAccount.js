@@ -166,8 +166,6 @@ export default class CreateAccount extends React.Component {
             //format phoneNum
             let unMask = this.phoneNum.getRawValue();
 
-
-
             //write user info
             firebase.database().ref('users/' + userId).set({
               username: this.state.username,
@@ -386,17 +384,11 @@ export default class CreateAccount extends React.Component {
                       <View style={styles.nameContainer}>
                       <View style={styles.nameInputContainer}>
                         <TextInputComponent
-                          /*style={[styles.nameInput,{
-                            borderColor: firstNameError == true
-                              ? 'red'
-                              : '#35b0d2',
-                          }]}*/
                           empty = {firstNameError}
                           error = {firstnameErrorMessage}
                           placeholder="First Name"
                           ref = "firstName"
                           autoCorrect= {false}
-                          //placeholderTextColor="rgba(255,255,255,0.8)"
                           returnKeyType='next'
                           onChangeText={(first) => this.updateFirstName(first)}
                           onSubmitEditing={()=> this.refs.lastName.focus()}
@@ -405,17 +397,11 @@ export default class CreateAccount extends React.Component {
                         <Text/>
                         <View style={styles.nameInputContainer}>
                         <TextInputComponent
-                          /*style={[styles.nameInput,{
-                            borderColor: lastNameError == true
-                              ? 'red'
-                              : '#35b0d2',
-                          }]}*/
                           empty = {lastNameError}
                           error = {lastnameErrorMessage}
                           placeholder="Last Name"
                           ref = "lastName"
                           autoCorrect= {false}
-                          placeholderTextColor="rgba(255,255,255,0.8)"
                           returnKeyType='next'
                           onChangeText={(last) => this.updateLastName(last)}
                         />
@@ -469,16 +455,10 @@ export default class CreateAccount extends React.Component {
                       <Text style = {styles.errorMessage}>{birthdayErrorMessage}</Text>
 
                       <TextInputComponent
-                        /*style={[styles.input,{
-                          borderColor: usernameError == true || usernameErrorMessage != ''
-                            ? 'red'
-                            : '#35b0d2',
-                        }]}*/
                         empty = {usernameError}
                         error = {usernameErrorMessage}
                         placeholder="Username"
                         ref = "username"
-                        //placeholderTextColor="rgba(255,255,255,0.8)"
                         autoCorrect= {false}
                         autoCapitalize = 'none'
                         returnKeyType='next'
@@ -488,16 +468,10 @@ export default class CreateAccount extends React.Component {
                       <Text style = {styles.errorMessage}>{usernameErrorMessage}</Text>
 
                       <TextInputComponent
-                        /*style={[styles.input,{
-                          borderColor: emailError == true || emailErrorMessage != ''
-                            ? 'red'
-                            : '#35b0d2',
-                        }]}*/
                         empty = {emailError}
                         error = {emailErrorMessage}
                         placeholder="Email"
                         ref = "email"
-                        //placeholderTextColor="rgba(255,255,255,0.8)"
                         autoCorrect= {false}
                         autoCapitalize = 'none'
                         returnKeyType='next'
@@ -507,16 +481,10 @@ export default class CreateAccount extends React.Component {
                       <Text style = {styles.errorMessage}>{emailErrorMessage}</Text>
 
                       <TextInputComponent
-                        /*style={[styles.input,{
-                          borderColor: passwordError == true || passwordErrorMessage != ''
-                            ? 'red'
-                            : '#35b0d2',
-                        }]}*/
                         empty = {passwordError}
                         error = {passwordErrorMessage}
                         placeholder="Password"
                         ref = "password"
-                        //placeholderTextColor="rgba(255,255,255,0.8)"
                         autoCorrect= {false}
                         secureTextEntry
                         returnKeyType='go'
@@ -544,11 +512,9 @@ export default class CreateAccount extends React.Component {
         </ImageBackground>
       </SafeAreaView>
 
-
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   container:{
@@ -601,20 +567,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  nameInputContainer: {
+    height:40,
+    width: width/2.3,
+  },
   input: {
     height:40,
     backgroundColor: 'rgba(255,255,255,0.2)',
     color:'#fff',
-    marginBottom: 5,
-    paddingHorizontal:10,
-    borderWidth: 2,
-    borderRadius: 20,
-  },
-  nameInput: {
-    height:40,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    color:'#fff',
-    width: width/2.3,
     marginBottom: 5,
     paddingHorizontal:10,
     borderWidth: 2,
@@ -662,9 +622,5 @@ const styles = StyleSheet.create({
     fontSize: 25,
     marginBottom: 20,
     textAlign: 'center',
-  },
-  nameInputContainer: {
-    height:40,
-    width: width/2.3,
   },
 });
