@@ -34,9 +34,6 @@ let firstnameMessage = '';
 let lastnameMessage = '';
 let phoneMessage = '';
 
-//new
-let usernameErrorMessage = '';
-
 export default class UserProfile extends React.Component {
   constructor(props){
     super(props);
@@ -50,7 +47,11 @@ export default class UserProfile extends React.Component {
         disable: true,
         showAlert: false
       };
-  }
+      //usernameMessage = '';
+      //firstnameMessage = '';
+      //lastnameMessage = '';
+      //phoneMessage = '';
+    }
 
   hideAlert = () => {
     showAlert = false;
@@ -102,7 +103,7 @@ export default class UserProfile extends React.Component {
 
   handleUsername(value){
     this.setState({disable: false});
-    usernameErrorMessage = ''
+    usernameMessage = ''
     if(value == ''){
       usernameEmpty = true;
     }
@@ -192,13 +193,12 @@ export default class UserProfile extends React.Component {
     this.forceUpdate();
 
     //check that there are no errors
-    if(usernameEmpty == false && usernameMessage == '' && firstnameMessage == '' && lastnameMessage == '' && phoneMessage == '' && usernameErrorMessage == ''){
+    if(usernameEmpty == false && usernameMessage == '' && firstnameMessage == '' && lastnameMessage == '' && phoneMessage == ''){
 
       //new
       this.makeUsernameUnique()
-      showAlert = true;
+      //showAlert = true;
     }
-
   }
 
   //function to create user
@@ -221,8 +221,7 @@ export default class UserProfile extends React.Component {
       });
 
       //show confirmation alert
-      this.setState({showAlert: true});
-
+      showAlert = true;
       //disable the buttons again
       this.setState({disable: true});
     }
@@ -242,14 +241,14 @@ export default class UserProfile extends React.Component {
       //if the username does not exist in the database
       if(!result){
         //clear username error
-        usernameErrorMessage = '';
+        usernameMessage = '';
         //call create user function
         this.updateUsername();
       }
       //if username is already taken
       else{
         //set username error message
-        usernameErrorMessage= 'Username is taken';
+        usernameMessage= 'Username is taken';
         this.forceUpdate();
       }
     });
@@ -303,11 +302,6 @@ export default class UserProfile extends React.Component {
             </View>
 
             <TextInputComponent
-              style={[styles.input,{
-                borderColor: usernameEmpty == true || usernameErrorMessage != ''
-                  ? 'red'
-                  : '#35b0d2',
-              }]}
               empty= {usernameEmpty}
               error= {usernameMessage}
               placeholder="Username"
@@ -317,7 +311,7 @@ export default class UserProfile extends React.Component {
               returnKeyType='next'
               onChangeText={(username) => this.handleUsername(username)}
             />
-            <Text style = {styles.errorMessage}>{usernameErrorMessage}</Text>
+            <Text style = {styles.errorMessage}>{usernameMessage}</Text>
 
             <Text/>
 
@@ -372,7 +366,7 @@ export default class UserProfile extends React.Component {
           showProgress={false}
           title="Profile Updated"
           closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
+          closeOnHardwareBackPress={true}
           showConfirmButton={true}
           confirmText="Gotcha"
           confirmButtonColor='#35b0d2'
