@@ -56,10 +56,10 @@ getUserName = (userUID) =>{
             // console.log("comparing...",childSnapShot.key);
             // console.log("and...",userUID);
             if(childSnapShot.key==userUID){
-     
+
               console.log("found name!!",childSnapShot.val().firstName);
               name= childSnapShot.val().firstName;
-              
+
             }
           // console.log(name);
            return (name);
@@ -67,7 +67,7 @@ getUserName = (userUID) =>{
 });
 }
 
-//function that is called everytime page mounts 
+//function that is called everytime page mounts
 componentDidMount(){
   var uid = firebase.auth().currentUser.uid;
   firebase
@@ -87,19 +87,19 @@ componentDidMount(){
                           date: childSnapShot.val().date,
                           name: childSnapShot.val().name,
                           paying: childSnapShot.val().paying,
-                  
+
                         })
 
     });
     this.forceUpdate();
-  
+
   })
 
 }
 
 keyExtractor = (item,index) =>index.toString()
 renderItem = ({item})=> (
-  <ListItem 
+  <ListItem
   containerStyle= {styles.blueButton}
 
   title={item.name}

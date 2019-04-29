@@ -25,7 +25,10 @@ export default class BillSplit extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <ImageBackground source={require('../../../assets/group-dinner.jpg')} style={styles.imageContainer}>
+        <ImageBackground
+          source={require('../../../assets/group-dinner.jpg')}
+          style={styles.imageContainer}
+        >
         <View style={styles.overlay} />
         <Header>
           <Left>

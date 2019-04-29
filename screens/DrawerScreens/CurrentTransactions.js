@@ -403,6 +403,7 @@ renderItem = ({item})=> (
           style={styles.imageContainer}
         >
           <View style={styles.overlay} />
+          
           <View style={styles.mainContainer}>
           <Text style={{color:'white', fontWeight:'bold'}}> Current Transactions</Text>
               <ButtonGroup

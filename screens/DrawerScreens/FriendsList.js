@@ -172,26 +172,6 @@ export default class FriendsList extends React.Component {
         >
           <View style={styles.overlay} />
           <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
-          <Header
-            style={{ backgroundColor: "transparent", borderBottomWidth: 0 }}
-          >
-            <Left>
-              <Icon
-                name="bars"
-                type="FontAwesome"
-                onPress={() => this.props.navigation.openDrawer()}
-              />
-            </Left>
-          </Header>
-          <StatusBar barStyle="light-content" />
-          {/* <Text> We have {this.state.currentFriends.length} friends!</Text> */}
-
-          <Button
-            color="white"
-            title="Back to home"
-            onPress={() => this.props.navigation.navigate("Dashboard")}
-          />
-
           <View style={styles.container}>
             <View style={styles.infoContainer}>
               <SearchableDropdown
