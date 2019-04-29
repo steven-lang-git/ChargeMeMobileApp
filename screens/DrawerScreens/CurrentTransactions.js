@@ -82,8 +82,10 @@ class MyItem extends React.Component {
         rightTitleStyle={{color:'white'}}
         chevronColor="white"
         chevron
+
         />
       }
+
         if(this.props.item.paying==uid){
         return <ListItem
         {...this.props}
@@ -98,8 +100,10 @@ class MyItem extends React.Component {
           rightTitleStyle={{color:'white'}}
           chevronColor="white"
           chevron
+
           />
         }
+
   }
     if(this.props.selectedIdx==1){
         // console.log(this.props.selectedIdx);
@@ -117,6 +121,7 @@ class MyItem extends React.Component {
           rightTitleStyle={{color:'white'}}
           chevronColor="white"
           chevron
+
           />
         }
         else{
@@ -124,6 +129,7 @@ class MyItem extends React.Component {
             <Text></Text>
           )
         }
+
     }
     if(this.props.selectedIdx==2){
       // console.log(this.props.selectedIdx);
@@ -141,11 +147,13 @@ class MyItem extends React.Component {
           rightTitleStyle={{color:'white'}}
           chevronColor="white"
           chevron
+
           />
         }
         else{
           return(
             <Text></Text>
+
           )
         }
     }
@@ -154,6 +162,7 @@ class MyItem extends React.Component {
         <Text>Thats all folks...</Text>
       )
     }
+
 }
 
   _renderC = () =>{
@@ -216,6 +225,7 @@ renderMain(item)
   var name;
 
   if(selectedIndex==0){
+
     if(item.paying==uid){
       return this._renderPaying(item)
       }
@@ -224,6 +234,7 @@ renderMain(item)
     {
       return this._renderCharging(item)
     }
+
   }
   if(selectedIndex==1){
     if(item.paying==uid){

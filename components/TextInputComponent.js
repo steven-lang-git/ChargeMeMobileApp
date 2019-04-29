@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, TextInput} from 'react-native';
 
-
 //text input component that makes the border red if there is an error
 class TextInputComponent extends Component {
 	render() {
