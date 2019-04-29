@@ -170,7 +170,7 @@ export default class FriendsList extends React.Component {
           <View style={styles.infoContainer}>
 
             <Text style={styles.title}> My Friends</Text>
-            <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={150} contentContainerStyle = {{height: height/3}}>
+            <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={width/2.5} contentContainerStyle = {{width: width- (width/9.375),height: height/3}}>
               <View style={styles.container}>
 
 
@@ -201,29 +201,29 @@ export default class FriendsList extends React.Component {
 
             <SearchableDropdown
               onItemSelect={item => this.addFriend(item)}
-              containerStyle={{ height: 400, width: width-40, alignContent: 'center'}}
+              containerStyle={{ height: height/4, width: width-(width/9.375), alignContent: 'center'}}
               textInputStyle={{
-                fontSize: 15,
+                fontSize: width/25,
                 color:'#fff',
                 textAlign: 'center',
-                padding: 5,
+                padding: width/75,
                 borderWidth: 1,
                 borderColor: "#35b0d2",
-                borderRadius: 20,
-                height: 40,
+                borderRadius: width/18.75,
+                height: width/9.375,
                 backgroundColor: '#35b0d2',
               }}
               itemStyle={{
-                height: 35,
-                padding: 7,
-                marginTop: 2,
+                height: width/10.714,
+                padding: width/53.57,
+                marginTop: width/187.5,
                 backgroundColor: 'rgba(255,255,255,0.2)',
                 borderColor: "#35b0d2",
                 borderWidth: 1,
-                borderRadius: 5
+                borderRadius: width/75
               }}
-              itemTextStyle={{ color: "white", textAlign: 'center', fontSize: 15, }}
-              itemsContainerStyle={{ maxHeight: 150 }}
+              itemTextStyle={{ color: "white", textAlign: 'center', fontSize: width/25, }}
+              itemsContainerStyle={{ maxHeight: width/2.5 }}
               items={tempArray}
               defaultIndex={2}
               placeholder="Search for friends!"
@@ -258,12 +258,12 @@ const styles = StyleSheet.create({
     position: "relative",
     justifyContent: "center",
     alignItems: "center",
-    width: width-40
+    width: width-(width/9.375)
   },
   infoContainer: {
     flex: 1,
     width: width,
-    padding:20,
+    padding:width/18.75,
     paddingBottom: 0,
     alignItems: 'center',
     justifyContent: 'center'
@@ -271,18 +271,18 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: width/2,
     flex: 1,
-    marginTop: 5,
+    marginTop: width/75,
   },
   input: {
-    height: 40,
+    height: width/9.375,
     backgroundColor: "rgba(255,255,255,0.2)",
     color: "#fff",
-    marginBottom: 20,
-    paddingHorizontal: 5
+    marginBottom: width/18.75,
+    paddingHorizontal: width/75
   },
   removeBtn: {
-    right: 10,
-    height: 15
+    right: width/37.5,
+    height: width/25
   },
   btntext: {
     color: 'white',
@@ -290,9 +290,9 @@ const styles = StyleSheet.create({
   title:{
     fontWeight: 'bold',
     color: '#fff',
-    fontSize: 25,
+    fontSize: width/15,
     textAlign:'center',
-    marginTop: 20,
-    marginBottom: 20
+    marginTop: width/18.75,
+    marginBottom: width/18.75
   }
 });

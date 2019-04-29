@@ -38,10 +38,6 @@ export default class BillSplit extends React.Component {
             <Text style={styles.title}>Choose your Bill Split</Text>
           </View>
 
-          <View style={styles.container}>
-            <Text/>
-          </View>
-
           <View style={styles.infoContainer}>
 
             <View style={styles.topContainer}>
@@ -51,9 +47,7 @@ export default class BillSplit extends React.Component {
                 disabled={false}
                 primary={true}
               />
-            </View>
 
-            <View style={styles.bottomContainer}>
               <ButtonComponent
                 text='SPLIT BY ITEM'
                 onPress={() => this.props.navigation.navigate('SplitByItem')}
@@ -78,11 +72,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  bottomContainer:{
-    flex: 2.5,
-  },
+
   topContainer:{
-    flex: 1,
+    height: width/2.6,
+
   },
   imageContainer: {
       resizeMode:'cover',
@@ -93,22 +86,20 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgba(69,85,117,0.7)',
   },
   titleContainer:{
-    justifyContent: 'center',
     alignContent: 'center',
-    padding: 20,
-    flex: 1,
+    padding: width/37.5,
+    flex: 1.5,
     width: width,
   },
   infoContainer: {
-    flex: 2,
+    flex: 1,
     width: width,
-    padding:20,
-    justifyContent:'flex-end',
+    padding:width/18.75,
   },
   title:{
     fontWeight: 'bold',
     color: '#fff',
-    fontSize: 25,
+    fontSize: width/15,
     textAlign:'center',
   },
 

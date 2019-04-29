@@ -46,12 +46,12 @@ class MyItem extends React.Component {
         onPress={this._onPress}
         containerStyle= {styles.blueButton}
         title={this.props.item.name}
-        titleStyle={{color:'white', fontWeight:'bold'}}
+        titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
         subtitle={this.props.item.date }
-        subtitleStyle={{color:'white'}}
-        rightElement={'$'+this.props.item.amount.toFixed(2)}
-        rightTitle={"Paying "+payingName}
-        rightTitleStyle={{color:'white'}}
+        subtitleStyle={{color:'white', fontSize: width/27}}
+        rightElement={<Text style = {{color: 'white'}}> $ {(this.props.item.amount).toFixed(2)}</Text>}
+        rightTitle={<Text style = {{fontSize: width/24,color:'white'}}>Paying{"\n"}{payingName}</Text>}
+        rightTitleStyle={{width: width/4}}
         chevronColor="white"
         chevron
 
@@ -64,12 +64,12 @@ class MyItem extends React.Component {
         onPress={this._onPress}
         containerStyle= {styles.redButton}
         title={this.props.item.name}
-          titleStyle={{color:'white', fontWeight:'bold'}}
+          titleStyle={{color:'white', fontWeight:'bold',fontSize: width/26}}
           subtitle={this.props.item.date }
-          subtitleStyle={{color:'white'}}
-          rightElement={'$'+this.props.item.amount.toFixed(2)}
-          rightTitle={"Charging "+chargingName}
-          rightTitleStyle={{color:'white'}}
+          subtitleStyle={{color:'white',fontSize: width/27}}
+          rightElement={<Text style = {{color: 'white'}}> $ {(this.props.item.amount).toFixed(2)}</Text>}
+          rightTitle={<Text style = {{fontSize: width/24,color:'white'}}>Charging{"\n"}{chargingName}</Text>}
+          rightTitleStyle={{ width: width/4}}
           chevronColor="white"
           chevron
 
@@ -85,12 +85,12 @@ class MyItem extends React.Component {
           onPress={this._onPress}
           containerStyle= {styles.blueButton}
           title={this.props.item.name}
-          titleStyle={{color:'white', fontWeight:'bold'}}
+          titleStyle={{color:'white', fontWeight:'bold',fontSize: width/26}}
           subtitle={this.props.item.date }
-          subtitleStyle={{color:'white'}}
-          rightElement={'$'+this.props.item.amount.toFixed(2)}
-          rightTitle={"Paying "+payingName}
-          rightTitleStyle={{color:'white'}}
+          subtitleStyle={{color:'white',fontSize: width/27}}
+          rightElement={<Text style = {{color: 'white'}}> $ {(this.props.item.amount).toFixed(2)}</Text>}
+          rightTitle={<Text style = {{fontSize: width/24,color:'white'}}>Paying{"\n"}{payingName}</Text>}
+          rightTitleStyle={{ width: width/4}}
           chevronColor="white"
           chevron
 
@@ -111,12 +111,12 @@ class MyItem extends React.Component {
         onPress={this._onPress}
         containerStyle= {styles.redButton}
         title={this.props.item.name}
-          titleStyle={{color:'white', fontWeight:'bold'}}
+          titleStyle={{color:'white', fontWeight:'bold',fontSize: width/26}}
           subtitle={this.props.item.date }
-          subtitleStyle={{color:'white'}}
-          rightElement={'$'+this.props.item.amount.toFixed(2)}
-          rightTitle={"Charging "+chargingName}
-          rightTitleStyle={{color:'white'}}
+          subtitleStyle={{color:'white',fontSize: width/27}}
+          rightElement={<Text style = {{color: 'white'}}> $ {(this.props.item.amount).toFixed(2)}</Text>}
+          rightTitle={<Text style = {{fontSize: width/24,color:'white'}}>Charging{"\n"}{chargingName}</Text>}
+          rightTitleStyle={{ width: width/4}}
           chevronColor="white"
           chevron
 
@@ -302,12 +302,12 @@ renderItem = ({item})=> (
           </Left>
         </Header>
           <View style={styles.mainContainer}>
-          <Text style={{color:'white', fontWeight:'bold'}}> Current Transactions</Text>
+          <Text style={{color:'white', fontWeight:'bold', fontSize: width/15, marginBottom: width/37.5}}> Current Transactions</Text>
               <ButtonGroup
                 onPress={this.updateIndex}
                 selectedIndex={selectedIndex}
                 buttons={buttons}
-                containerStyle={{ height: 30 }}
+                containerStyle={{ height: width/12.5 }}
               />
                  <View style={styles.infoContainer}>
 
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     position:"relative",
     width:width,
     height: height,
-    marginTop:50,
+    marginTop:width/30,
 
   },
   imageContainer: {
@@ -352,48 +352,48 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flex: 2,
-    padding: 20,
+    padding: width/18.75,
     justifyContent: "flex-end",
     width:width,
-    marginTop:20,
+    marginTop:width/18.75,
 
 
   },
   blueButton: {
-  	padding:15,
+  	padding:width/25,
   	backgroundColor: '#202646',
-    borderRadius:10,
+    borderRadius:width/37.5,
     borderWidth: 1,
     borderColor: '#35b0d2',
     backgroundColor: '#35b0d2',
-    marginTop:10,
-    marginBottom: 10,
+    marginTop:width/37.5,
+    marginBottom: width/37.5,
   },
   redButton: {
-    padding:15,
+    padding:width/25,
   	backgroundColor: '#202646',
-    borderRadius:10,
+    borderRadius:width/37.5,
     borderWidth: 1,
     borderColor: 'coral',
     backgroundColor: 'coral',
-    marginTop:10,
-    marginBottom: 10,
+    marginTop:width/37.5,
+    marginBottom: width/37.5,
   },
   modalContent: {
     backgroundColor: 'white',
-    padding: 22,
+    padding: width/17.045,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 4,
+    borderRadius: width/93.75,
     borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   button: {
     backgroundColor: 'lightblue',
-    padding: 12,
-    margin: 16,
+    padding: width/31.25,
+    margin: width/23.4375,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 4,
+    borderRadius: width/93.75,
     borderColor: 'rgba(0, 0, 0, 0.1)',
   },
 });
