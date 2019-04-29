@@ -30,9 +30,9 @@ export default class BillSplit extends React.Component {
           style={styles.imageContainer}
         >
         <View style={styles.overlay} />
-        <Header>
+        <Header style={{borderBottomWidth:0,backgroundColor:'transparent', zIndex:100, top: 0, left:0, right:0}}>
           <Left>
-            <Icon name="bars" type="FontAwesome" onPress={()=>this.props.navigation.openDrawer()}/>
+            <Icon name="bars" type="FontAwesome" style={{color:'white' }} onPress={()=>this.props.navigation.openDrawer()}/>
           </Left>
         </Header>
           <View style={styles.titleContainer}>
