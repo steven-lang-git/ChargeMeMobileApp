@@ -30,17 +30,19 @@ class MyItem extends React.Component {
   let chargingName, payingName;
   this.tempArray = tempArray.map((item,key) =>{
 
-    if(item.key==this.props.item.paying){
-      payingName=item.first;
-    }
-    else if(item.key==this.props.item.charging){
+    
+    if(item.key==this.props.item.paying){      
       chargingName=item.first;
-    }
+    } 
+    else if(item.key==this.props.item.charging){
+      payingName=item.first;
+    } 
+
   });
 
     // return this.props.renderPay(this.props.item);
   if(this.props.selectedIdx==0){
-    if(this.props.item.charging==uid){
+    if(this.props.item.paying==uid){
         return <ListItem
         {...this.props}
         onPress={this._onPress}
@@ -58,7 +60,7 @@ class MyItem extends React.Component {
         />
       }
 
-        if(this.props.item.paying==uid){
+        if(this.props.item.charging==uid){
         return <ListItem
         {...this.props}
         onPress={this._onPress}
@@ -79,7 +81,7 @@ class MyItem extends React.Component {
   }
     if(this.props.selectedIdx==1){
         // console.log(this.props.selectedIdx);
-      if(this.props.item.charging==uid){
+      if(this.props.item.paying==uid){
         return <ListItem
           {...this.props}
           onPress={this._onPress}
@@ -105,7 +107,7 @@ class MyItem extends React.Component {
     }
     if(this.props.selectedIdx==2){
       // console.log(this.props.selectedIdx);
-      if(this.props.item.paying==uid){
+      if(this.props.item.charging==uid){
         return <ListItem
         {...this.props}
         onPress={this._onPress}
@@ -167,7 +169,6 @@ export default class CurrentTransactions extends React.Component {
     };
     transactionData= [],
     tempArray =[],
-    billy=['hello','goddamn','byebye'],
     uid=firebase.auth().currentUser.uid,
     this.updateIndex = this.updateIndex.bind(this);
   };
@@ -275,7 +276,6 @@ renderItem = ({item})=> (
   charging={item.charging}
   uid = {uid}
   temp={tempArray}
-  bob={billy}
   selectedIdx ={this.state.selectedIndex}
   renderCharge ={()=>this._renderCharging(item)}
   renderPay={()=>this._renderPaying(item)}

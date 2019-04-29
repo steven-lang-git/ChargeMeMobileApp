@@ -6,7 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
-  ImageBackground
+  ImageBackground,
+  Switch
 } from 'react-native';
 import {Icon} from 'native-base'
 
@@ -16,21 +17,34 @@ export default class TextNotifications extends React.Component {
       <Icon name="sitemap" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
     )
   }
+  //Initial state false for the switch. You can change it to true just to see.
+  state = { switchValue: false };
+
+  toggleSwitch = value => {
+    //onValueChange of the switch this function will be called
+    this.setState({ switchValue: value });
+    //state changes according to switch
+    //which will result in re-render the text
+  };
+
   render() {
     return (
+
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../../../../assets/blue.jpg')} style={styles.imageContainer}>
-        <View style={styles.overlay} />
-          <View style={styles.container}>
-            <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+          <View style={styles.overlay} />
 
-
-
-              <Text> Text Notifications Page </Text>
-
-
-
-            </View>
+          <View style={styles.label}>
+          <Text>
+            <Text style={styles.labeltxt}>TEXT NOTIFICATIONS </Text>
+          </Text>
+          <View style={styles.switchContainer}>
+            <Switch
+              //style={{ marginTop: 30 }}
+              onValueChange={this.toggleSwitch}
+              value={this.state.switchValue}
+            />
+          </View>
           </View>
         </ImageBackground>
       </SafeAreaView>
@@ -42,7 +56,12 @@ export default class TextNotifications extends React.Component {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-
+  },
+  switchContainer:{
+    padding: 10,
+    paddingTop: 0,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
   },
   header:{
     fontSize:24,
@@ -59,19 +78,20 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     color: "#000",
   },
-  button: {
+  label: {
     alignSelf: 'stretch',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#000',
-    width: '60%',
-    marginTop: 20,
-    marginBottom: 40,
+    paddingTop: 20,
+    padding: 10,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    width: '100%',
     alignSelf: 'center',
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  btntext:{
-    color: '#fff',
-    fontWeight: 'bold',
+  labeltxt:{
+    fontSize: 22,
+    color: 'white',
   },
   overlay: {
       ...StyleSheet.absoluteFillObject,

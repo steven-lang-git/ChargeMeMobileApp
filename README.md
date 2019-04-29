@@ -34,6 +34,9 @@ $ npm install --save react-native-material-dropdown
 $ npm i react-native-ui-stepper
 $ npm install react-native-datepicker --save
 $ npm install --save react-native-modal
+
+$ npm install --save react-native-push-notification
+$ react-native link react-native-push-notification
 ```
 5. Fix errors within react-native-vector-icons
 ```
