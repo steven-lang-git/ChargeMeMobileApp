@@ -184,14 +184,14 @@ export default class Dashboard extends React.Component {
         <ImageBackground source={require('../../assets/blue.jpg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
 
-
+          <Header style={{borderBottomWidth:0,backgroundColor:'transparent', zIndex:100, top: 0, left:0, right:0}}>
+          <Left>
+            <Icon name="bars" type="FontAwesome" style={{color:'white' }} onPress={()=>this.props.navigation.openDrawer()}/>
+          </Left>
+        </Header>
       <View style={styles.container}>
 
-          <Header>
-            <Left>
-              <Icon name="bars" type="FontAwesome" onPress={()=>this.props.navigation.openDrawer()}/>
-            </Left>
-          </Header>
+   
 
           <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
             <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
