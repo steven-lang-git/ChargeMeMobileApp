@@ -54,7 +54,7 @@ export default class SplitEvenlyReview extends React.Component{
     this.state = {
       date: '',
     };
-    console.log("today: ", moment().format("MM-DD-YYYY"))
+
   }
 
   componentDidMount(){
@@ -191,7 +191,7 @@ export default class SplitEvenlyReview extends React.Component{
                 paying: friends[i].key,
                 amount: parseFloat((friendI[i].total).toFixed(2)),
                 name: name,
-                date: today,
+                date: this.state.date,
           });
       }
 

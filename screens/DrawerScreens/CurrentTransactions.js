@@ -35,7 +35,7 @@ class MyItem extends React.Component {
     titleStyle={{color:'white', fontWeight:'bold'}}
     subtitle={this.props.item.date }
     subtitleStyle={{color:'white'}}
-    rightElement={this.props.item.amount}
+    rightElement={'$'+this.props.item.amount.toFixed(2)}
     rightTitle={"Paying "+this.props.item.paying}
     rightTitleStyle={{color:'white'}}
     chevronColor="white"
@@ -54,7 +54,7 @@ class MyItem extends React.Component {
       titleStyle={{color:'white', fontWeight:'bold'}}
       subtitle={this.props.item.date }
       subtitleStyle={{color:'white'}}
-      rightElement={this.props.item.amount}
+      rightElement={'$'+this.props.item.amount.toFixed(2)}
       rightTitle={"Charging "+this.props.item.charging}
       rightTitleStyle={{color:'white'}}
       chevronColor="white"
@@ -77,7 +77,7 @@ class MyItem extends React.Component {
         titleStyle={{color:'white', fontWeight:'bold'}}
         subtitle={this.props.item.date }
         subtitleStyle={{color:'white'}}
-        rightElement={this.props.item.amount}
+        rightElement={'$'+this.props.item.amount.toFixed(2)}
         rightTitle={"Paying "+this.props.item.paying}
         rightTitleStyle={{color:'white'}}
         chevronColor="white"
@@ -95,7 +95,7 @@ class MyItem extends React.Component {
           titleStyle={{color:'white', fontWeight:'bold'}}
           subtitle={this.props.item.date }
           subtitleStyle={{color:'white'}}
-          rightElement={this.props.item.amount}
+          rightElement={'$'+this.props.item.amount.toFixed(2)}
           rightTitle={"Charging "+this.props.item.charging}
           rightTitleStyle={{color:'white'}}
           chevronColor="white"
@@ -116,7 +116,7 @@ class MyItem extends React.Component {
           titleStyle={{color:'white', fontWeight:'bold'}}
           subtitle={this.props.item.date }
           subtitleStyle={{color:'white'}}
-          rightElement={this.props.item.amount}
+          rightElement={'$'+this.props.item.amount.toFixed(2)}
           rightTitle={"Paying "+this.props.item.paying}
           rightTitleStyle={{color:'white'}}
           chevronColor="white"
@@ -142,7 +142,7 @@ class MyItem extends React.Component {
           titleStyle={{color:'white', fontWeight:'bold'}}
           subtitle={this.props.item.date }
           subtitleStyle={{color:'white'}}
-          rightElement={this.props.item.amount}
+          rightElement={'$'+this.props.item.amount.toFixed(2)}
           rightTitle={"Charging "+this.props.item.charging}
           rightTitleStyle={{color:'white'}}
           chevronColor="white"
@@ -271,7 +271,7 @@ _renderPaying = (item) => (
     subtitle={item.date }
     subtitleStyle={{color:'white'}}
 
-    rightElement={item.amount}
+    rightElement={'$'+item.amount.toFixed(2)}
     rightTitle={"Paying "}
     rightTitleStyle={{color:'white'}}
     chevronColor="white"
@@ -289,7 +289,7 @@ _renderCharging = (item) => (
     titleStyle={{color:'white', fontWeight:'bold'}}
     subtitle={item.date }
     subtitleStyle={{color:'white'}}
-    rightElement={item.amount}
+    rightElement={'$'+item.amount.toFixed(2)}
 
     rightTitle={"Charging "}
     rightTitleStyle={{color:'white'}}
