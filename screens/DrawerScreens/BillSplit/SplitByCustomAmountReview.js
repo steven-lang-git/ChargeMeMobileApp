@@ -110,9 +110,6 @@ export default class SplitByCustomAmountReview extends React.Component{
     for (let i = 0; i < friendAmounts.length; i++){
       const unique = moment()
       console.log('unique: ', unique)
-
-
-
       //dispatch charge to database under user
       firebase
         .database()
@@ -120,7 +117,7 @@ export default class SplitByCustomAmountReview extends React.Component{
         .set({
               charging: uid,
               paying: friendAmounts[i].friend.key,
-              amount: friendAmounts[i].amount,
+              amount: parseFloat(friendAmounts[i].amount),
               name: name,
               date: this.state.date
         });
@@ -132,7 +129,7 @@ export default class SplitByCustomAmountReview extends React.Component{
           .set({
                 charging: uid,
                 paying: friendAmounts[i].friend.key,
-                amount: friendAmounts[i].amount,
+                amount: parseFloat(friendAmounts[i].amount),
                 name: name,
                 date: this.state.date
           });

@@ -20,9 +20,6 @@ import Modal from "react-native-modal";
 import MyModal from './MyModal';
 const { width, height } = Dimensions.get("window");
 
-
-
-
 class MyItem extends React.Component {
   _onPress = () => {
       this.props.onPressItem(this.props.item);
@@ -86,7 +83,9 @@ class MyItem extends React.Component {
         chevronColor="white"
         chevron
 
-        />  }
+        />
+      }
+
         if(this.props.item.paying==uid){
         return <ListItem
         {...this.props}
@@ -123,13 +122,14 @@ class MyItem extends React.Component {
           chevronColor="white"
           chevron
 
-          />  }
-          else{
-            return(
-              <Text></Text>
+          />
+        }
+        else{
+          return(
+            <Text></Text>
+          )
+        }
 
-            )
-          }
     }
     if(this.props.selectedIdx==2){
       // console.log(this.props.selectedIdx);
@@ -160,10 +160,8 @@ class MyItem extends React.Component {
     else{
       return(
         <Text>Thats all folks...</Text>
-
       )
     }
-
 
 }
 
@@ -171,15 +169,11 @@ class MyItem extends React.Component {
     return this.props.renderCharge(this.props.item);
   }
 
-
   render() {
     // console.log("temp?",this.props.temp);
-      return(
-
-          // this.props._renderCharging(this.props.item)
-this._renderMain()
-      )
-// this.props.renderM(this.props.item)   )
+    return(
+        this._renderMain()
+    )
   }
 }
 
@@ -231,50 +225,28 @@ renderMain(item)
   var name;
 
   if(selectedIndex==0){
-  if(item.paying==uid){
 
-    // for(var x in tempArray){
-    //   if(tempArray[x].key==item.charging){
-    //   name=tempArray[x].first;
-    //   }
-    // };
-    return this._renderPaying(item)
+    if(item.paying==uid){
+      return this._renderPaying(item)
+      }
+
+    else if(item.charging==uid)
+    {
+      return this._renderCharging(item)
     }
-  else if(item.charging==uid)
-  {
-    // for(var x in tempArray){
-    //   if(tempArray[x].key==item.paying){
-    //   name=tempArray[x].first;
-    //   }
-    // };
-    return this._renderCharging(item)
 
-//=
   }
-}
-if(selectedIndex==1){
-  if(item.paying==uid){
-
-    // for(var x in tempArray){
-    //   if(tempArray[x].key==item.charging){
-    //   name=tempArray[x].first;
-    //   }
-    // };
-
-    return this._renderPaying(item)
+  if(selectedIndex==1){
+    if(item.paying==uid){
+      return this._renderPaying(item)
+    }
   }
-}
-else if(selectedIndex==2){
-  if(item.charging==uid){
-    // for(var x in tempArray){
-    //   if(tempArray[x].key==item.paying){
-    //   name=tempArray[x].first;
-    //   }
-    // };
-    return this._renderCharging(item)
-  }
-}
 
+  else if(selectedIndex==2){
+    if(item.charging==uid){
+      return this._renderCharging(item)
+    }
+  }
 };
 
 _onPressItem = (item) => {
@@ -282,8 +254,7 @@ _onPressItem = (item) => {
 };
 
 //to close modal
-_toggleModal = () =>
-this.setState({ isModalVisible: !this.state.isModalVisible });
+_toggleModal = () => this.setState({ isModalVisible: !this.state.isModalVisible });
 
 _showModal = (item) => this.setState({ isModalVisible: true, selectedItem: item });
 
