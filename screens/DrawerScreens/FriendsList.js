@@ -19,7 +19,7 @@ import {
   Keyboard
 } from "react-native";
 import { Header, Left, Right, Icon, ListItem, List } from "native-base";
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 import * as firebase from "firebase";
 import AwesomeAlert from 'react-native-awesome-alerts';
 import SearchableDropdown from "react-native-searchable-dropdown";
@@ -30,7 +30,6 @@ import ButtonComponent from '../../components/ButtonComponent'
 let currentFriends = []
 let possibleFriends = []
 let tempArray = []
-let showAlert = false
 
 export default class FriendsList extends React.Component {
   constructor(props) {
@@ -39,13 +38,10 @@ export default class FriendsList extends React.Component {
     possibleFriends = []
     currentFriends = []
     tempArray = []
-    showAlert = false
   }
 
-  save() {
-    //show confirmation alert
-    showAlert = true
-    this.forceUpdate();
+//function called to save changes when use navigates away from screen
+  componentWillUnmount() {
     var uid = firebase.auth().currentUser.uid;
 
     //clear out user's current friends
@@ -66,11 +62,6 @@ export default class FriendsList extends React.Component {
               });
     }
   }
-  //function to hide confirmation alert
-  hideAlert = () => {
-    showAlert = false;
-    this.forceUpdate();
-  };
 
   //function to add friend to current friends
   addFriend = item => {
@@ -171,104 +162,78 @@ export default class FriendsList extends React.Component {
           style={styles.imageContainer}
         >
           <View style={styles.overlay} />
-          <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
-          <View style={styles.container}>
-            <View style={styles.infoContainer}>
-              <SearchableDropdown
-                //  onTextChange={text => alert(text)}
-                onItemSelect={item => this.addFriend(item)}
-                containerStyle={{ padding: 5 }}
-                textInputStyle={{
-                  fontSize: 15,
-                  color:'#fff',
-                  textAlign: 'center',
-                  padding: 12,
-                  borderWidth: 1,
-                  borderColor: "#35b0d2",
-                  borderRadius: 5,
-                  width: width/2,
-                  backgroundColor: 'rgba(255,255,255,0.2)',
-                }}
-                itemStyle={{
-                  padding: 10,
-                  marginTop: 2,
-                  backgroundColor: 'rgba(255,255,255,0.2)',
-                  borderColor: "#35b0d2",
-                  borderWidth: 1,
-                  borderRadius: 5
-                }}
-                itemTextStyle={{ color: "white", textAlign: 'center', fontSize: 15, }}
-                itemsContainerStyle={{ maxHeight: 140 }}
-                items={tempArray}
-                defaultIndex={2}
-                placeholder="Search for friends!"
-                placeholderTextColor="rgba(255,255,255,0.8)"
-                resetValue={false}
-                underlineColorAndroid="transparent"
-              />
-            </View>
+          <Header style={{borderBottomWidth:0,backgroundColor:'transparent', zIndex:100, top: 0, left:0, right:0}}>
+            <Left>
+              <Icon name="bars" type="FontAwesome" style={{color:'white' }} onPress={()=>this.props.navigation.openDrawer()}/>
+            </Left>
+          </Header>
+          <View style={styles.infoContainer}>
 
-            <Text> Currently our friends are:</Text>
-            {currentFriends.map((friend, index) => (
-              <ListItem style={styles.listContainer}>
-                <Left>
-                  <Text style={styles.btntext} key={friend.username}>
-                    {" "}
-                    {`${friend.firstName + ' ' + friend.lastName}`}{" "}
-                  </Text>
-                </Left>
-                <Right>
-                  <View style={styles.removeBtn}>
-                    <TouchableOpacity
-                      style={styles.btntext}
-                      onPress={() => this.removeFriend(index)}
-                      key={friend.username}
-                    >
-                      <Text style={styles.btntext}>Remove</Text>
-                    </TouchableOpacity>
-                  </View>
-                </Right>
-              </ListItem>
-            ))}
+            <Text style={styles.title}> My Friends</Text>
+            <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={150} contentContainerStyle = {{height: height/3}}>
+              <View style={styles.container}>
 
-            <KeyboardAvoidingView style={styles.container}>
-              <Text>Add friends here!</Text>
-              {possibleFriends.map((friend, index) => (
 
-                <Button
-                  color="white"
-                  key={friend.username}
-                  title={`Add ${friend.firstName + " " + friend.lastName}`}
-                  key={friend.username}
-                  onPress={() => this.addFriend(index)}
-                />
-              ))}
 
-              <View style={styles.buttonContainer}>
-                <ButtonComponent
-                  text='SAVE'
-                  onPress={() => this.save()}
-                  disabled={false}
-                  primary={true}
-                />
+                {currentFriends.map((friend, index) => (
+                  <ListItem style={styles.listContainer}>
+                    <Left>
+                      <Text style={[styles.btntext,{fontWeight: 'bold'}]} key={friend.username}>
+                        {" "}
+                        {`${friend.firstName + ' ' + friend.lastName}`}{" "}
+                      </Text>
+                    </Left>
+                    <Right>
+                      <View style={styles.removeBtn}>
+                        <TouchableOpacity
+                          style={styles.btntext}
+                          onPress={() => this.removeFriend(index)}
+                          key={friend.username}
+                        >
+                          <Text style={styles.btntext}>Remove</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </Right>
+                  </ListItem>
+                ))}
               </View>
+            </KeyboardAwareScrollView>
 
-            </KeyboardAvoidingView>
-            <AwesomeAlert
-              show={showAlert}
-              showProgress={false}
-              title="Friends List Updated"
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={false}
-              showConfirmButton={true}
-              confirmText="Gotcha"
-              confirmButtonColor='#35b0d2'
-              onConfirmPressed={() => {
-                this.hideAlert();
+            <SearchableDropdown
+              onItemSelect={item => this.addFriend(item)}
+              containerStyle={{ height: 400, width: width-40, alignContent: 'center'}}
+              textInputStyle={{
+                fontSize: 15,
+                color:'#fff',
+                textAlign: 'center',
+                padding: 5,
+                borderWidth: 1,
+                borderColor: "#35b0d2",
+                borderRadius: 20,
+                height: 40,
+                backgroundColor: '#35b0d2',
               }}
+              itemStyle={{
+                height: 35,
+                padding: 7,
+                marginTop: 2,
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                borderColor: "#35b0d2",
+                borderWidth: 1,
+                borderRadius: 5
+              }}
+              itemTextStyle={{ color: "white", textAlign: 'center', fontSize: 15, }}
+              itemsContainerStyle={{ maxHeight: 150 }}
+              items={tempArray}
+              defaultIndex={2}
+              placeholder="Search for friends!"
+              placeholderTextColor="rgba(255,255,255,0.8)"
+              resetValue={false}
+              underlineColorAndroid="transparent"
             />
+
+
           </View>
-          </KeyboardAwareScrollView>
         </ImageBackground>
       </SafeAreaView>
     );
@@ -279,16 +244,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column"
   },
 
   imageContainer: {
-    width: null,
-    height: null,
-    aspectRatio: 1,
     resizeMode: "cover",
-    justifyContent: "center",
     flex: 1
   },
   overlay: {
@@ -299,11 +258,20 @@ const styles = StyleSheet.create({
     position: "relative",
     justifyContent: "center",
     alignItems: "center",
-    width: width
+    width: width-40
+  },
+  infoContainer: {
+    flex: 1,
+    width: width,
+    padding:20,
+    paddingBottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   buttonContainer: {
     width: width/2,
     flex: 1,
+    marginTop: 5,
   },
   input: {
     height: 40,
@@ -312,17 +280,19 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 5
   },
-  infoContainer: {
-    position: "relative",
-    left: 0,
-    right: 0,
-    padding: 5
-  },
   removeBtn: {
-    right: 20,
+    right: 10,
     height: 15
   },
   btntext: {
     color: 'white',
   },
+  title:{
+    fontWeight: 'bold',
+    color: '#fff',
+    fontSize: 25,
+    textAlign:'center',
+    marginTop: 20,
+    marginBottom: 20
+  }
 });

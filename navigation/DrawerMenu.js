@@ -2,7 +2,6 @@ import React, { Component } from "react"
 import {Image, Dimensions} from 'react-native'
 import { DrawerActions, StackActions, NavigationActions} from 'react-navigation';
 import {
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -17,11 +16,11 @@ import * as firebase from 'firebase';
 const{width, height} = Dimensions.get('window')
 
 const menuData = [
-  {icon: "address-card", name:"Dashboard", screenName:"Dashboard", activeTint: "#35b0d2", key: 1},
+  {icon: "address-card", name:"Dashboard", screenName:"DashboardStack", activeTint: "#35b0d2", key: 1},
   {icon: "money", name:"Bill Split", screenName:"BillSplitStackScreen", activeTint: "#35b0d2", key: 2},
-  {icon: "users", name:"Friends", screenName:"FriendsList", activeTint: "#35b0d2", key: 3},
-  {icon: "check-circle", name:"Past Transactions", screenName:"PastTransactions", activeTint: "#35b0d2", key: 4},
-  {icon: "clock-o", name:"Current Transactions", screenName:"CurrentTransactions", activeTint: "#35b0d2", key: 5},
+  {icon: "users", name:"Friends", screenName:"FriendsStack", activeTint: "#35b0d2", key: 3},
+  {icon: "check-circle", name:"Past Transactions", screenName:"PastTransactionsStack", activeTint: "#35b0d2", key: 4},
+  {icon: "clock-o", name:"Current Transactions", screenName:"CurrentTransactionsStack", activeTint: "#35b0d2", key: 5},
   {icon: "sliders", name:"Settings", screenName:"SettingsStackScreen", activeTint: "#35b0d2", key: 6},
 ]
 

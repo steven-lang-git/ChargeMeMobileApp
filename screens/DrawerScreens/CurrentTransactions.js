@@ -155,15 +155,7 @@ let uid;
 let transactionData =[]
 let tempArray =[]
 export default class CurrentTransactions extends React.Component {
-  static navigationOptions = {
-    drawerIcon: tintColor => (
-      <Icon
-        name="clock-o"
-        type="FontAwesome"
-        style={{ fontSize: 24, color: tintColor }}
-      />
-    )
-  };
+
   constructor(props) {
     super(props);
     this.state = {

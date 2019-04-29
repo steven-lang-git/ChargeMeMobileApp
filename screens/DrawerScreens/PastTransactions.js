@@ -21,13 +21,7 @@ const { width, height } = Dimensions.get("window");
 
 export default class PastTransactions extends React.Component {
   static navigationOptions = {
-    drawerIcon: tintColor => (
-      <Icon
-        name="clock-o"
-        type="FontAwesome"
-        style={{ fontSize: 24, color: tintColor }}
-      />
-    )
+    header: null
   };
   constructor() {
     super();
@@ -129,6 +123,11 @@ renderItem = ({item})=> (
           style={styles.imageContainer}
         >
           <View style={styles.overlay} />
+          <Header style={{borderBottomWidth:0,backgroundColor:'transparent', zIndex:100, top: 0, left:0, right:0}}>
+            <Left>
+              <Icon name="bars" type="FontAwesome" style={{color:'white' }} onPress={()=>this.props.navigation.openDrawer()}/>
+            </Left>
+          </Header>
           <View style={styles.mainContainer}>
               <Text style={{color:'white', fontWeight:'bold'}}> Past transactions</Text>
               <ButtonGroup
