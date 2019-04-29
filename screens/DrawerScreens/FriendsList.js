@@ -169,11 +169,42 @@ export default class FriendsList extends React.Component {
           </Header>
           <View style={styles.infoContainer}>
 
+          <SearchableDropdown
+            onItemSelect={item => this.addFriend(item)}
+            containerStyle={{  width: width-(width/9.375), alignContent: 'center'}}
+            textInputStyle={{
+              fontSize: width/25,
+              color:'#fff',
+              textAlign: 'center',
+              padding: width/75,
+              borderWidth: 1,
+              borderColor: "#35b0d2",
+              borderRadius: width/18.75,
+              height: width/9.375,
+              backgroundColor: '#35b0d2',
+            }}
+            itemStyle={{
+              height: width/10.714,
+              padding: width/53.57,
+              marginTop: width/187.5,
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              borderColor: "#35b0d2",
+              borderWidth: 1,
+              borderRadius: width/75
+            }}
+            itemTextStyle={{ color: "white", textAlign: 'center', fontSize: width/25, }}
+            itemsContainerStyle={{ maxHeight: width/2.5 }}
+            items={tempArray}
+            defaultIndex={2}
+            placeholder="Search for friends!"
+            placeholderTextColor="rgba(255,255,255,0.8)"
+            resetValue={false}
+            underlineColorAndroid="transparent"
+          />
+
             <Text style={styles.title}> My Friends</Text>
-            <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={width/2.5} contentContainerStyle = {{width: width- (width/9.375),height: height/3}}>
+            <KeyboardAwareScrollView contentContainerStyle = {{width: width- (width/9.375),height: height/2}}>
               <View style={styles.container}>
-
-
 
                 {currentFriends.map((friend, index) => (
                   <ListItem style={styles.listContainer}>
@@ -198,40 +229,6 @@ export default class FriendsList extends React.Component {
                 ))}
               </View>
             </KeyboardAwareScrollView>
-
-            <SearchableDropdown
-              onItemSelect={item => this.addFriend(item)}
-              containerStyle={{ height: height/4, width: width-(width/9.375), alignContent: 'center'}}
-              textInputStyle={{
-                fontSize: width/25,
-                color:'#fff',
-                textAlign: 'center',
-                padding: width/75,
-                borderWidth: 1,
-                borderColor: "#35b0d2",
-                borderRadius: width/18.75,
-                height: width/9.375,
-                backgroundColor: '#35b0d2',
-              }}
-              itemStyle={{
-                height: width/10.714,
-                padding: width/53.57,
-                marginTop: width/187.5,
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                borderColor: "#35b0d2",
-                borderWidth: 1,
-                borderRadius: width/75
-              }}
-              itemTextStyle={{ color: "white", textAlign: 'center', fontSize: width/25, }}
-              itemsContainerStyle={{ maxHeight: width/2.5 }}
-              items={tempArray}
-              defaultIndex={2}
-              placeholder="Search for friends!"
-              placeholderTextColor="rgba(255,255,255,0.8)"
-              resetValue={false}
-              underlineColorAndroid="transparent"
-            />
-
 
           </View>
         </ImageBackground>
