@@ -33,13 +33,9 @@ export default class MyModal extends Component {
                   <View style={styles.container}>
                   <View style={styles.innerContainer}>
                         <Text style={styles.title}>Item Detail</Text>
-                        <Text style={styles.description}>Charging...</Text>
-                        <Text style={styles.description}>{this.props.selectedItem.charging}</Text>
-                        <Text style={styles.description}>Paying...</Text>
-                        <Text style={styles.description}>{this.props.selectedItem.paying}</Text>
-                        <Text style={styles.description}>{this.props.selectedItem.name}</Text>
-                        <Text style={styles.description}>{this.props.selectedItem.date}</Text>
-                        <Text style={styles.description}>{this.props.selectedItem.amount}</Text>
+                        <Text style={styles.nameDescription}>{this.props.selectedItem.name}</Text>
+                        <Text style={styles.dateDescription}>{this.props.selectedItem.date}</Text>
+                        <Text style={styles.amountDescription}>{'$'+this.props.selectedItem.amount.toFixed(2)}</Text>
 
                         <TouchableHighlight
                             style={styles.blueButton}
@@ -71,14 +67,28 @@ export default class MyModal extends Component {
             backgroundColor: '#ecf0f1',
         },
         title: {
-            color: '#bdc3c7',
+            color: '#35b0d2',
             paddingTop: 10,
             paddingBottom: 10,
         },
-        description: {
-            color: '#bdc3c7',
+        nameDescription: {
+            color: '#12728d',
+            fontWeight: 'bold',
             paddingTop: 10,
             paddingBottom: 10,
+        },
+        dateDescription: {
+            color: '#808080',
+            paddingTop: 10,
+            paddingBottom: 10,
+        },
+        amountDescription: {
+            color: '#12728d',
+            fontSize: 30,
+            height:40,
+            paddingTop: 10,
+            paddingBottom: 10,
+            marginBottom:25,
         },
         buttonContainer: {
             paddingVertical: 5,

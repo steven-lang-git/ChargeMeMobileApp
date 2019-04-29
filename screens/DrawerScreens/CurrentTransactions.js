@@ -25,47 +25,19 @@ class MyItem extends React.Component {
       this.props.onPressItem(this.props.item);
   };
 
-  _renderPaid = () =>{
-
-  <ListItem
-    {...this.props}
-    onPress={this._onPress}
-    containerStyle= {styles.blueButton}
-    title={this.props.item.name}
-    titleStyle={{color:'white', fontWeight:'bold'}}
-    subtitle={this.props.item.date }
-    subtitleStyle={{color:'white'}}
-    rightElement={'$'+this.props.item.amount.toFixed(2)}
-    rightTitle={"Paying "+this.props.item.paying}
-    rightTitleStyle={{color:'white'}}
-    chevronColor="white"
-    chevron
-
-    />
-  }
-
-  _renderCharged = () =>{
-
-    <ListItem
-    {...this.props}
-    onPress={this._onPress}
-    containerStyle= {styles.redButton}
-    title={this.props.item.name}
-      titleStyle={{color:'white', fontWeight:'bold'}}
-      subtitle={this.props.item.date }
-      subtitleStyle={{color:'white'}}
-      rightElement={'$'+this.props.item.amount.toFixed(2)}
-      rightTitle={"Charging "+this.props.item.charging}
-      rightTitleStyle={{color:'white'}}
-      chevronColor="white"
-      chevron
-
-      />
-  }
-
+  
   _renderMain = () =>{
+  let chargingName, payingName;
+  this.tempArray = tempArray.map((item,key) =>{
+    
+    if(item.key==this.props.item.paying){      
+      payingName=item.first;
+    } 
+    else if(item.key==this.props.item.charging){
+      chargingName=item.first;
+    } 
+  });
 
-    console.log(this.props.selectedIdx);
     // return this.props.renderPay(this.props.item);
   if(this.props.selectedIdx==0){
     if(this.props.item.charging==uid){
@@ -78,7 +50,7 @@ class MyItem extends React.Component {
         subtitle={this.props.item.date }
         subtitleStyle={{color:'white'}}
         rightElement={'$'+this.props.item.amount.toFixed(2)}
-        rightTitle={"Paying "+this.props.item.paying}
+        rightTitle={"Paying "+payingName}
         rightTitleStyle={{color:'white'}}
         chevronColor="white"
         chevron
@@ -96,7 +68,7 @@ class MyItem extends React.Component {
           subtitle={this.props.item.date }
           subtitleStyle={{color:'white'}}
           rightElement={'$'+this.props.item.amount.toFixed(2)}
-          rightTitle={"Charging "+this.props.item.charging}
+          rightTitle={"Charging "+chargingName}
           rightTitleStyle={{color:'white'}}
           chevronColor="white"
           chevron
@@ -117,7 +89,7 @@ class MyItem extends React.Component {
           subtitle={this.props.item.date }
           subtitleStyle={{color:'white'}}
           rightElement={'$'+this.props.item.amount.toFixed(2)}
-          rightTitle={"Paying "+this.props.item.paying}
+          rightTitle={"Paying "+payingName}
           rightTitleStyle={{color:'white'}}
           chevronColor="white"
           chevron
@@ -143,7 +115,7 @@ class MyItem extends React.Component {
           subtitle={this.props.item.date }
           subtitleStyle={{color:'white'}}
           rightElement={'$'+this.props.item.amount.toFixed(2)}
-          rightTitle={"Charging "+this.props.item.charging}
+          rightTitle={"Charging "+chargingName}
           rightTitleStyle={{color:'white'}}
           chevronColor="white"
           chevron
@@ -165,9 +137,7 @@ class MyItem extends React.Component {
 
 }
 
-  _renderC = () =>{
-    return this.props.renderCharge(this.props.item);
-  }
+ 
 
   render() {
     // console.log("temp?",this.props.temp);
@@ -205,6 +175,7 @@ export default class CurrentTransactions extends React.Component {
     };
     transactionData= [],
     tempArray =[],
+    billy=['hello','goddamn','byebye'],
     uid=firebase.auth().currentUser.uid,
     this.updateIndex = this.updateIndex.bind(this);
   };
@@ -216,38 +187,6 @@ updateIndex(selectedIndex) {
   this.setState({ selectedIndex });
 };
 
-renderMain(item)
-{
-
-  // console.log("hullo");
-  const {selectedIndex}= this.state;
-  uid = firebase.auth().currentUser.uid;
-  var name;
-
-  if(selectedIndex==0){
-
-    if(item.paying==uid){
-      return this._renderPaying(item)
-      }
-
-    else if(item.charging==uid)
-    {
-      return this._renderCharging(item)
-    }
-
-  }
-  if(selectedIndex==1){
-    if(item.paying==uid){
-      return this._renderPaying(item)
-    }
-  }
-
-  else if(selectedIndex==2){
-    if(item.charging==uid){
-      return this._renderCharging(item)
-    }
-  }
-};
 
 _onPressItem = (item) => {
   this._showModal(item);
@@ -259,45 +198,6 @@ _toggleModal = () => this.setState({ isModalVisible: !this.state.isModalVisible 
 _showModal = (item) => this.setState({ isModalVisible: true, selectedItem: item });
 
 _hideModal = () => this.setState({isModalVisible:false})
-
-_renderPaying = (item) => (
-
-  <ListItem
-    onPress={this._onPressItem(item)}
-
-    containerStyle= {styles.blueButton}
-    title={item.name}
-    titleStyle={{color:'white', fontWeight:'bold'}}
-    subtitle={item.date }
-    subtitleStyle={{color:'white'}}
-
-    rightElement={'$'+item.amount.toFixed(2)}
-    rightTitle={"Paying "}
-    rightTitleStyle={{color:'white'}}
-    chevronColor="white"
-    chevron
-
-    />
-);
-
-_renderCharging = (item) => (
-  <ListItem
-  onPress={this._onPressItem(item)}
-  containerStyle= {styles.redButton}
-
-    title={item.name}
-    titleStyle={{color:'white', fontWeight:'bold'}}
-    subtitle={item.date }
-    subtitleStyle={{color:'white'}}
-    rightElement={'$'+item.amount.toFixed(2)}
-
-    rightTitle={"Charging "}
-    rightTitleStyle={{color:'white'}}
-    chevronColor="white"
-    chevron
-
-    />
-)
 
 
 //function that is called everytime page mounts
@@ -383,6 +283,7 @@ renderItem = ({item})=> (
   charging={item.charging}
   uid = {uid}
   temp={tempArray}
+  bob={billy}
   selectedIdx ={this.state.selectedIndex}
   renderCharge ={()=>this._renderCharging(item)}
   renderPay={()=>this._renderPaying(item)}
@@ -403,6 +304,11 @@ renderItem = ({item})=> (
           style={styles.imageContainer}
         >
           <View style={styles.overlay} />
+          <Header style={{borderBottomWidth:0,backgroundColor:'transparent', zIndex:100, top: 0, left:0, right:0}}>
+          <Left>
+            <Icon name="bars" type="FontAwesome" style={{color:'white' }} onPress={()=>this.props.navigation.openDrawer()}/>
+          </Left>
+        </Header>
           <View style={styles.mainContainer}>
           <Text style={{color:'white', fontWeight:'bold'}}> Current Transactions</Text>
               <ButtonGroup
