@@ -107,19 +107,14 @@ export default class SplitEvenlyReview extends React.Component{
     const total = parseFloat(navigation.getParam('total'))
     const tip = parseFloat(navigation.getParam('tip'))
     const finalTotal = parseFloat((total + tip).toFixed(2))
-    const selectedFriends = navigation.getParam('selectedFriends');
-    const payEach = parseFloat((finalTotal/(selectedFriends.length + 1)).toFixed(2))
-
-
-    console.log('todays date: ', today )
+    const friends = navigation.getParam('friends');
+    const payEach = parseFloat((finalTotal/(friends.length + 1)).toFixed(2))
 
     //get current user's uid
     var uid = firebase.auth().currentUser.uid
 
-    for (let i = 0; i < selectedFriends.length; i++){
+    for (let i = 0; i < friends.length; i++){
       const unique = moment()
-      console.log('unique: ', unique)
-
 
       //dispatch charge to database under user
       firebase
@@ -127,7 +122,7 @@ export default class SplitEvenlyReview extends React.Component{
         .ref("currentTransactions/" + uid + "/" + unique )
         .set({
               charging: uid,
-              paying: selectedFriends[i].key,
+              paying: friends[i].key,
               amount: payEach,
               name: name,
               date: this.state.date
@@ -136,17 +131,15 @@ export default class SplitEvenlyReview extends React.Component{
         //dispatch charge to database under friend
         firebase
           .database()
-          .ref("currentTransactions/" + selectedFriends[i].key + "/" + unique)
+          .ref("currentTransactions/" + friends[i].key + "/" + unique)
           .set({
                 charging: uid,
-                paying: selectedFriends[i].key,
+                paying: friends[i].key,
                 amount: payEach,
                 name: name,
-                date: today
+                date: this.state.date
           });
      }
-
-    console.log('FINAL FRIENDS: ', selectedFriends)
 
     this.hideLoadingAlert()
     this.showConfirmedAlert()
@@ -181,12 +174,12 @@ export default class SplitEvenlyReview extends React.Component{
     const total = parseFloat(navigation.getParam('total'))
     const tip = parseFloat(navigation.getParam('tip'))
     const finalTotal = parseFloat((total + tip).toFixed(2))
-    const selectedFriends = navigation.getParam('friends');
-    const payEach = parseFloat((finalTotal/(selectedFriends.length + 1)).toFixed(2))
+    const friends = navigation.getParam('friends');
+    const payEach = parseFloat((finalTotal/(friends.length + 1)).toFixed(2))
     let selectedFlat = []
     var y;
-    for (y in selectedFriends) {
-      var friendName = selectedFriends[y].firstName + " " + selectedFriends[y].lastName
+    for (y in friends) {
+      var friendName = friends[y].firstName + " " + friends[y].lastName
       selectedFlat[y] = { id: y, name: friendName };
     }
     return(

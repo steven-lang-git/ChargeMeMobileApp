@@ -20,17 +20,14 @@ import Modal from "react-native-modal";
 import MyModal from './MyModal';
 const { width, height } = Dimensions.get("window");
 
-
-
-
-class MyItem extends React.Component { 
-  _onPress = () => { 
-      this.props.onPressItem(this.props.item); 
-  }; 
+class MyItem extends React.Component {
+  _onPress = () => {
+      this.props.onPressItem(this.props.item);
+  };
 
   _renderPaid = () =>{
-    
-  <ListItem 
+
+  <ListItem
     {...this.props}
     onPress={this._onPress}
     containerStyle= {styles.blueButton}
@@ -43,16 +40,16 @@ class MyItem extends React.Component {
     rightTitleStyle={{color:'white'}}
     chevronColor="white"
     chevron
-  
+
     />
   }
 
   _renderCharged = () =>{
-    
-    <ListItem 
+
+    <ListItem
     {...this.props}
     onPress={this._onPress}
-    containerStyle= {styles.redButton}   
+    containerStyle= {styles.redButton}
     title={this.props.item.name}
       titleStyle={{color:'white', fontWeight:'bold'}}
       subtitle={this.props.item.date }
@@ -62,17 +59,17 @@ class MyItem extends React.Component {
       rightTitleStyle={{color:'white'}}
       chevronColor="white"
       chevron
-    
+
       />
   }
 
   _renderMain = () =>{
- 
+
     console.log(this.props.selectedIdx);
     // return this.props.renderPay(this.props.item);
   if(this.props.selectedIdx==0){
     if(this.props.item.charging==uid){
-        return <ListItem 
+        return <ListItem
         {...this.props}
         onPress={this._onPress}
         containerStyle= {styles.blueButton}
@@ -85,13 +82,13 @@ class MyItem extends React.Component {
         rightTitleStyle={{color:'white'}}
         chevronColor="white"
         chevron
-      
-        />  }
+        />
+      }
         if(this.props.item.paying==uid){
-        return <ListItem 
+        return <ListItem
         {...this.props}
         onPress={this._onPress}
-        containerStyle= {styles.redButton}   
+        containerStyle= {styles.redButton}
         title={this.props.item.name}
           titleStyle={{color:'white', fontWeight:'bold'}}
           subtitle={this.props.item.date }
@@ -101,15 +98,13 @@ class MyItem extends React.Component {
           rightTitleStyle={{color:'white'}}
           chevronColor="white"
           chevron
-        
           />
         }
-      
   }
     if(this.props.selectedIdx==1){
         // console.log(this.props.selectedIdx);
       if(this.props.item.charging==uid){
-        return <ListItem 
+        return <ListItem
           {...this.props}
           onPress={this._onPress}
           containerStyle= {styles.blueButton}
@@ -122,22 +117,21 @@ class MyItem extends React.Component {
           rightTitleStyle={{color:'white'}}
           chevronColor="white"
           chevron
-        
-          />  }
-          else{
-            return(
-              <Text></Text>
-        
-            )
-          }
+          />
+        }
+        else{
+          return(
+            <Text></Text>
+          )
+        }
     }
     if(this.props.selectedIdx==2){
       // console.log(this.props.selectedIdx);
       if(this.props.item.paying==uid){
-        return <ListItem 
+        return <ListItem
         {...this.props}
         onPress={this._onPress}
-        containerStyle= {styles.redButton}   
+        containerStyle= {styles.redButton}
         title={this.props.item.name}
           titleStyle={{color:'white', fontWeight:'bold'}}
           subtitle={this.props.item.date }
@@ -147,40 +141,31 @@ class MyItem extends React.Component {
           rightTitleStyle={{color:'white'}}
           chevronColor="white"
           chevron
-        
           />
         }
         else{
           return(
             <Text></Text>
-      
           )
         }
     }
     else{
       return(
         <Text>Thats all folks...</Text>
-  
       )
     }
-
-  
 }
 
   _renderC = () =>{
     return this.props.renderCharge(this.props.item);
   }
 
-
-  render() { 
+  render() {
     // console.log("temp?",this.props.temp);
-      return(
-
-          // this.props._renderCharging(this.props.item)
-this._renderMain()  
-      )
-// this.props.renderM(this.props.item)   ) 
-  } 
+    return(
+        this._renderMain()
+    )
+  }
 }
 
 
@@ -216,7 +201,7 @@ export default class CurrentTransactions extends React.Component {
   };
 
 
-  
+
 //updates the three option menu at the top
 updateIndex(selectedIndex) {
   this.setState({ selectedIndex });
@@ -231,59 +216,34 @@ renderMain(item)
   var name;
 
   if(selectedIndex==0){
-  if(item.paying==uid){
+    if(item.paying==uid){
+      return this._renderPaying(item)
+      }
 
-    // for(var x in tempArray){
-    //   if(tempArray[x].key==item.charging){
-    //   name=tempArray[x].first;
-    //   }
-    // };  
-    return this._renderPaying(item)
+    else if(item.charging==uid)
+    {
+      return this._renderCharging(item)
     }
-  else if(item.charging==uid)
-  {
-    // for(var x in tempArray){
-    //   if(tempArray[x].key==item.paying){
-    //   name=tempArray[x].first;
-    //   }
-    // };
-    return this._renderCharging(item)
-  
-=
   }
-}
-if(selectedIndex==1){
-  if(item.paying==uid){
+  if(selectedIndex==1){
+    if(item.paying==uid){
+      return this._renderPaying(item)
+    }
+  }
 
-    // for(var x in tempArray){
-    //   if(tempArray[x].key==item.charging){
-    //   name=tempArray[x].first;
-    //   }
-    // };
-  
-    return this._renderPaying(item)
+  else if(selectedIndex==2){
+    if(item.charging==uid){
+      return this._renderCharging(item)
+    }
   }
-}
-else if(selectedIndex==2){
-  if(item.charging==uid){
-    // for(var x in tempArray){
-    //   if(tempArray[x].key==item.paying){
-    //   name=tempArray[x].first;
-    //   }
-    // };
-    return this._renderCharging(item)
-  }
-}
-
 };
 
-_onPressItem = (item) => { 
+_onPressItem = (item) => {
   this._showModal(item);
 };
 
 //to close modal
-_toggleModal = () =>
-this.setState({ isModalVisible: !this.state.isModalVisible });
+_toggleModal = () => this.setState({ isModalVisible: !this.state.isModalVisible });
 
 _showModal = (item) => this.setState({ isModalVisible: true, selectedItem: item });
 
@@ -291,7 +251,7 @@ _hideModal = () => this.setState({isModalVisible:false})
 
 _renderPaying = (item) => (
 
-  <ListItem 
+  <ListItem
     onPress={this._onPressItem(item)}
 
     containerStyle= {styles.blueButton}
@@ -305,14 +265,14 @@ _renderPaying = (item) => (
     rightTitleStyle={{color:'white'}}
     chevronColor="white"
     chevron
-  
+
     />
 );
 
 _renderCharging = (item) => (
-  <ListItem 
+  <ListItem
   onPress={this._onPressItem(item)}
-  containerStyle= {styles.redButton}   
+  containerStyle= {styles.redButton}
 
     title={item.name}
     titleStyle={{color:'white', fontWeight:'bold'}}
@@ -324,7 +284,7 @@ _renderCharging = (item) => (
     rightTitleStyle={{color:'white'}}
     chevronColor="white"
     chevron
-  
+
     />
 )
 
@@ -333,7 +293,7 @@ _renderCharging = (item) => (
 componentDidMount(){
   var uid = firebase.auth().currentUser.uid
   this.setState({uid:uid})
-  
+
   firebase
   .database()
   .ref()
@@ -402,11 +362,11 @@ _renderModalContent = () => (
 keyExtractor = (item,index) =>index.toString()
 
 
-renderItem = ({item})=> ( 
+renderItem = ({item})=> (
 //
 
 // this.renderMain(item)
-  <MyItem 
+  <MyItem
   item={item}
   paying={item.paying}
   charging={item.charging}
