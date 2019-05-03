@@ -10,14 +10,32 @@ import {
   ListView,
   FlatList,
   Dimensions,
-  ImageBackground
+  ImageBackground,
+  Platform,
+  Button,
 } from "react-native";
 import { Header, Left, Right, Icon } from "native-base";
 import { Camera, Permissions } from "expo";
-// import RNTextDetector from "react-native-text-detector";
+import ImagePicker from 'react-native-image-picker';
+import Ocr from 'react-native-tesseract-ocr';
+
+import RNTextDetector from "react-native-text-detector";
 import ButtonComponent from "../../../components/ButtonComponent";
 
 let { width, height } = Dimensions.get("window");
+
+
+const imagePickerOptions ={
+  quality: 1.0,
+  storageOptions: {
+    skipBackup: true,
+  },
+};
+const tessOptions ={
+  whitelist: null,
+  blacklist: null
+};
+
 
 export default class ReceiptScanner extends React.Component {
   static navigationOptions = {
@@ -37,8 +55,44 @@ export default class ReceiptScanner extends React.Component {
       path: null,
       imageProperties: null,
       data: null,
+      imageSource: null,
+      text:'',
+      photo:null,
     };
+  this.selectImage = this.selectImage.bind(this);
   }
+  
+  selectImage(){
+
+    ImagePicker.showImagePicker(imagePickerOptions, (response)=>
+    {
+      console.log('Response =',response);
+      if(response.didCancel){
+        console.log('User cancelled image picker');
+      }
+      else if(!response.didCancel){
+        const source = {uri:response.uri};
+        this.setState({imageSource:source});
+        this.extractText(response.path);
+      }
+    });
+  }
+  handleChoosePhoto =() => {
+    const options ={
+      noData: true
+    };
+    ImagePicker.launchImageLibrary(options,response=>{
+      console.log("response",response);
+      if(response.uri){
+        this.setState({photo:response});
+      }
+    });
+  };
+  extractText(imgPath){
+    Ocr.recognize(imgPath, 'LANG_ENGLISH', tessOptions)
+    .then((res)=> this.setState({text:res}));
+  }
+
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === "granted" });
@@ -57,18 +111,21 @@ export default class ReceiptScanner extends React.Component {
   };
 
   processImage =async() =>{
-  //   console.log("did we get here?");
-  //  const{data} =this.state;
-  //  console.log("1");
-  //   const visionResp = await RNTextDetector.detectFromUri(data);
-  //   console.log("2");
-  //   console.log('visionResp',visionResp);
-  //   if(!(visionResp && visionResp.length >0)){
-  //     throw "unmatched";
-  //   }
-    // this.setState({
-    //   visionResp: this.mapVisionRespToScreen(visionResp, imageProperties)
-    // });
+    console.log("did we get here?");
+   const{data} =this.state;
+   console.log("1");
+   console.log(data);
+   console.log('uri',data.uri);
+   console.log('path?',data.path);
+    const visionResp = await RNTextDetector.detectFromUri(data.uri);
+    console.log("2");
+    console.log('visionResp',visionResp);
+    if(!(visionResp && visionResp.length >0)){
+      throw "unmatched";
+    }
+    this.setState({
+      visionResp: this.mapVisionRespToScreen(visionResp, imageProperties)
+    });
   };
   renderImage() {
     return (
@@ -76,18 +133,18 @@ export default class ReceiptScanner extends React.Component {
         <Image source={{ uri: this.state.path }} style={styles.preview} />
         <View style={styles.buttonContainer}>
           <ButtonComponent
-            style={styles.cancel}
+            containerStyle={styles.cancel}
             onPress={() => this.setState({ path: null })}
             text="Cancel"
             disabled={false}
             primary={true}
           />
            <ButtonComponent
-            style={styles.cancel}
-            // onPress={this.processImage.bind(this)}
+            containerStyle={styles.scan}
+            onPress={this.processImage.bind(this)}
             text="Scan Receipt"
             disabled={false}
-            primary={true}
+            primary={false}
           />
         </View>
       </View>
@@ -97,6 +154,8 @@ export default class ReceiptScanner extends React.Component {
 
   renderCamera() {
     const { hasCameraPermission } = this.state;
+    const {photo} =this.state;
+
     if (hasCameraPermission === null) {
       return <View />;
     } else if (hasCameraPermission === false) {
@@ -145,6 +204,14 @@ export default class ReceiptScanner extends React.Component {
                   source={require("../../../assets/capture.png")}
                 />
               </TouchableOpacity>
+              <View style ={{position:'absolute', flex:1, alignItems: "center", justifyContent:"center"}}>
+      {photo&&(<Image
+        source={{uri:photo.uri}}
+        style={{width:300,height:300}}
+        
+      />)}
+      <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
+     </View>
             </View>
           </Camera>
         </View>
@@ -153,13 +220,53 @@ export default class ReceiptScanner extends React.Component {
   }
 
   render() {
+    // const {imageSource} = this.state;
+    const {photo} =this.state;
+
+
+
     return (
+      
+     
       <View style={styles.container}>
+       {/* <View style ={{position:'absolute', flex:1, alignItems: "center", justifyContent:"center"}}>
+      {photo&&(<Image
+        source={{uri:photo.uri}}
+        style={{width:300,height:300}}
+        
+      />)}
+      <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
+     </View> */}
         {this.state.path ? this.renderImage() : this.renderCamera()}
       </View>
     );
+  
+    //  return(
+     
+    
+  //  )
+   
+    // return(
+    //   <View style={{flex:1}}>
+    //     <TouchableOpacity onPress={this.selectImage}>
+    //       <View >
+    //       {
+    //         imageSource === null
+    //         ? <Text> Tap me!</Text>
+    //         : <Image style={styles.preview} source={imageSource}/>
+    //       }
+    //       </View>
+    //     </TouchableOpacity>
+    //     <Text>{this.state.text}</Text>
+    //   </View>
+    // );
   }
 }
+
+ReceiptScanner.navigationOptions ={
+  title: 'Scan Your Receipt',
+
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -191,6 +298,10 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontWeight: "600",
     fontSize: width/22.0588
+  },
+  scan:{
+    color: "#FFF",
+    marginLeft:50,
   },
   imageContainer: {
     resizeMode: "cover",
