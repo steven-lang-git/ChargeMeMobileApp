@@ -19,7 +19,7 @@ import { Camera, Permissions } from "expo";
 import ImagePicker from 'react-native-image-picker';
 import Ocr from 'react-native-tesseract-ocr';
 
-import RNTextDetector from "react-native-text-detector";
+// import RNTextDetector from "react-native-text-detector";
 import ButtonComponent from "../../../components/ButtonComponent";
 
 let { width, height } = Dimensions.get("window");
