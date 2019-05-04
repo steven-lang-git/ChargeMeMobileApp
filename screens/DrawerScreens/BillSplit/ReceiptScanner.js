@@ -85,6 +85,7 @@ export default class ReceiptScanner extends React.Component {
       console.log("response",response);
       if(response.uri){
         this.setState({photo:response});
+        this.extractText(response.path);
       }
     });
   };
@@ -150,7 +151,18 @@ export default class ReceiptScanner extends React.Component {
       </View>
     );
   }
-
+  renderImagePick(){
+    return (
+      <View style ={{position:'absolute', flex:1, alignItems: "center", justifyContent:"center", marginTop:20}}>
+      {photo&&(<Image
+        source={{uri:photo.uri}}
+        style={{width:300,height:300}}
+        
+      />)}
+      <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
+     </View>
+    );
+  }
 
   renderCamera() {
     const { hasCameraPermission } = this.state;
@@ -204,14 +216,6 @@ export default class ReceiptScanner extends React.Component {
                   source={require("../../../assets/capture.png")}
                 />
               </TouchableOpacity>
-              <View style ={{position:'absolute', flex:1, alignItems: "center", justifyContent:"center"}}>
-      {photo&&(<Image
-        source={{uri:photo.uri}}
-        style={{width:300,height:300}}
-        
-      />)}
-      <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
-     </View>
             </View>
           </Camera>
         </View>
@@ -225,41 +229,43 @@ export default class ReceiptScanner extends React.Component {
 
 
 
-    return (
+    // return (
       
      
-      <View style={styles.container}>
-       {/* <View style ={{position:'absolute', flex:1, alignItems: "center", justifyContent:"center"}}>
-      {photo&&(<Image
-        source={{uri:photo.uri}}
-        style={{width:300,height:300}}
+    //   <View style={styles.container}>
+    //    {/* <View style ={{position:'absolute', flex:1, alignItems: "center", justifyContent:"center"}}>
+    //   {photo&&(<Image
+    //     source={{uri:photo.uri}}
+    //     style={{width:300,height:300}}
         
-      />)}
-      <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
-     </View> */}
-        {this.state.path ? this.renderImage() : this.renderCamera()}
-      </View>
-    );
+    //   />)}
+    //   <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
+    //  </View> */}
+    //     {this.state.path ? this.renderImage() : this.renderCamera()}
+    //     <Text>{this.state.text}</Text>
+    //   </View>
+
+    // );
   
     //  return(
      
     
   //  )
    
-    // return(
-    //   <View style={{flex:1}}>
-    //     <TouchableOpacity onPress={this.selectImage}>
-    //       <View >
-    //       {
-    //         imageSource === null
-    //         ? <Text> Tap me!</Text>
-    //         : <Image style={styles.preview} source={imageSource}/>
-    //       }
-    //       </View>
-    //     </TouchableOpacity>
-    //     <Text>{this.state.text}</Text>
-    //   </View>
-    // );
+    return(
+      <View style={{flex:1}}>
+        <TouchableOpacity onPress={this.handleChoosePhoto}>
+          <View >
+          {
+            photo === null
+            ? <Text> Tap me!</Text>
+            : <Image style={styles.preview} source={photo}/>
+          }
+          </View>
+        </TouchableOpacity>
+        <Text>{this.state.text}</Text>
+      </View>
+    );
   }
 }
 
