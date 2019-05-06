@@ -19,7 +19,7 @@ import { Camera, Permissions } from "expo";
 import ImagePicker from 'react-native-image-picker';
 import Ocr from 'react-native-tesseract-ocr';
 
-// import RNTextDetector from "react-native-text-detector";
+import RNTextDetector from "react-native-text-detector";
 import ButtonComponent from "../../../components/ButtonComponent";
 
 let { width, height } = Dimensions.get("window");
@@ -203,6 +203,15 @@ export default class ReceiptScanner extends React.Component {
                   opacity: 0.9
                 }}
               />
+              <View style ={{position:'absolute', flex:1, alignItems: "center", justifyContent:"center"}}>
+      {photo&&(<Image
+        source={{uri:photo.uri}}
+        style={{width:300,height:300}}
+        
+      />)}
+      <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
+     </View>
+
               <TouchableOpacity
                 style={{
                   flex: 0.5,
@@ -229,43 +238,36 @@ export default class ReceiptScanner extends React.Component {
 
 
 
-    // return (
+    return (
       
      
-    //   <View style={styles.container}>
-    //    {/* <View style ={{position:'absolute', flex:1, alignItems: "center", justifyContent:"center"}}>
-    //   {photo&&(<Image
-    //     source={{uri:photo.uri}}
-    //     style={{width:300,height:300}}
-        
-    //   />)}
-    //   <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
-    //  </View> */}
-    //     {this.state.path ? this.renderImage() : this.renderCamera()}
-    //     <Text>{this.state.text}</Text>
-    //   </View>
+      <View style={styles.container}>
+       
+        {this.state.path ? this.renderImage() : this.renderCamera()}
+        <Text>{this.state.text}</Text>
+      </View>
 
-    // );
+    );
   
     //  return(
      
     
   //  )
    
-    return(
-      <View style={{flex:1}}>
-        <TouchableOpacity onPress={this.handleChoosePhoto}>
-          <View >
-          {
-            photo === null
-            ? <Text> Tap me!</Text>
-            : <Image style={styles.preview} source={photo}/>
-          }
-          </View>
-        </TouchableOpacity>
-        <Text>{this.state.text}</Text>
-      </View>
-    );
+    // return(
+    //   <View style={{flex:1}}>
+    //     <TouchableOpacity onPress={this.handleChoosePhoto}>
+    //       <View >
+    //       {
+    //         photo === null
+    //         ? <Text> Tap me!</Text>
+    //         : <Image style={styles.preview} source={photo}/>
+    //       }
+    //       </View>
+    //     </TouchableOpacity>
+    //     <Text>{this.state.text}</Text>
+    //   </View>
+    // );
   }
 }
 
