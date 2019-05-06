@@ -5,10 +5,9 @@ import Login from '../screens/EntryPoints/Login';
 import CreateAccount from '../screens/EntryPoints/CreateAccount';
 import UserDrawerScreen from './UserDrawerScreen';
 
-console.log('stacklogin')
 const LoginStack = createStackNavigator({
-    Login: {screen: Login, navigationOptions: {gesturesEnabled: false,}},
-    CreateAccount: {screen: CreateAccount, navigationOptions: {gesturesEnabled: false,}},
+    Login: {screen: Login, navigationOptions: {gesturesEnabled: false, header: null}},
+    CreateAccount: {screen: CreateAccount, navigationOptions: {gesturesEnabled: false, header: null}},
   },
   {
     initialRouteName: 'Login',

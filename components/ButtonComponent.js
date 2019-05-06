@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withNavigation } from 'react-navigation';
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, View, Dimensions } from 'react-native';
+
+const{width} = Dimensions.get('window')
 
 //button component that incorporates making the button dim when it is disabled
 class ButtonComponent extends Component {
 	render() {
-		const { text, onPress, disabled, primary} = this.props;
+		const { text, onPress, disabled, primary, blueButton, redButton, textStyle } = this.props;
 		return (
       <View style={disabled?styles.disabled:styles.enabled}>
-  		  <TouchableOpacity style={primary?styles.blueButton:styles.redButton}
+  		  <TouchableOpacity style={primary? blueButton: redButton}
   			   onPress={() => onPress()}
            disabled={disabled}
   		  >
-  			 <Text style={styles.textStyle}>{text}</Text>
+  			 <Text style={textStyle}>{text}</Text>
   		  </TouchableOpacity>
       </View>
 		);
@@ -26,26 +28,53 @@ ButtonComponent.propTypes = {
   onPress: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
 	primary: PropTypes.bool.isRequired,
+	blueButton: PropTypes.object,
+	redButton: PropTypes.object,
+	secondText: PropTypes.string,
+	textStyle: PropTypes.object,
+	secondTextStyle: PropTypes.object,
+};
+
+ButtonComponent.defaultProps = {
+ blueButton: {
+	 padding:width/25,
+	 backgroundColor: '#202646',
+	 borderRadius:width/37.5,
+	 borderWidth: 1,
+	 borderColor: '#35b0d2',
+	 backgroundColor: '#35b0d2',
+ },
+	redButton: {
+		padding:width/25,
+  	backgroundColor: '#202646',
+    borderRadius:width/37.5,
+    borderWidth: 1,
+    borderColor: 'coral',
+    backgroundColor: 'coral',
+	},
+	textStyle: {
+    fontSize:width/20.833,
+  	color: 'white',
+  	textAlign: 'center'
+  },
 };
 
 const styles = StyleSheet.create({
   textStyle: {
-    fontSize:18,
+    fontSize:width/20.833,
   	color: 'white',
   	textAlign: 'center'
   },
   blueButton: {
-  	padding:15,
-  	backgroundColor: '#202646',
-    borderRadius:10,
+  	padding:width/25,
+    borderRadius:width/37.5,
     borderWidth: 1,
     borderColor: '#35b0d2',
     backgroundColor: '#35b0d2',
   },
 	redButton: {
-		padding:15,
-  	backgroundColor: '#202646',
-    borderRadius:10,
+		padding:width/25,
+    borderRadius:width/37.5,
     borderWidth: 1,
     borderColor: 'coral',
     backgroundColor: 'coral',

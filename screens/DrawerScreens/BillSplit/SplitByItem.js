@@ -11,7 +11,7 @@ import {
   FlatList,
   Picker
 } from 'react-native';
-import { Dropdown } from 'react-native-material-dropdown';
+import UIStepper from 'react-native-ui-stepper';
 import TextInputComponent from '../../../components/TextInputComponent'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ButtonComponent from '../../../components/ButtonComponent'
@@ -25,7 +25,6 @@ import {
 } from 'react-native-elements';
 
 let nameEmpty = false
-let taxEmpty = false
 let itemNameEmpty = false
 let itemPriceEmpty = false
 let noFriends = '';
@@ -33,6 +32,7 @@ let noItems= '';
 let tempArray = [];
 let tempItemArray = [];
 let itemTotal = 0;
+
 const{width} = Dimensions.get('window')
 
 export default class SplitByItem extends React.Component {
@@ -40,39 +40,32 @@ export default class SplitByItem extends React.Component {
     super(props);
     this.state = {
       name: '',
-      tax: 0,
-      tip: 0,
-      subtotal: 0,
-      total: 0,
       items: [],
       friends: [],
       selectedFriends: [],
       selectedFlat: [],
       first:'',
-      checked10: false,
-      checked15: false,
-      checked18: false,
-      checked20: false,
-      checkedCustom: false,
-      checkedNo: true,
       disable: true,
       itemName: '',
       itemPrice: 0,
       quantity: 1,
     };
-    taxEmpty = false;
+
+  }
+
+  //run when page first loads
+  componentDidMount() {
     nameEmpty = false;
     itemNameEmpty = false;
     itemPriceEmpty = false
     noFriends = '';
     noItems = '';
     tempArray = [];
-    tempItemArray = [];
     itemTotal = 0;
-  }
 
-  //run when page first loads
-  componentDidMount() {
+    this.generateTempItemArray()
+    const { selectedFriends } = this.state;
+    this.generateSelectedFlat(selectedFriends)
     // console.log('getting data from database')
     //get current logged in user
     var uid = firebase.auth().currentUser.uid;
@@ -111,7 +104,36 @@ export default class SplitByItem extends React.Component {
       })
   }
 
-  addFriend = index => {
+  generateTempItemArray = () => {
+
+    const { items } = this.state;
+    tempItemArray = []
+    var z;
+    for (z in items) {
+      tempItemArray[z] = { id: z, name: items[z].name, price: items[z].price };
+    }
+    //console.log('temp item array: ', tempItemArray)
+
+    this.forceUpdate();
+  }
+
+  generateSelectedFlat = (selectedFriends) => {
+    let selectedFlat = this.state;
+
+    selectedFlat = []
+    var y;
+    for (y in selectedFriends) {
+      var name = selectedFriends[y].firstName + " " + selectedFriends[y].lastName
+      selectedFlat[y] = { id: y, name: name };
+    }
+    this.setState({selectedFlat: selectedFlat});
+    this.forceUpdate();
+
+  }
+
+  addFriend = item => {
+    index = eval(JSON.stringify(item.id))
+    item.name = "",
     noFriends = ''
     this.forceUpdate();
     const { selectedFriends, friends } = this.state;
@@ -124,6 +146,7 @@ export default class SplitByItem extends React.Component {
     tempArray.splice(index, 1);
 
     // Finally, update our app state
+    this.generateSelectedFlat(selectedFriends)
     this.setState({
       friends: friends,
       selectedFriends: selectedFriends
@@ -140,6 +163,7 @@ export default class SplitByItem extends React.Component {
     selectedFriends.splice(index, 1);
 
     // Finally, update our app state
+    this.generateSelectedFlat(selectedFriends)
     this.setState({
       friends: friends,
       selectedFriends: selectedFriends
@@ -148,24 +172,24 @@ export default class SplitByItem extends React.Component {
 
   //function to handle pressing remove item button
   removeItem = (index) => {
+    //console.log('removing ')
+    //console.log('index: ', index)
     const{ items } = this.state;
 
-    console.log(items[index].price)
-
-    itemTotal =  itemTotal - parseInt(items[index].price)
-
-    console.log('itemTotal: ', itemTotal)
+    //console.log(items[index].price)
 
     items.splice(index,1);
 
-    this.setState({items: items, subtotal: itemTotal})
+    this.generateTempItemArray()
+
+    this.setState({items: items})
   }
 
   //function to handle pressing add item icon
   addItem = () => {
     noItems = ''
     this.forceUpdate();
-    console.log('quantity: ', this.state.quantity)
+    //console.log('quantity: ', this.state.quantity)
     if(this.state.itemName == ''){
       itemNameEmpty = true
     }
@@ -179,14 +203,13 @@ export default class SplitByItem extends React.Component {
     if(itemNameEmpty == false && itemPriceEmpty == false){
 
       for(let x = 0; x < this.state.quantity; x++){
-        this.state.items.push({name: this.state.itemName, price: parseInt(this.state.itemPrice)})
-        itemTotal =  itemTotal + parseInt(this.state.itemPrice)
-        //console.log('item total: ', itemTotal)
+        this.state.items.push({name: this.state.itemName, price: parseFloat(this.state.itemPrice)})
       }
 
-      this.setState({itemName: '', itemPrice: 0, quantity: 1, subtotal: itemTotal})
-      console.log('items: ', this.state.items)
-      console.log('item total: ', itemTotal)
+      this.generateTempItemArray()
+
+      this.setState({itemName: '', itemPrice: 0, quantity: 1})
+      //console.log('items: ', this.state.items)
     }
   }
 
@@ -199,19 +222,6 @@ export default class SplitByItem extends React.Component {
       nameEmpty = false;
     }
     this.setState({name: value, disable: false})
-  };
-
-  //update tax entered by user
-  checkTax = value => {
-
-    const numericTax = this.taxField.getRawValue().toFixed(2);
-    if(numericTax == 0){
-      taxEmpty = true;
-    }
-    else{
-      taxEmpty = false;
-    }
-    this.setState({tax: numericTax, disable: false, subtotal: itemTotal + parseInt(numericTax)});
   };
 
   //update item name entered by user
@@ -227,159 +237,10 @@ export default class SplitByItem extends React.Component {
     this.setState({itemPrice: numericPrice})
   }
 
-  on10Toggle = (checked10) => {
-    this.setState(() => ({checked10}));
-    if(checked10==true){
-      this.setState({tip: (this.state.total * 0.10).toFixed(2)})
-      this.setState({checked15: false});
-      this.setState({checked18: false});
-      this.setState({checked20: false});
-      this.setState({checkedCustom: false});
-      this.setState({checkedNo: false});
-    }
-    else{
-      if (this.state.checked20 == false
-          && this.state.checked15 == false
-          && this.state.checked18 == false
-          && this.state.checkedCustom == false){
-            this.setState({checkedNo:true})
-          }
-    }
-  }
-  on15Toggle = (checked15) => {
-    this.setState(() => ({checked15}));
-    if(checked15==true){
-      this.setState({tip: (this.state.total * 0.15).toFixed(2)})
-      this.setState({checked10: false});
-      this.setState({checked18: false});
-      this.setState({checked20: false});
-      this.setState({checkedCustom: false});
-      this.setState({checkedNo: false});
-    }
-    else{
-      if (this.state.checked10 == false
-          && this.state.checked20 == false
-          && this.state.checked18 == false
-          && this.state.checkedCustom == false){
-            this.setState({checkedNo:true})
-          }
-    }
-  }
-
-  on18Toggle = (checked18) => {
-    this.setState(() => ({checked18}));
-    if(checked18==true){
-      this.setState({tip: (this.state.total * 0.18).toFixed(2)})
-      this.setState({checked10: false});
-      this.setState({checked15: false});
-      this.setState({checked20: false});
-      this.setState({checkedCustom: false});
-      this.setState({checkedNo: false});
-    }
-    else{
-      if (this.state.checked10 == false
-          && this.state.checked15 == false
-          && this.state.checked20 == false
-          && this.state.checkedCustom == false){
-            this.setState({checkedNo:true})
-          }
-    }
-  }
-
-  on20Toggle = (checked20) => {
-    this.setState(() => ({checked20}));
-    if(checked20==true){
-      this.setState({tip: (this.state.total * 0.20).toFixed(2)})
-      this.setState({checked10: false});
-      this.setState({checked15: false});
-      this.setState({checked18: false});
-      this.setState({checkedCustom: false});
-      this.setState({checkedNo: false});
-    }
-    else{
-      if (this.state.checked10 == false
-          && this.state.checked15 == false
-          && this.state.checked18 == false
-          && this.state.checkedCustom == false){
-            this.setState({checkedNo:true})
-          }
-    }
-  }
-
-  onCustomToggle = (checkedCustom) => {
-    this.setState(() => ({checkedCustom}));
-    if(checkedCustom==true){
-      this.setState({checked10: false});
-      this.setState({checked15: false});
-      this.setState({checked18: false});
-      this.setState({checked20: false});
-      this.setState({checkedNo: false});
-    }
-    else{
-      if (this.state.checked10 == false
-          && this.state.checked15 == false
-          && this.state.checked18 == false
-          && this.state.checked20 == false){
-            this.setState({checkedNo:true})
-          }
-    }
-  }
-
-  onNoToggle = (checkedNo) => {
-    this.setState(() => ({checkedNo}));
-    if(checkedNo==true){
-      this.setState({tip: 0});
-      this.setState({checked10: false});
-      this.setState({checked15: false});
-      this.setState({checked18: false});
-      this.setState({checked20: false});
-      this.setState({checkedCustom: false});
-    }
-    else{
-      if (this.state.checked10 == false
-          && this.state.checked15 == false
-          && this.state.checked18 == false
-          && this.state.checked20 == false
-          && this.state.checkedCustom == false){
-            this.setState({checkedNo:true})
-          }
-    }
-  }
-
-  showCustomField = () => {
-    if(this.state.checkedCustom == true){
-      return(
-        <View style={styles.customContainer}>
-          <TextInputMask
-            type={'money'}
-            options={{
-              precision: 2,
-              separator: '.',
-              delimiter: ',',
-              unit: '$',
-              suffixUnit: ''
-            }}
-            value={this.state.tip}
-            onChangeText={(customTip) => this.checkCustom(customTip)}
-            style={[styles.input, {borderColor: '#35b0d2'}]}
-            ref={(ref) => this.tipField = ref}
-            placeholder="$0"
-            placeholderTextColor="rgba(255,255,255,0.8)"
-            keyboardType={'numeric'}
-            returnKeyType='go'
-          />
-        </View>
-      )
-    }
-  }
-
   //function to handle when user clicks review button
   onSubmitBillSplit = () => {
     if(this.state.name == ''){
       nameEmpty = true;
-    }
-    if(this.state.tax == 0){
-      taxEmpty = true;
     }
     if(this.state.selectedFriends.length == 0){
       noFriends = 'Add Some Friends!';
@@ -396,16 +257,20 @@ export default class SplitByItem extends React.Component {
 
     this.forceUpdate();
 
-    if(taxEmpty == false && nameEmpty == false && noFriends == '' && noItems == ''){
-      console.log("first tax: " + this.state.tax);
-      console.log("first tip: " + this.state.tip);
+    if(nameEmpty == false && noFriends == '' && noItems == ''){
+      var y;
+      for (y in this.state.items){
+        itemTotal += this.state.items[y].price
+      }
+      console.log('SUBMITTING')
+      console.log("item total", itemTotal)
       console.log('submitting selected friends: ', this.state.selectedFriends)
+      console.log('submitting items: ', this.state.items)
       this.props.navigation.navigate('SplitByItemAssociate', {
                                                             name: this.state.name,
-                                                            tip: this.state.tip,
-                                                            tax: this.state.tax,
                                                             selectedFriends: this.state.selectedFriends,
-                                                            items: this.state.items
+                                                            items: this.state.items,
+                                                            itemTotal: itemTotal
                                                           })
     }
   }
@@ -415,7 +280,7 @@ export default class SplitByItem extends React.Component {
     var x;
     for (x in this.state.friends) {
       var name1 = this.state.friends[x].firstName + " " + this.state.friends[x].lastName
-      tempArray[x] = { id: x, name: name1 };
+      tempArray[x] = { id: x, name: name1};
     }
     // console.log('temp array: ', tempArray)
     var y;
@@ -423,295 +288,93 @@ export default class SplitByItem extends React.Component {
       var name = selectedFriends[y].firstName + " " + selectedFriends[y].lastName
       this.state.selectedFlat[y] = { id: y, name: name };
     }
-    var z;
-    for (z in items) {
-      tempItemArray[z] = { id: z, name: items[z].name, price: items[z].price };
-    }
-
-    var quan = [
-                {value: '1'},
-                {value: '2'},
-                {value: '3'},
-                {value: '4'},
-                {value: '5'},
-                {value: '6'},
-                {value: '7'},
-                {value: '8',}
-              ]
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../../../assets/group-dinner.jpg')} style={styles.imageContainer}>
         <View style={styles.overlay} />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
-          <View style={styles.infoContainer}>
+          <View style={{ width: width, padding:width/18.75, paddingBottom: 0}}>
 
-          <View style={styles.receiptScannerContainer}>
-            <ButtonComponent
-              text='RECEIPT SCANNER'
-              onPress={() => this.props.navigation.navigate('ReceiptScanner')}
-              disabled={false}
-              primary={true}
-            />
-          </View>
-            <View style= {{alignContent:'flex-start'}}>
-              <Text style={styles.inputTitle}>Bill Split Name</Text>
+            <View style = {{flexDirection: 'row', alignItems: 'center',justifyContent: 'space-between', marginLeft: (width-(width/1.5))/2 - (width/18.75),width: width/1.5,}}>
+
+              <TouchableOpacity style = {styles.progressButton}
+                disabled = {true}
+                >
+                <Text style={styles.stepLabel}>1</Text>
+              </TouchableOpacity>
+
+              <View style={[styles.line, {backgroundColor: 'rgba(225,225,225,0.2)'}]}/>
+
+              <TouchableOpacity style = {[styles.progressButton, {backgroundColor: 'rgba(225,225,225,0.2)'}]}
+                disabled = {true}
+                >
+                <Text style={[styles.stepLabel, {color: 'rgba(225,225,225,0.2)'}]}>2</Text>
+              </TouchableOpacity>
+
+              <View style={[styles.line, {backgroundColor: 'rgba(225,225,225,0.2)'}]}/>
+
+              <TouchableOpacity style = {[styles.progressButton, {backgroundColor: 'rgba(225,225,225,0.2)'}]}
+                disabled = {true}
+                >
+                <Text style={[styles.stepLabel, {color: 'rgba(225,225,225,0.2)'}]}>3</Text>
+              </TouchableOpacity>
+
+              <View style={[styles.line, {backgroundColor: 'rgba(225,225,225,0.2)'}]}/>
+
+              <TouchableOpacity style = {[styles.progressButton, {backgroundColor: 'rgba(225,225,225,0.2)'}]}
+                disabled = {true}
+                >
+                <Text style={[styles.stepLabel, {color: 'rgba(225,225,225,0.2)'}]}>4</Text>
+              </TouchableOpacity>
             </View>
+
+            <View style = {{flexDirection: 'row', alignItems: 'center',marginLeft: width/10,width: width/1.2,}}>
+              <Text style={{marginLeft: width/30, marginRight: width/11, color: 'white', fontSize: width/25}}>Info</Text>
+              <Text style={{marginRight: width/16, color: 'rgba(225,225,225,0.2)', fontSize: width/25}}>Assign</Text>
+              <Text style={{marginRight: width/15, color: 'rgba(225,225,225,0.2)', fontSize: width/25}}>Tip/Tax</Text>
+              <Text style={{color: 'rgba(225,225,225,0.2)', fontSize: width/25}}>Review</Text>
+            </View>
+          </View>
+
+            <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
+              <View style={styles.infoContainer}>
+
+
+            <View style= {{alignContent:'flex-start'}}>
+              <Text style={[styles.inputTitle, {marginTop: width/37.5}]}>Title</Text>
+            </View>
+
             <TextInputComponent
               empty = {nameEmpty}
+              style = {styles.input}
               placeholder="'Sunday Brunch'"
+              placeholderTextColor="rgba(0,0,0,0.5)"
               onChangeText={(name) => this.updateName(name)}
               returnKeyType='next'
             />
 
-          <Text style={styles.inputTitle}>Items:</Text>
+            <Text style={[styles.inputTitle,{marginBottom: 0}]}>Friends</Text>
 
-          <View style={{height: this.state.items.length*50}}>
-            <FlatList
-              data={tempItemArray}
-              extraData={this.state}
-              renderItem={({item}) =>
-                <View style={styles.searchboxContainer}>
-                <Text style={{marginLeft: 25,marginTop: 9,color: '#35b0d2', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>{item.name}</Text>
-                <Text style={{marginTop: 10,color: '#35b0d2',fontSize: 13, textAlign: 'center'}}>${(item.price).toFixed(2)}</Text>
-                <CheckBox
-                  right={true}
-                  title='Remove'
-                  iconRight
-                  iconType='material'
-                  containerStyle={{
-                                    backgroundColor: 'transparent',
-                                    paddingTop: 7,
-                                    height: 40,
-                                    margin: 0,
-                                    borderColor: 'transparent'}}
-                  textStyle={{color: '#35b0d2', fontWeight: 'normal', fontSize: 12}}
-                  uncheckedIcon='clear'
-                  size= {22}
-                  uncheckedColor='red'
-                  checked={false}
-                  onIconPress={() => this.removeItem(eval(JSON.stringify(item.id)))}
-                />
-
-                </View>
-              }
-              keyExtractor={item => item.id}
-            />
-          </View>
-
-          <View style={styles.itemContainer}>
-            <View style={{width: width/3, marginRight: 5}}>
-              <TextInputComponent
-                empty = {itemNameEmpty}
-                placeholder="Item Name"
-                onChangeText= {(value) => this.checkItemName(value)}
-                returnKeyType='next'
-                defaultValue={this.state.itemName}
-              />
-            </View>
-
-            <View style={{width: width/4, marginRight: 5}}>
-              <TextInputMask
-                type={'money'}
-                options={{
-                  precision: 2,
-                  separator: '.',
-                  delimiter: ',',
-                  unit: '$',
-                  suffixUnit: ''
-                }}
-                value={this.state.itemPrice}
-                onChangeText={(total) => this.checkItemPrice(total)}
-                style={[styles.input,{
-                  borderColor: itemPriceEmpty == true
-                    ? 'red'
-                    : '#35b0d2',
-                }]}
-                ref={(ref) => this.itemPriceField = ref}
-                placeholder="Price"
-                placeholderTextColor="rgba(255,255,255,0.8)"
-                keyboardType={'numeric'}
-                returnKeyType='go'
-              />
-            </View>
-
-            <View style={{backgroundColor: 'rgba(255,255,255,0.2)', borderColor: '#35b0d2', borderWidth: 2, borderRadius: 20, width: width/7, justifyContent: 'center', alignContent: 'center'}}>
-              <Dropdown
-                data={quan}
-                containerStyle= {{marginLeft: width/30, width: width/10 , height: 40}}
-                pickerStyle= {{ backgroundColor: '#35b0d2'}}
-                textColor= 'white'
-                value = {this.state.quantity}
-                dropdownOffset= {{top: 7, left: 0}}
-                fontSize = {15}
-                onChangeText = {(value) => this.setState({quantity: parseInt(value)})}
-              />
-            </View>
-              <CheckBox
-                center
-                containerStyle={{padding: 0,height: 40,}}
-                iconType='material'
-                size= {30}
-                uncheckedIcon='add-circle'
-                uncheckedColor='rgba(255,255,255,0.6)'
-                checked={false}
-                onIconPress={() => this.addItem()}
-              />
-
-
-          </View>
-
-          <Text style={styles.errorMessage}>{noItems}</Text>
-
-          <Text style={styles.inputTitle}>Tax:</Text>
-
-          <TextInputMask
-            type={'money'}
-            options={{
-              precision: 2,
-              separator: '.',
-              delimiter: ',',
-              unit: '$',
-              suffixUnit: ''
-            }}
-            value={this.state.tax}
-            onChangeText={(total) => this.checkTax(total)}
-            style={[styles.input,{
-              borderColor: taxEmpty == true
-                ? 'red'
-                : '#35b0d2',
-            }]}
-            ref={(ref) => this.taxField = ref}
-            placeholder="$0"
-            placeholderTextColor="rgba(255,255,255,0.8)"
-            keyboardType={'numeric'}
-            returnKeyType='go'
-          />
-
-          <Text style={styles.inputTitle}>Tip:</Text>
-
-          <View style={styles.customCheckBoxContainer}>
-            <View style = {styles.checkBoxContainer}>
-              <View style={styles.optionContainer}>
-                <View style={styles.circleContainer}>
-                  <CircleCheckBox
-                    checked={this.state.checked10}
-                    onToggle={this.on10Toggle}
-                    outerColor='#35b0d2'
-                    innerColor='#35b0d2'
-                    filterSize= {20}
-                    innerSize= {15}
-                  />
-                </View>
-                <Text style={styles.btntext}> 10% </Text>
-                <Text style={styles.tipText}>(${(this.state.subtotal * 0.10).toFixed(2)})</Text>
-              </View>
-
-              <View style={styles.optionContainer}>
-                <View style={styles.circleContainer}>
-                  <CircleCheckBox
-                    checked={this.state.checked18}
-                    onToggle={this.on18Toggle}
-                    outerColor='#35b0d2'
-                    innerColor='#35b0d2'
-                    filterSize= {20}
-                    innerSize= {15}
-                  />
-                </View>
-                <Text style={styles.btntext}> 18% </Text>
-                <Text style={styles.tipText}>(${(this.state.subtotal * 0.18).toFixed(2)})</Text>
-              </View>
-
-              <View style={styles.optionContainer}>
-                <View style={styles.circleContainer}>
-                  <CircleCheckBox
-                    checked={this.state.checkedNo}
-                    onToggle={this.onNoToggle}
-                    outerColor='#35b0d2'
-                    innerColor='#35b0d2'
-                    filterSize= {20}
-                    innerSize= {15}
-                  />
-                </View>
-                <Text style={styles.btntext}> No Tip </Text>
-              </View>
-
-            </View>
-
-            <View style={styles.checkBoxContainer}>
-
-              <View style={styles.optionContainer}>
-                <View style={styles.circleContainer}>
-                  <CircleCheckBox
-                    checked={this.state.checked15}
-                    onToggle={this.on15Toggle}
-                    outerColor='#35b0d2'
-                    innerColor='#35b0d2'
-                    filterSize= {20}
-                    innerSize= {15}
-                  />
-                </View>
-                <Text style={styles.btntext}> 15% </Text>
-                <Text style={styles.tipText}>(${(this.state.subtotal * 0.15).toFixed(2)})</Text>
-              </View>
-
-              <View style={styles.optionContainer}>
-                <View style={styles.circleContainer}>
-                  <CircleCheckBox
-                    checked={this.state.checked20}
-                    onToggle={this.on20Toggle}
-                    outerColor='#35b0d2'
-                    innerColor='#35b0d2'
-                    filterSize= {20}
-                    innerSize= {15}
-                  />
-                </View>
-                <Text style={styles.btntext}> 20% </Text>
-                <Text style={styles.tipText}>(${(this.state.subtotal * 0.20).toFixed(2)})</Text>
-              </View>
-
-              <View style={styles.optionContainer}>
-                <View style={styles.circleContainer}>
-                  <CircleCheckBox
-                    checked={this.state.checkedCustom}
-                    onToggle={this.onCustomToggle}
-                    outerColor='#35b0d2'
-                    innerColor='#35b0d2'
-                    filterSize= {20}
-                    innerSize= {15}
-                  />
-                </View>
-                <Text style={styles.btntext}> Custom: </Text>
-                {this.showCustomField()}
-              </View>
-            </View>
-          </View>
-
-
-          <Text style={styles.inputTitle}>Bill Split Friends:</Text>
-
-          <View style={styles.friendsContainer}>
-            <View style={{height: selectedFriends.length*50}}>
+            <View>
               <FlatList
                 data={this.state.selectedFlat}
                 extraData={this.state}
                 renderItem={({item}) =>
                   <View style={styles.searchboxContainer}>
-                  <Text style={{marginLeft: 25,marginTop: 9,color: '#35b0d2', fontWeight: 'bold',fontSize: 15, textAlign: 'center'}}>{item.name}</Text>
+                  <Text style={{marginLeft: width/15,marginTop: width/41.66,color: 'rgba(0,0,0,0.6)', fontWeight: 'bold',fontSize: width/25, textAlign: 'center'}}>{item.name}</Text>
                   <CheckBox
                     right={true}
-                    title='Remove'
                     iconRight
                     iconType='material'
                     containerStyle={{
-                                      paddingTop: 7,
+                                      paddingTop: width/53.57,
                                       backgroundColor: 'transparent',
-                                      height: 40,
+                                      height: width/9.375,
                                       margin: 0,
                                       borderColor: 'transparent'}}
-                    textStyle={{color: '#35b0d2', fontWeight: 'normal', fontSize: 12}}
+                    textStyle={{color: 'rgba(0,0,0,0.6)', fontWeight: 'normal', fontSize: width/31.25}}
                     uncheckedIcon='clear'
-                    size= {22}
-                    uncheckedColor='red'
+                    size= {width/17}
+                    uncheckedColor='coral'
                     checked={false}
                     onIconPress={() => this.removeFriend(eval(JSON.stringify(item.id)))}
                   />
@@ -721,51 +384,182 @@ export default class SplitByItem extends React.Component {
                 keyExtractor={item => item.id}
               />
             </View>
-              <SearchableDropdown
-                // onTextChange={(value) => this.searchFriends(value)}
-                onItemSelect={item =>this.addFriend(eval(JSON.stringify(item.id)))}
-                containerStyle={{ padding: 5 }}
-                textInputStyle={{
-                  fontSize: 15,
-                  color:'#fff',
-                  textAlign: 'center',
-                  marginTop: 10,
-                  height: 40,
-                  borderWidth: 2,
-                  borderColor: '#35b0d2',
-                  borderRadius: 20,
-                  width: width/1.2,
-                  backgroundColor: 'rgba(255,255,255,0.2)',
 
-                }}
-                itemStyle={{
-                  padding: 10,
-                  marginTop: 2,
-                  backgroundColor: 'rgba(255,255,255,0.2)',
-                  borderColor: 'rgba(255,255,255,0.2)',
-                  borderWidth: 1,
-                  borderRadius: 5
-                }}
-                itemTextStyle={{ color: "white", textAlign: 'center', fontSize: 15,}}
-                itemsContainerStyle={{ maxHeight: 150 }}
-                items={tempArray}
-                placeholder="Add friends!"
-                placeholderTextColor="rgba(255,255,255,0.8)"
-                autoCorrect= {false}
-                resetValue={false}
-                underlineColorAndroid="transparent"
-              />
+            <SearchableDropdown
+              // onTextChange={(value) => this.searchFriends(value)}
+              onItemSelect={item => this.addFriend(item)}
+
+              textInputStyle={{
+                fontSize: width/25,
+                color:'white',
+                textAlign: 'center',
+                height: width/9.375,
+                width: width-(width/9.375),
+                borderWidth: 2,
+                borderColor: '#35b0d2',
+                borderRadius: width/18.75,
+                backgroundColor: '#35b0d2',
+
+              }}
+              itemStyle={{
+                padding: width/37.5,
+                marginTop: 2,
+                marginLeft: width/18.75,
+                marginRight: width/18.75,
+                backgroundColor: 'rgba(255,255,255,0.4)',
+                borderColor: 'rgba(255,255,255,0.4)',
+                borderWidth: 1,
+                borderRadius: width/75
+              }}
+              itemTextStyle={{ color: "white", textAlign: 'center', fontSize: width/25,}}
+              itemsContainerStyle={{ maxHeight: width/2.5 }}
+              items={tempArray}
+              placeholder="Search friends"
+              placeholderTextColor="white"
+              autoCorrect= {false}
+              resetValue={false}
+              underlineColorAndroid="transparent"
+            />
 
             <Text style={styles.errorMessage}>{noFriends}</Text>
-            <ButtonComponent
-              text='NEXT'
-              onPress={() => this.onSubmitBillSplit()}
-              disabled={disable}
-              primary={true}
-            />
+
+            <Text style={[styles.inputTitle,{marginTop: 0}]}>Items</Text>
+
+            <View>
+              <FlatList
+                data={tempItemArray}
+                extraData={this.state}
+                renderItem={({item}) =>
+                  <View style={styles.searchboxContainer}>
+                    <Text style={{marginLeft: width/15,marginTop: width/41.66,color: 'rgba(0,0,0,0.6)', fontWeight: 'bold',fontSize: width/25, textAlign: 'center'}}>{item.name}</Text>
+
+                    <View style={{flexDirection: 'row'}}>
+                      <Text style={{marginRight: width/75, marginTop: width/37.5,color: 'rgba(0,0,0,0.6)',fontSize: width/28.85, textAlign: 'center'}}>${(item.price).toFixed(2)}</Text>
+                      <CheckBox
+                        right={true}
+                        iconRight
+                        iconType='material'
+                        containerStyle={{
+                                          backgroundColor: 'transparent',
+                                          paddingTop: width/53.57,
+                                          height: width/9.375,
+                                          margin: 0,
+                                          borderColor: 'transparent'}}
+                        textStyle={{color: 'rgba(0,0,0,0.6)', fontWeight: 'normal', fontSize: width/31.25}}
+                        uncheckedIcon='clear'
+                        size= {width/17}
+                        uncheckedColor='coral'
+                        checked={false}
+                        onIconPress={() => this.removeItem(eval(JSON.stringify(item.id)))}
+                      />
+                    </View>
+
+                  </View>
+                }
+                keyExtractor={item => item.id}
+              />
+            </View>
+
+            <View style={styles.itemContainer}>
+              <View style={{flexDirection: 'row', backgroundColor: '#35b0d2', borderRadius: width/18.75, height: width/9.375, alignItems: 'center', borderColor: '#35b0d2', borderWidth: 2}}>
+                <View style={{width: width/2.5, marginLeft: width/75, marginRight: width/75, marginTop: width/93.75}}>
+                  <TextInput
+                    style={[styles.input,{height: width/12.5, borderRadius: width/37.5, borderWidth: 1, color: 'white',margin: 0, backgroundColor: '#35b0d2',
+                      borderColor: itemNameEmpty == true
+                        ? 'red'
+                        : 'transparent',
+                    }]}
+                    placeholder="Item Name"
+                    placeholderTextColor="white"
+                    onChangeText= {(value) => this.checkItemName(value)}
+                    returnKeyType='next'
+                    defaultValue={this.state.itemName}
+                  />
+                </View>
+
+                <View style={{width: width/5, marginTop: width/93.75, marginRight: width/75}}>
+                  <TextInputMask
+                    type={'money'}
+                    options={{
+                      precision: 2,
+                      separator: '.',
+                      delimiter: ',',
+                      unit: '$',
+                      suffixUnit: ''
+                    }}
+                    value={this.state.itemPrice}
+                    onChangeText={(total) => this.checkItemPrice(total)}
+                    style={[styles.input,{height: width/12.5,width: width/5,  color: 'white',borderWidth: 1,borderRadius: width/37.5, margin: 0, backgroundColor:'#35b0d2',
+                      borderColor: itemPriceEmpty == true
+                        ? 'red'
+                        : 'transparent',
+                    }]}
+                    ref={(ref) => this.itemPriceField = ref}
+                    placeholder="Price"
+                    placeholderTextColor="white"
+                    keyboardType={'numeric'}
+                    returnKeyType='go'
+                  />
+                </View>
+
+                <View style={{backgroundColor: '#35b0d2', borderRadius: width/37.5, height: width/12.5}}>
+                  <UIStepper
+                    onValueChange={(value) => { this.setState({quantity: value}) }}
+                    initialValue={1}
+                    value={this.state.quantity}
+                    minimumValue={1}
+                    maximumValue={10}
+                    displayValue = {true}
+                    wraps={true}
+                    tintColor="white"
+                    borderColor='transparent'
+                    borderWidth={2}
+                    textColor="white"
+                    fontSize={width/26.8}
+                    width={width/6}
+                    height= {width/12.5}
+                  />
+                </View>
+
+              </View>
+
+              <CheckBox
+                center
+                containerStyle={{marginLeft: 2, padding: 0,height: width/9.375}}
+                iconType='material'
+                size= {width/12.5}
+                uncheckedIcon='add-circle'
+                uncheckedColor='#35b0d2'
+                checked={false}
+                onIconPress={() => this.addItem()}
+              />
+
+
+            </View>
+
+            <Text style={styles.errorMessage}>{noItems}</Text>
+
+            <View style={styles.receiptScannerContainer}>
+              <ButtonComponent
+                text='RECEIPT SCANNER'
+                onPress={() => this.props.navigation.navigate('ReceiptScanner')}
+                disabled={false}
+                primary={false}
+                redButton= {styles.redButton}
+                textStyle={styles.redbtntext}
+              />
+            </View>
+
+            <View style={{marginTop: width/6.25, width: width-(width/9.375)}}>
+              <ButtonComponent
+                text='NEXT'
+                onPress={() => this.onSubmitBillSplit()}
+                disabled={disable}
+                primary={true}
+              />
+            </View>
           </View>
-          </View>
-          </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
         </ImageBackground>
       </SafeAreaView>
     );
@@ -784,27 +578,23 @@ const styles = StyleSheet.create({
     flex:8,
   },
   flatListContainer:{
-    height: 100,
-  },
-  friendsContainer: {
-    flex:1,
-    alignItems: 'center',
+    height: width/3.75,
   },
   searchboxContainer: {
     flex: 1,
     alignContent: 'center',
     justifyContent: 'space-between',
     width: width/1.15,
-    height: 40,
-    borderColor: '#35b0d2',
-    backgroundColor: 'rgba(255,255,255, 0.8)',
+    height: width/9.375,
+    borderColor: 'transparent',
+    backgroundColor: 'rgba(255,255,255, 1)',
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: width/75,
     flexDirection: 'row',
-    marginBottom: 10,
+    marginBottom: width/75,
   },
   checkBoxContainer: {
-      height: 150,
+      height: width/2.5,
     justifyContent:'space-between',
   },
   customCheckBoxContainer: {
@@ -813,8 +603,8 @@ const styles = StyleSheet.create({
     justifyContent:'space-around',
   },
   circleContainer:{
-    height: 26,
-    width:26,
+    height: width/14.42,
+    width:width/14.42,
   },
   optionContainer:{
     flexDirection:'row',
@@ -831,43 +621,79 @@ const styles = StyleSheet.create({
   infoContainer: {
     flex: 2,
     width: width,
-    padding:20,
+    padding:width/18.75,
   },
   receiptScannerContainer: {
-    width: width/2,
+    marginTop: width/37.5,
+    width: width/2.5,
+    height: width/10.71,
+    flex: 1,
     justifyContent: 'flex-end'
   },
   itemContainer: {
     flexDirection: 'row',
-    height: 40,
+    height: width/9.375,
   },
   input: {
-    height:40,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    color:'#fff',
-    marginBottom: 5,
-    paddingHorizontal:10,
+    height:width/9.375,
+    backgroundColor: 'rgba(255,255,255,1)',
+    color:'rgba(0,0,0,0.5)',
+    marginBottom: width/75,
+    paddingHorizontal:width/37.5,
     borderWidth: 2,
-    borderRadius: 20,
+    borderRadius: width/18.75,
+    fontSize: width/31.25,
   },
   customContainer: {
     width: width / 4,
   },
   inputTitle: {
     color: 'white',
-    fontSize: 20,
+    fontSize: width/18.75,
     fontWeight: 'bold',
-    marginBottom: 5,
-    marginTop: 20,
+    marginBottom: width/75,
+    marginTop: width/18.75,
     textAlign: 'left',
   },
   tipText:{
     color: 'white',
-    fontSize: 15,
+    fontSize: width/25,
     opacity: 0.8,
   },
   btntext: {
     color: 'white',
-    fontSize: 18,
+    fontSize: width/20.83,
   },
+  redbtntext: {
+    color: 'white',
+    fontSize: width/28.85,
+    textAlign: 'center'
+  },
+  redButton: {
+    padding: width/46.875,
+    flex: 1,
+  	backgroundColor: '#202646',
+    borderRadius:width/3.75,
+    borderWidth: 1,
+    borderColor: 'coral',
+    backgroundColor: 'coral',
+	},
+  progressButton: {
+    margin: 0,
+    justifyContent: 'center',
+    width: width/9.375,
+    height: width/9.375,
+    borderRadius: width/3.75,
+    backgroundColor: '#35b0d2',
+  },
+  line: {
+    width: width/12 ,
+    height: 3,
+    backgroundColor: '#35b0d2'
+  },
+  stepLabel: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: width/23.44
+  }
 });

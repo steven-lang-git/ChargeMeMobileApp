@@ -3,44 +3,47 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableWithoutFeedback,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  StatusBar,
-  Dimensions,
-  Image,
-  ImageBackground,
+  TextInput,
   TouchableOpacity,
-  Keyboard,
-  FlatList
+  SafeAreaView,
+  ImageBackground,
+  Dimensions,
+  FlatList,
+  Picker
 } from 'react-native';
+import UIStepper from 'react-native-ui-stepper';
+import TextInputComponent from '../../../components/TextInputComponent'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import ButtonComponent from '../../../components/ButtonComponent'
+import SearchableDropdown from "react-native-searchable-dropdown";
+import * as firebase from "firebase";
+import CircleCheckBox, {LABEL_POSITION} from 'react-native-circle-checkbox';
+import {TextInputMask} from 'react-native-masked-text';
 import {
   ListItem,
   CheckBox,
   Icon,
 } from 'react-native-elements';
-import CircleCheckBox, {LABEL_POSITION} from 'react-native-circle-checkbox';
-import {TextInputMask} from 'react-native-masked-text';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import ButtonComponent from '../../../components/ButtonComponent'
 
-let totalEmpty = false;
-let tempArray = []
-let tip = 0
 
+let taxEmpty = false
+let items =[]
+let itemTotal = 0;
+let tip = 0;
 const{width} = Dimensions.get('window')
 
-export default class SplitEvenly extends React.Component {
-
+export default class SplitByItem extends React.Component {
   constructor(props){
     super(props);
 
     const { navigation } = this.props;
 
     this.state = {
-      name: '',
-      total: 0,
+      name: navigation.getParam('name'),
       friends: navigation.getParam('friends'),
+      friendItems: navigation.getParam('friendItems'),
+      tax: 0,
+      subtotal: 0,
       checked10: false,
       checked15: false,
       checked18: false,
@@ -49,33 +52,40 @@ export default class SplitEvenly extends React.Component {
       checkedNo: true,
       disable: true,
     };
-
   }
 
   componentDidMount(){
-    console.log('SPLIT EVENLY')
-    totalEmpty = false;
-    nameEmpty = false;
-    noFriends = '';
-    tempArray = []
-    tip = 0
 
-    const {navigation} = this.props
-    this.setState({
-      name: navigation.getParam('name'),
-      friends:navigation.getParam('friends'),
-    })
+    const { navigation } = this.props
+
+    items = navigation.getParam('items'),
+    taxEmpty = false;
+    tip = 0;
+    console.log('items: ',items)
+    var x
+    for(x in items){
+      itemTotal += items[x].price
+    }
+    console.log('item total: ', itemTotal)
   }
+
+  //update tax entered by user
+  checkTax = value => {
+
+    const numericTax = this.taxField.getRawValue().toFixed(2);
+    this.setState({tax: numericTax, disable: false, subtotal: itemTotal + parseInt(numericTax)});
+  };
 
   //update custom tip entered by user
   checkCustom = () => {
-    const numericCust = this.tipField.getRawValue();
+    let numericCust = this.tipField.getRawValue();
     tip = numericCust;
   };
 
   on10Toggle = (checked10) => {
     this.setState(() => ({checked10}));
     if(checked10==true){
+      console.log('assigning 10 tip: ', (this.state.subtotal * 0.10).toFixed(2))
       this.setState({
         checked15: false,
         checked18: false,
@@ -96,6 +106,7 @@ export default class SplitEvenly extends React.Component {
   on15Toggle = (checked15) => {
     this.setState(() => ({checked15}));
     if(checked15==true){
+      console.log('assigning 15 tip: ', (this.state.subtotal * 0.15).toFixed(2))
       this.setState({
         checked10: false,
         checked18: false,
@@ -117,6 +128,7 @@ export default class SplitEvenly extends React.Component {
   on18Toggle = (checked18) => {
     this.setState(() => ({checked18}));
     if(checked18==true){
+      console.log('assigning 18 tip: ', (this.state.subtotal * 0.18).toFixed(2))
       this.setState({
         checked10: false,
         checked15: false,
@@ -138,6 +150,7 @@ export default class SplitEvenly extends React.Component {
   on20Toggle = (checked20) => {
     this.setState(() => ({checked20}));
     if(checked20==true){
+      console.log('assigning 20 tip: ', (this.state.subtotal * 0.20).toFixed(2))
       this.setState({
         checked10: false,
         checked15: false,
@@ -159,6 +172,7 @@ export default class SplitEvenly extends React.Component {
   onCustomToggle = (checkedCustom) => {
     this.setState(() => ({checkedCustom}));
     if(checkedCustom==true){
+      console.log('assigning custom tip')
       this.setState({
         checked10: false,
         checked15: false,
@@ -180,6 +194,7 @@ export default class SplitEvenly extends React.Component {
   onNoToggle = (checkedNo) => {
     this.setState(() => ({checkedNo}));
     if(checkedNo==true){
+      console.log('assigning no tip')
       this.setState({
         checked10: false,
         checked15: false,
@@ -212,7 +227,7 @@ export default class SplitEvenly extends React.Component {
               unit: '$',
               suffixUnit: ''
             }}
-            value={this.state.tip}
+            value={tip}
             onChangeText={(customTip) => this.checkCustom(customTip)}
             style={[styles.input, {borderColor: '#35b0d2'}]}
             ref={(ref) => this.tipField = ref}
@@ -226,65 +241,52 @@ export default class SplitEvenly extends React.Component {
     }
   }
 
-  //update total entered by user
-  checkTotal = value =>{
-
-    const numericTotal = this.totalField.getRawValue().toFixed(2);
-    if(numericTotal == 0){
-      totalEmpty = true;
-    }
-    else{
-      totalEmpty = false;
-    }
-    this.setState({total: numericTotal, disable: false});
-  };
-
+  //function to handle when user clicks review button
   onSubmitBillSplit = () => {
-    console.log("CLICK")
-    const { total } = this.state
-    if(this.state.checked10){
-      tip = (total * 0.10).toFixed(2)
-    }
-    if(this.state.checked15){
-      tip = (total * 0.15).toFixed(2)
-    }
-    if(this.state.checked18){
-      tip = (total * 0.18).toFixed(2)
-    }
-    if(this.state.checked20){
-      tip = (total * 0.20).toFixed(2)
-    }
-    if(this.state.checkedNo){
-      tip = 0
-    }
 
-    if(totalEmpty == false ){
-      console.log("first total: " + this.state.total);
-      console.log("first tip: " + tip)
-      console.log('submitting selected friends: ', this.state.selectedFriends)
+    if(taxEmpty == false){
+      const { subtotal } = this.state
+      if(this.state.checked10){
+        tip = 10
+      }
+      if(this.state.checked15){
+        tip = 15
+      }
+      if(this.state.checked18){
+        tip = 18
+      }
+      if(this.state.checked20){
+        tip = 20
+      }
+      if(this.state.checkedNo){
+        tip = 0
+      }
 
-
-      this.props.navigation.navigate('SplitEvenlyReview', {
+      const { navigation } = this.props
+      console.log("first tax: ",this.state.tax);
+      console.log("first tip: ", tip);
+      console.log('submitting selected friends: ', this.state.friends)
+      this.props.navigation.navigate('SplitByItemReview', {
                                                             name: this.state.name,
-                                                            total: this.state.total,
                                                             tip: tip,
-                                                            friends: this.state.friends
+                                                            tax: this.state.tax,
+                                                            friends: this.state.friends,
+                                                            friendItems: this.state.friendItems,
+                                                            itemTotal: navigation.getParam('itemTotal'),
                                                           })
     }
   }
 
-  render(){
-    const { disable } = this.state;
-    return(
+  render() {
+    const { disable, subtotal } = this.state;
 
+    return (
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../../../assets/group-dinner.jpg')} style={styles.imageContainer}>
-
         <View style={styles.overlay} />
 
-        <View style={{ width: width/1.2, padding:width/18.75, paddingBottom: 0}}>
-
-          <View style = {{flexDirection: 'row', alignItems: 'center',justifyContent: 'space-between', marginLeft: (width-(width/2.1))/2 - (width/18.75),width: width/2.1,}}>
+          <View style={{ width: width, padding:width/18.75, paddingBottom: 0}}>
+          <View style = {{flexDirection: 'row', alignItems: 'center',justifyContent: 'space-between', marginLeft: (width-(width/1.5))/2 - (width/18.75),width: width/1.5,}}>
 
             <TouchableOpacity style = {styles.progressButton}
               disabled = {true}
@@ -297,7 +299,15 @@ export default class SplitEvenly extends React.Component {
             <TouchableOpacity style = {styles.progressButton}
               disabled = {true}
               >
-              <Text style={[styles.stepLabel, {color: 'white'}]}>2</Text>
+              <Icon name = 'check' color='white' size = {24}/>
+            </TouchableOpacity>
+
+            <View style={styles.line}/>
+
+            <TouchableOpacity style = {styles.progressButton}
+              disabled = {true}
+              >
+              <Text style={styles.stepLabel}>3</Text>
             </TouchableOpacity>
 
             <View style={[styles.line, {backgroundColor: 'rgba(225,225,225,0.2)'}]}/>
@@ -305,22 +315,25 @@ export default class SplitEvenly extends React.Component {
             <TouchableOpacity style = {[styles.progressButton, {backgroundColor: 'rgba(225,225,225,0.2)'}]}
               disabled = {true}
               >
-              <Text style={[styles.stepLabel, {color: 'rgba(225,225,225,0.2)'}]}>3</Text>
+              <Text style={[styles.stepLabel, {color: 'rgba(225,225,225,0.2)'}]}>4</Text>
             </TouchableOpacity>
-
           </View>
 
-          <View style = {{flexDirection: 'row', alignItems: 'center',marginLeft: width/5.2,width: width/1.2,}}>
-            <Text style={{marginLeft: width/28, marginRight: width/12, color: 'rgba(225,225,225,0.2)', fontSize: width/25}}>Info</Text>
-            <Text style={{marginRight: width/17, color: 'white', fontSize: width/25}}>Amount</Text>
+          <View style = {{flexDirection: 'row', alignItems: 'center',marginLeft: width/10,width: width/1.2,}}>
+            <Text style={{marginLeft: width/30, marginRight: width/11, color: 'rgba(225,225,225,0.2)', fontSize: width/25}}>Info</Text>
+            <Text style={{marginRight: width/16, color: 'rgba(225,225,225,0.2)', fontSize: width/25}}>Assign</Text>
+            <Text style={{marginRight: width/15, color: 'white', fontSize: width/25}}>Tip/Tax</Text>
             <Text style={{color: 'rgba(225,225,225,0.2)', fontSize: width/25}}>Review</Text>
           </View>
-        </View>
 
-        <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
-          <View style={styles.infoContainer}>
+          </View>
 
-          <Text style={styles.inputTitle}>Total (including tax)</Text>
+          <KeyboardAwareScrollView keyboardShouldPersistTaps='always' extraScrollHeight={130}>
+            <View style={styles.infoContainer}>
+
+
+          <Text style={[styles.inputTitle,{marginTop: width/37.5}]}>Total Tax</Text>
+
           <TextInputMask
             type={'money'}
             options={{
@@ -330,32 +343,21 @@ export default class SplitEvenly extends React.Component {
               unit: '$',
               suffixUnit: ''
             }}
-            value={this.state.total}
-            onChangeText={(total) => this.checkTotal(total)}
+            value={this.state.tax}
+            onChangeText={(total) => this.checkTax(total)}
             style={[styles.input,{
-              borderColor: totalEmpty == true
+              borderColor: taxEmpty == true
                 ? 'red'
                 : '#35b0d2',
             }]}
-            ref={(ref) => this.totalField = ref}
+            ref={(ref) => this.taxField = ref}
             placeholder="$0"
             placeholderTextColor="rgba(255,255,255,0.8)"
             keyboardType={'numeric'}
             returnKeyType='go'
           />
 
-          <View style={styles.receiptScannerContainer}>
-            <ButtonComponent
-              text='RECEIPT SCANNER'
-              onPress={() => this.props.navigation.navigate('ReceiptScanner')}
-              disabled={false}
-              primary={false}
-              redButton= {styles.redButton}
-              textStyle={styles.redbtntext}
-            />
-          </View>
-
-          <Text style={styles.inputTitle}>Tip:</Text>
+          <Text style={styles.inputTitle}>Tip</Text>
 
           <View style={styles.customCheckBoxContainer}>
             <View style = {styles.checkBoxContainer}>
@@ -370,8 +372,7 @@ export default class SplitEvenly extends React.Component {
                     innerSize= {15}
                   />
                 </View>
-                <Text style={styles.btntext}>  10% </Text>
-                <Text style={styles.tipText}>(${(this.state.total * 0.10).toFixed(2)})</Text>
+                <Text style={styles.btntext}> 10% </Text>
               </View>
 
               <View style={styles.optionContainer}>
@@ -385,8 +386,7 @@ export default class SplitEvenly extends React.Component {
                     innerSize= {15}
                   />
                 </View>
-                <Text style={styles.btntext}>  18% </Text>
-                <Text style={styles.tipText}>(${(this.state.total * 0.18).toFixed(2)})</Text>
+                <Text style={styles.btntext}> 18% </Text>
               </View>
 
               <View style={styles.optionContainer}>
@@ -400,7 +400,7 @@ export default class SplitEvenly extends React.Component {
                     innerSize= {15}
                   />
                 </View>
-                <Text style={styles.btntext}>  No Tip </Text>
+                <Text style={styles.btntext}> No Tip </Text>
               </View>
 
             </View>
@@ -418,8 +418,7 @@ export default class SplitEvenly extends React.Component {
                     innerSize= {15}
                   />
                 </View>
-                <Text style={styles.btntext}>  15% </Text>
-                <Text style={styles.tipText}>(${(this.state.total * 0.15).toFixed(2)})</Text>
+                <Text style={styles.btntext}> 15% </Text>
               </View>
 
               <View style={styles.optionContainer}>
@@ -433,8 +432,7 @@ export default class SplitEvenly extends React.Component {
                     innerSize= {15}
                   />
                 </View>
-                <Text style={styles.btntext}>  20% </Text>
-                <Text style={styles.tipText}>(${(this.state.total * 0.20).toFixed(2)})</Text>
+                <Text style={styles.btntext}> 20% </Text>
               </View>
 
               <View style={styles.optionContainer}>
@@ -448,21 +446,22 @@ export default class SplitEvenly extends React.Component {
                     innerSize= {15}
                   />
                 </View>
-                <Text style={styles.btntext}>  Custom: </Text>
+                <Text style={styles.btntext}> Custom: </Text>
                 {this.showCustomField()}
               </View>
             </View>
           </View>
 
-          <View style={{marginTop: width/18.75, width: width-(width/9.375)}}>
-            <ButtonComponent
-              text='NEXT'
-              onPress={() => this.onSubmitBillSplit()}
-              disabled={disable}
-              primary={true}
-            />
-          </View>
 
+
+            <View style={{marginTop: width/18.75, width: width-(width/9.375)}}>
+              <ButtonComponent
+                text='NEXT'
+                onPress={() => this.onSubmitBillSplit()}
+                disabled={false}
+                primary={true}
+              />
+            </View>
           </View>
           </KeyboardAwareScrollView>
         </ImageBackground>
@@ -470,6 +469,7 @@ export default class SplitEvenly extends React.Component {
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   container:{
@@ -494,12 +494,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: width/1.15,
     height: width/9.375,
-    borderColor: '#35b0d2',
-    backgroundColor: 'rgba(255,255,255, 0.8)',
+    borderColor: 'transparent',
+    backgroundColor: 'rgba(255,255,255, 1)',
     borderWidth: 1,
     borderRadius: width/75,
     flexDirection: 'row',
-    marginBottom: width/37.5,
+    marginBottom: width/75,
   },
   checkBoxContainer: {
       height: width/2.5,
@@ -532,8 +532,15 @@ const styles = StyleSheet.create({
     padding:width/18.75,
   },
   receiptScannerContainer: {
-    width: width/2,
+    marginTop: width/18.75,
+    width: width/2.5,
+    height: width/10.71,
+    flex: 1,
     justifyContent: 'flex-end'
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    height: width/9.375,
   },
   input: {
     height:width/9.375,
@@ -566,7 +573,7 @@ const styles = StyleSheet.create({
   },
   redbtntext: {
     color: 'white',
-    fontSize: width/28.85,
+    fontSize: width/28.8,
     textAlign: 'center'
   },
   redButton: {
@@ -578,13 +585,6 @@ const styles = StyleSheet.create({
     borderColor: 'coral',
     backgroundColor: 'coral',
 	},
-  receiptScannerContainer: {
-    marginTop: width/37.5,
-    width: width/2.5,
-    height: width/10.7,
-    flex: 1,
-    justifyContent: 'flex-end'
-  },
   progressButton: {
     margin: 0,
     justifyContent: 'center',
@@ -601,6 +601,6 @@ const styles = StyleSheet.create({
   stepLabel: {
     color: 'white',
     textAlign: 'center',
-    fontSize: width/23.4
+    fontSize: width/23.44
   }
 });

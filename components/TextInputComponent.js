@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet, TextInput} from 'react-native';
+import {StyleSheet, TextInput, Dimensions} from 'react-native';
 
-
+const{width} = Dimensions.get('window')
 //text input component that makes the border red if there is an error
 class TextInputComponent extends Component {
 	render() {
@@ -18,17 +18,19 @@ class TextInputComponent extends Component {
       autoCapitalize,
       secureTextEntry,
       onSubmitEditing,
+			style,
+			placeholderTextColor,
     } = this.props;
     return(
       <TextInput
-        style={[styles.input,{
+        style={[style ,{
           borderColor: empty == true || error != ''
             ? 'red'
             : '#35b0d2',
         }]}
         placeholder={placeholder}
         defaultValue={defaultValue}
-        placeholderTextColor="rgba(255,255,255,0.8)"
+        placeholderTextColor= {placeholderTextColor}
         onChangeText={(text) => onChangeText(text)}
         returnKeyType={returnKeyType}
         ref={inputRef}
@@ -44,10 +46,12 @@ class TextInputComponent extends Component {
 //check the type of the props and if they are required
 TextInputComponent.propTypes = {
   empty: PropTypes.bool.isRequired,
-  error: PropTypes.string,
   placeholder: PropTypes.string.isRequired,
   onChangeText: PropTypes.func.isRequired,
   returnKeyType: PropTypes.string.isRequired,
+	placeholder: PropTypes.string,
+	style: PropTypes.object,
+  error: PropTypes.string,
   autoCapitalize: PropTypes.string,
   autoCorrect: PropTypes.bool,
   secureTextEntry: PropTypes.bool,
@@ -61,10 +65,7 @@ TextInputComponent.defaultProps = {
   autoCorrect: false,
   secureTextEntry: false,
   onSubmitEditing: () => {},
-}
-
-const styles = StyleSheet.create({
-  input: {
+	style: {
     height:40,
     backgroundColor: 'rgba(255,255,255,0.2)',
     color:'#fff',
@@ -72,7 +73,20 @@ const styles = StyleSheet.create({
     paddingHorizontal:10,
     borderWidth: 2,
     borderRadius: 20,
-  }
+  },
+	placeholderTextColor: "rgba(255,255,255,0.8)",
+}
+
+const styles = StyleSheet.create({
+	input: {
+    height:width/9.375,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    color:'#fff',
+    marginBottom: width/75,
+    paddingHorizontal:width/37.5,
+    borderWidth: 2,
+    borderRadius: width/18.75,
+  },
 });
 
 export default TextInputComponent;

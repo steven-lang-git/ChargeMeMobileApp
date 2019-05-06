@@ -2,7 +2,8 @@ import React from 'react';
 import {
   StyleSheet,
   Text,
-  View, TouchableWithoutFeedback,
+  View,
+  TouchableWithoutFeedback,
   SafeAreaView,
   StatusBar,
   TextInput,
@@ -19,7 +20,9 @@ import moment from 'moment';
 import {TextInputMask} from 'react-native-masked-text';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { StackActions, NavigationActions } from 'react-navigation';
+import TextInputComponent from '../../components/TextInputComponent.js'
 
+const{width} = Dimensions.get('window')
 let firstNameError = false;
 let lastNameError = false;
 let phoneError = false;
@@ -34,7 +37,6 @@ let birthdayErrorMessage = '';
 let usernameErrorMessage = '';
 let phoneErrorMessage = '';
 
-const{width} = Dimensions.get('window')
 
 const resetToLogin = StackActions.reset({
   index: 0,
@@ -64,6 +66,8 @@ export default class CreateAccount extends React.Component {
     emailError = false;
     passwordError = false;
     loading = false;
+    firstnameErrorMessage = '';
+    lastnameErrorMessage = '';
     passwordErrorMessage = '';
     emailErrorMessage = '';
     birthdayErrorMessage = '';
@@ -121,6 +125,8 @@ export default class CreateAccount extends React.Component {
         && usernameError == false
         && emailError == false
         && passwordError == false
+        && lastnameErrorMessage == ''
+        && firstnameErrorMessage == ''
         && passwordErrorMessage == ''
         && usernameErrorMessage == ''
         && emailErrorMessage == ''
@@ -160,8 +166,6 @@ export default class CreateAccount extends React.Component {
             //format phoneNum
             let unMask = this.phoneNum.getRawValue();
 
-
-
             //write user info
             firebase.database().ref('users/' + userId).set({
               username: this.state.username,
@@ -171,6 +175,10 @@ export default class CreateAccount extends React.Component {
               phone: unMask,
               birthday: day,
             });
+
+            firebase.database().ref('payments/' + userId + '/wallet').set({
+              balance: 0,
+            })
             //allow access to app
             this.props.navigation.navigate('App');
       })
@@ -378,35 +386,38 @@ export default class CreateAccount extends React.Component {
                     <Text style={styles.pageTitle}>Please fill out all fields</Text>
 
                       <View style={styles.nameContainer}>
+                      <View style={styles.nameInputContainer}>
                         <TextInput
-                          style={[styles.nameInput,{
-                            borderColor: firstNameError == true
+                          style={[styles.input,{
+                            borderColor: firstNameError == true || firstnameErrorMessage != ''
                               ? 'red'
                               : '#35b0d2',
                           }]}
                           placeholder="First Name"
+                          placeholderTextColor="rgba(255,255,255,0.8)"
                           ref = "firstName"
                           autoCorrect= {false}
-                          placeholderTextColor="rgba(255,255,255,0.8)"
                           returnKeyType='next'
                           onChangeText={(first) => this.updateFirstName(first)}
                           onSubmitEditing={()=> this.refs.lastName.focus()}
                         />
+                        </View>
                         <Text/>
-
+                        <View style={styles.nameInputContainer}>
                         <TextInput
-                          style={[styles.nameInput,{
-                            borderColor: lastNameError == true
+                          style={[styles.input,{
+                            borderColor: lastNameError == true || lastnameErrorMessage != ''
                               ? 'red'
                               : '#35b0d2',
                           }]}
                           placeholder="Last Name"
+                          placeholderTextColor="rgba(255,255,255,0.8)"
                           ref = "lastName"
                           autoCorrect= {false}
-                          placeholderTextColor="rgba(255,255,255,0.8)"
                           returnKeyType='next'
                           onChangeText={(last) => this.updateLastName(last)}
                         />
+                        </View>
                         <Text/>
                       </View>
 
@@ -462,8 +473,8 @@ export default class CreateAccount extends React.Component {
                             : '#35b0d2',
                         }]}
                         placeholder="Username"
-                        ref = "username"
                         placeholderTextColor="rgba(255,255,255,0.8)"
+                        ref = "username"
                         autoCorrect= {false}
                         autoCapitalize = 'none'
                         returnKeyType='next'
@@ -479,8 +490,8 @@ export default class CreateAccount extends React.Component {
                             : '#35b0d2',
                         }]}
                         placeholder="Email"
-                        ref = "email"
                         placeholderTextColor="rgba(255,255,255,0.8)"
+                        ref = "email"
                         autoCorrect= {false}
                         autoCapitalize = 'none'
                         returnKeyType='next'
@@ -496,8 +507,8 @@ export default class CreateAccount extends React.Component {
                             : '#35b0d2',
                         }]}
                         placeholder="Password"
-                        ref = "password"
                         placeholderTextColor="rgba(255,255,255,0.8)"
+                        ref = "password"
                         autoCorrect= {false}
                         secureTextEntry
                         returnKeyType='go'
@@ -525,11 +536,9 @@ export default class CreateAccount extends React.Component {
         </ImageBackground>
       </SafeAreaView>
 
-
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   container:{
@@ -539,8 +548,8 @@ const styles = StyleSheet.create({
   },
   errorMessage:{
     color: 'red',
-    marginBottom: 5,
-    fontSize: 15,
+    marginBottom: width/75,
+    fontSize: width/25,
   },
   inputBoxContainer:{
     flex:8,
@@ -549,7 +558,6 @@ const styles = StyleSheet.create({
   signUpContainer: {
     flex:1,
     alignItems: 'center',
-    justifyContent: 'flex-start',
   },
   header:{
     position:'absolute',
@@ -570,56 +578,50 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-    margin: 20,
+    margin: width/18.75,
   },
   infoContainer: {
     flex: 4,
     width: width,
-    padding:20,
+    padding:width/18.75,
   },
   nameContainer:{
-    height: 64,
+    height: width/5.859,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  input: {
-    height:40,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    color:'#fff',
-    marginBottom: 5,
-    paddingHorizontal:10,
-    borderWidth: 2,
-    borderRadius: 20,
-  },
-  nameInput: {
-    height:40,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    color:'#fff',
+  nameInputContainer: {
+    height:width/12.5,
     width: width/2.3,
-    marginBottom: 5,
-    paddingHorizontal:10,
+  },
+  input: {
+    height:width/9.375,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    color:'#fff',
+    marginBottom: width/75,
+    paddingHorizontal:width/37.5,
     borderWidth: 2,
-    borderRadius: 20,
+    borderRadius: width/18.75,
   },
   title:{
     color: '#fff',
-    fontSize: 15,
+    fontSize: width/25,
     textAlign:'center',
-    marginTop: 20,
+    marginTop: width/18.75,
   },
   inputTitle: {
     color: "rgba(255,255,255,0.8)",
-    fontSize: 16,
-    marginBottom: 5,
-    marginTop: 10,
+    fontSize: width/23.438,
+    marginBottom: width/75,
+    marginTop: width/37.5,
   },
   button: {
-    width: 200,
-    marginTop:10,
-    marginBottom: 10,
-    paddingTop:15,
-    paddingBottom:15,
-    borderRadius:10,
+    width: width/1.875,
+    marginTop:width/37.5,
+    marginBottom: width/37.5,
+    paddingTop:width/25,
+    paddingBottom:width/25,
+    borderRadius:width/37.5,
     borderWidth: 1,
     borderColor: '#35b0d2',
     backgroundColor: '#35b0d2',
@@ -628,7 +630,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'rgb(32,53,70)',
     color: 'white',
-    fontSize: 18,
+    fontSize: width/20.833,
   },
   disabled: {
     flex:1,
@@ -640,8 +642,8 @@ const styles = StyleSheet.create({
   },
   pageTitle: {
     color: '#fff',
-    fontSize: 25,
-    marginBottom: 20,
+    fontSize: width/15,
+    marginBottom: width/18.75,
     textAlign: 'center',
   },
 });

@@ -16,6 +16,7 @@ import {
   Keyboard,
   ScrollView
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {TextInputMask} from 'react-native-masked-text';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -28,6 +29,7 @@ let usernameEmpty = false;
 let firstNameEmpty = false;
 let lastNameEmpty = false;
 let phoneEmpty = false;
+let showAlert = false;
 let usernameMessage = '';
 let firstnameMessage = '';
 let lastnameMessage = '';
@@ -40,20 +42,30 @@ export default class UserProfile extends React.Component {
         email: '',
         firstname: '',
         lastname: '',
+        username: '',
+        OGusername: '',
         birthday: '',
         profilePic: '',
         uid: '',
-        loading: false,
         disable: true,
-        showAlert: false
       };
-  }
+    }
 
   hideAlert = () => {
-    this.setState({
-      showAlert: false
-    });
+    showAlert = false;
+    this.forceUpdate();
   };
+
+  renderCustomAlertView = () => (
+    <View style={styles.customView}>
+      <Icon
+        name='check-circle'
+        color= 'green'
+        size= {width/6.25}
+        onChangeText={text => this.setState({ text })}
+      />
+    </View>
+  );
 
   //function that executes when page loads
   componentDidMount(){
@@ -92,12 +104,16 @@ export default class UserProfile extends React.Component {
          lastname : snapshot.val().lastName,
          phone : snapshot.val().phone,
          username : snapshot.val().username,
-         birthday : snapshot.val().birthday
+         OGusername: snapshot.val().username,
+         birthday : snapshot.val().birthday,
+         email : snapshot.val().email,
        })
     });
   }
 
   handleUsername(value){
+    this.setState({disable: false});
+    usernameMessage = ''
     if(value == ''){
       usernameEmpty = true;
     }
@@ -105,9 +121,9 @@ export default class UserProfile extends React.Component {
       usernameEmpty = false;
     }
     //clear out any existing errors
-    usernameMessage = '';
+    //usernameMessage = '';
     //enable buttons
-    this.setState({disable: false});
+    //this.setState({disable: false});
     //update username
     this.setState({username: value});
   }
@@ -170,6 +186,8 @@ export default class UserProfile extends React.Component {
     //check that all fields have been filled out
     if(this.state.username == ''){
       usernameMessage = 'Please enter a username';
+      //new
+      //usernameEmpty = true;
     }
     if(this.state.firstname == ''){
       firstnameMessage = 'Please enter a first name';
@@ -185,8 +203,17 @@ export default class UserProfile extends React.Component {
     this.forceUpdate();
 
     //check that there are no errors
-    if(usernameMessage == '' && firstnameMessage == '' && lastnameMessage == '' && phoneMessage == '' ){
-      //get user id
+    if(usernameEmpty == false && usernameMessage == '' && firstnameMessage == '' && lastnameMessage == '' && phoneMessage == ''){
+
+      //new
+      this.makeUsernameUnique()
+      //showAlert = true;
+    }
+  }
+
+  //function to update user
+  updateUser(){
+    //get user id
       var uid = firebase.auth().currentUser.uid;
 
       //format phone
@@ -204,16 +231,48 @@ export default class UserProfile extends React.Component {
       });
 
       //show confirmation alert
-      this.setState({showAlert: true});
+      showAlert = true;
+
+      //delay one second to allow user to see confirmation alert before dismissing it
+      var delayInMilliseconds = 1000; //1 second
+      setTimeout(() => {this.hideAlert();}, delayInMilliseconds);
 
       //disable the buttons again
       this.setState({disable: true});
     }
+
+  //function to check if entered username already exists
+  makeUsernameUnique(){
+    //save the username entered
+    var currentUsername = this.state.username;
+
+    //save the root reference to the database
+    var ref = firebase.database().ref();
+
+    //find all users that have the current username
+    ref.child('users').orderByChild('username').equalTo(currentUsername).once('value', snapshot => {
+      let result = snapshot;
+      console.log('new(?) username: ', this.state.username)
+      console.log('og username: ', this.state.OGusername)
+
+      //if the username does not exist in the database or it has been unchanged
+      if(!result || this.state.username == this.state.OGusername){
+        //clear username error
+        usernameMessage = '';
+        //call create user function
+        this.updateUser();
+      }
+      //if username is already taken
+      else{
+        //set username error message
+        usernameMessage= 'Username is taken';
+        this.forceUpdate();
+      }
+    });
   }
 
-
   render() {
-    const showAlert  = this.state.showAlert;
+    //const showAlert  = this.state.showAlert;
     const username = this.state.username;
     const isDisabled  = this.state.disable;
     return (
@@ -221,23 +280,17 @@ export default class UserProfile extends React.Component {
         <ImageBackground source={require('../../../assets/blue.jpg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
 
-          <KeyboardAwareScrollView contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: 'space-between'
-          }}>
-
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>Edit your information</Text>
-          </View>
-
           <View style = {styles.infoContainer}>
 
             <View style={styles.nameContainer}>
               <View style={styles.nameInputContainer}>
+                <Text style={styles.inputTitle}>First Name</Text>
                 <TextInputComponent
                   empty={firstNameEmpty}
                   error={firstnameMessage}
+                  style={styles.input}
                   placeholder="First Name"
+                  placeholderTextColor="rgba(1,1,1,0.6)"
                   defaultValue = {this.state.firstname}
                   returnKeyType='next'
                   onChangeText={(firstname) => this.handleFirstName(firstname)}
@@ -246,10 +299,13 @@ export default class UserProfile extends React.Component {
               </View>
 
                 <View style={styles.nameInputContainer}>
+                <Text style={styles.inputTitle}>Last Name</Text>
                 <TextInputComponent
                   empty={lastNameEmpty}
                   error={lastnameMessage}
+                  style={styles.input}
                   placeholder="Last Name"
+                  placeholderTextColor="rgba(1,1,1,0.6)"
                   defaultValue = {this.state.lastname}
                   inputRef = {(input) => {this.lastName = input}}
                   returnKeyType='next'
@@ -259,18 +315,24 @@ export default class UserProfile extends React.Component {
               </View>
             </View>
 
+            <Text style={styles.inputTitle}>Username</Text>
             <TextInputComponent
               empty= {usernameEmpty}
               error= {usernameMessage}
+              style={styles.input}
               placeholder="Username"
+              placeholderTextColor="rgba(1,1,1,0.6)"
               defaultValue = {username}
               inputRef = {(input) => {this.username = input}}
               autoCapitalize = 'none'
               returnKeyType='next'
               onChangeText={(username) => this.handleUsername(username)}
             />
-            <Text/>
+            <Text style = {styles.errorMessage}>{usernameMessage}</Text>
 
+
+
+            <Text style={styles.inputTitle}>Phone</Text>
             <TextInputMask
               type={'custom'}
               options={
@@ -290,7 +352,7 @@ export default class UserProfile extends React.Component {
                   : '#35b0d2',
               }]}
               placeholder="Phone"
-              placeholderTextColor="rgba(255,255,255,0.8)"
+              placeholderTextColor="rgba(1,1,1,0.6)"
               keyboardType='numeric'
               returnKeyType='next'
             />
@@ -317,21 +379,12 @@ export default class UserProfile extends React.Component {
               />
             </View>
           </View>
-
           <AwesomeAlert
-          show={showAlert}
-          showProgress={false}
-          title="Profile Updated"
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showConfirmButton={true}
-          confirmText="Gotcha"
-          confirmButtonColor='#35b0d2'
-          onConfirmPressed={() => {
-            this.hideAlert();
-          }}
-        />
-        </KeyboardAwareScrollView>
+              show={showAlert}
+              customView={this.renderCustomAlertView()}
+              closeOnTouchOutside={false}
+              closeOnHardwareBackPress={false}
+            />
         </ImageBackground>
       </SafeAreaView>
     );
@@ -343,37 +396,32 @@ const styles = StyleSheet.create({
       flex: 1,
       flexDirection: 'column',
     },
-    inputBoxContainer:{
-      flex:8,
-    },
     imageContainer: {
         resizeMode:'cover',
         flex:1,
     },
     titleContainer:{
       justifyContent: 'flex-end',
-      padding: 20,
+      padding: width/18.75,
       flex: 1,
       width: width,
     },
     buttonContainer:{
-      flex: 3,
+      flex: 1,
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      padding: 20,
+      justifyContent: 'space-around',
     },
     buttonWidth: {
       width: width/2.4,
     },
     infoContainer: {
-      flex: 5,
+      flex: 1,
       width: width,
-      padding:20,
+      padding:width/18.75,
       justifyContent: 'center',
-      alignContent: 'center',
     },
     nameContainer:{
-      height: 64,
+      height: width/4.167,
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
@@ -392,29 +440,28 @@ const styles = StyleSheet.create({
       resizeMode: 'contain',
     },
     input: {
-      height:40,
-      backgroundColor: 'rgba(255,255,255,0.2)',
-      color:'#fff',
-      marginBottom: 5,
-      paddingHorizontal:10,
+      height:width/9.375,
+      backgroundColor: 'rgba(255,255,255,1)',
+      color:'rgba(1,1,1,0.6)',
+      marginBottom: width/75,
+      paddingHorizontal:width/37.5,
       borderWidth: 2,
-      borderRadius: 20,
+      borderRadius: width/18.75,
     },
     nameInputContainer: {
-      height:40,
+      height:width/5.36,
       width: width/2.3,
     },
     title:{
       fontWeight: 'bold',
       color: '#fff',
-      fontSize: 25,
+      fontSize: width/15,
       textAlign:'center',
     },
     inputTitle: {
-      color: 'white',
-      fontSize: 20,
+      color: "white",
+      fontSize: width/18.75,
       fontWeight: 'bold',
-      marginBottom: 5,
-      marginTop: 10,
+      marginBottom: width/75,
     },
 });

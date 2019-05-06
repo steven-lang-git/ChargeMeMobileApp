@@ -34,7 +34,7 @@ let showLoadingAlert = false;
 let showConfirmedAlert = false;
 let pickDate = ''
 
-export default class SplitEvenlyReview extends React.Component{
+export default class SplitByCustomAmountReview extends React.Component{
   constructor(props){
     super(props);
     this.state = {
@@ -46,8 +46,6 @@ export default class SplitEvenlyReview extends React.Component{
     showLoadingAlert = false;
     showConfirmedAlert = false;
     pickDate = ''
-
-    console.log('reached review screen')
   }
 
   //function to show option alert
@@ -104,26 +102,22 @@ export default class SplitEvenlyReview extends React.Component{
     const { navigation } = this.props;
 
     const name = navigation.getParam('name');
-    const total = parseFloat(navigation.getParam('total'))
-    const tip = parseFloat(navigation.getParam('tip'))
-    const finalTotal = parseFloat((total + tip).toFixed(2))
-    const friends = navigation.getParam('friends');
-    const payEach = parseFloat((finalTotal/(friends.length + 1)).toFixed(2))
+    const friendAmounts = navigation.getParam('friendAmounts');
 
     //get current user's uid
     var uid = firebase.auth().currentUser.uid
 
-    for (let i = 0; i < friends.length; i++){
+    for (let i = 0; i < friendAmounts.length; i++){
       const unique = moment()
-
+      console.log('unique: ', unique)
       //dispatch charge to database under user
       firebase
         .database()
         .ref("currentTransactions/" + uid + "/" + unique )
         .set({
               charging: uid,
-              paying: friends[i].key,
-              amount: payEach,
+              paying: friendAmounts[i].friend.key,
+              amount: parseFloat(friendAmounts[i].amount),
               name: name,
               date: this.state.date
         });
@@ -131,11 +125,11 @@ export default class SplitEvenlyReview extends React.Component{
         //dispatch charge to database under friend
         firebase
           .database()
-          .ref("currentTransactions/" + friends[i].key + "/" + unique)
+          .ref("currentTransactions/" + friendAmounts[i].friend.key + "/" + unique)
           .set({
                 charging: uid,
-                paying: friends[i].key,
-                amount: payEach,
+                paying: friendAmounts[i].friend.key,
+                amount: parseFloat(friendAmounts[i].amount),
                 name: name,
                 date: this.state.date
           });
@@ -171,17 +165,16 @@ export default class SplitEvenlyReview extends React.Component{
     const { navigation } = this.props;
 
     const name = navigation.getParam('name');
-    const total = parseFloat(navigation.getParam('total'))
-    const tip = parseFloat(navigation.getParam('tip'))
-    const finalTotal = parseFloat((total + tip).toFixed(2))
-    const friends = navigation.getParam('friends');
-    const payEach = parseFloat((finalTotal/(friends.length + 1)).toFixed(2))
-    let selectedFlat = []
+    const friendAmounts = navigation.getParam('friendAmounts')
+    console.log('friendamounts: ', friendAmounts)
+
+    let amountsFlat = []
     var y;
-    for (y in friends) {
-      var friendName = friends[y].firstName + " " + friends[y].lastName
-      selectedFlat[y] = { id: y, name: friendName };
+    for (y in friendAmounts) {
+      var friendName = friendAmounts[y].friend.firstName + " " + friendAmounts[y].friend.lastName
+      amountsFlat[y] = { id: y, name: friendName, amount: friendAmounts[y].amount };
     }
+    console.log("amountsflat: ", amountsFlat)
     return(
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../../../assets/group-dinner.jpg')} style={styles.imageContainer}>
@@ -228,7 +221,7 @@ export default class SplitEvenlyReview extends React.Component{
               <View style={styles.infoContainer}>
 
               <DatePicker
-                  style={{width: width/2.3, height: width/12.5, marginBottom:width/75, padding: 0}}
+                  style={{width: width/2.3, height: width/12.5, marginBottom:width/18.75, padding: 0}}
                   showIcon = {true }
                   date={this.state.date}
                   mode="date"
@@ -265,34 +258,16 @@ export default class SplitEvenlyReview extends React.Component{
                 />
                 <Text style={styles.errorMessage}>{pickDate}</Text>
 
-                <View style = {{flexDirection: 'row', marginBottom: width/53.57}}>
-                  <Text style={[styles.sectionTitle, {marginTop: width/46.875}]}>Tip: </Text>
-                  <View style={[styles.valueContainer, {marginLeft: width/20}]}>
-                    <Text style={{textAlign: 'center', fontWeight: 'bold', color: 'rgba(1,1,1,0.6)', fontSize: width/25}}>${tip.toFixed(2)}</Text>
-                  </View>
-                </View>
-
-                <View style = {{flexDirection: 'row'}}>
-                  <Text style={[styles.sectionTitle, {marginTop: width/46.875}]}>Total:</Text>
-                  <View style={[styles.valueContainer, {marginLeft: width/50}]}>
-                    <Text style={{textAlign: 'center', fontWeight: 'bold', color: 'rgba(1,1,1,0.6)', fontSize: width/25}}>${finalTotal.toFixed(2)}</Text>
-                  </View>
-                </View>
 
                 <Text style={[styles.sectionTitle, {marginTop: width/53.57}]}>Who's Paying What:</Text>
 
-                <View style={[styles.searchboxContainer, {borderColor: 'coral', backgroundColor: 'coral'}] }>
-                  <Text style={{marginLeft: width/15,marginTop: width/41.66,color: 'white', fontWeight: 'bold',fontSize: width/25, textAlign: 'center'}}>Me</Text>
-                  <Text style={{marginRight: width/15,marginTop: width/41.66,color: 'white', fontWeight: 'bold',fontSize: width/25, textAlign: 'center'}}>${payEach.toFixed(2)}</Text>
-                </View>
-
                 <FlatList
-                  data={selectedFlat}
+                  data={amountsFlat}
                   extraData={this.state}
                   renderItem={({item}) =>
                     <View style={styles.searchboxContainer}>
-                      <Text style={{marginLeft: width/15,marginTop: width/41.66,color: 'white', fontWeight: 'bold',fontSize: width/25, textAlign: 'center'}}>{item.name}</Text>
-                      <Text style={{marginRight: width/15,marginTop: width/41.66,color: 'white', fontWeight: 'bold',fontSize: width/25, textAlign: 'center'}}>${payEach.toFixed(2)}</Text>
+                      <Text style={{marginLeft: width/15,marginTop: width/41.7,color: 'white', fontWeight: 'bold',fontSize: width/25, textAlign: 'center'}}>{item.name}</Text>
+                      <Text style={{marginRight: width/15,marginTop: width/41.7,color: 'white', fontWeight: 'bold',fontSize: width/25, textAlign: 'center'}}>${item.amount}</Text>
                     </View>
                   }
                   keyExtractor={item => item.id}
@@ -442,7 +417,7 @@ const styles = StyleSheet.create({
   stepLabel: {
     color: 'white',
     textAlign: 'center',
-    fontSize: width/23.44
+    fontSize: width/23.4375
   },
   errorMessage:{
     color: 'red',
