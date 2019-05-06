@@ -89,7 +89,6 @@ export default class MyModal extends Component {
             color: '#35b0d2',
             paddingTop: width/37.5,
             paddingBottom: width/37.5,
-
         },
         nameDescription: {
             color: '#12728d',

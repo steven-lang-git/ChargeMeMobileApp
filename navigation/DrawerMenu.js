@@ -25,7 +25,6 @@ const menuData = [
 ]
 
 let showAlert = false
-let balance = 20
 
 class DrawerMenu extends Component {
 
