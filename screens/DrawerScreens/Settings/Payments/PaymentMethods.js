@@ -9,7 +9,7 @@ import {
   Button,
   SafeAreaView,
   ImageBackground,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import {Icon} from 'native-base'
 import * as firebase from 'firebase';
@@ -20,7 +20,9 @@ export default class PaymentMethods extends React.Component {
   constructor(props){
     super(props);
     this.state= {
-      balance: 0
+      balance: 0,
+      cards: '',
+      banks: '',
     };
   }
 
@@ -38,11 +40,55 @@ export default class PaymentMethods extends React.Component {
         balance: (snapshot.val().balance).toFixed(2)
       })
     });
+
+    //get users cards
+    firebase
+      .database()
+      .ref("payments/" + uid)
+      .child("cards")
+      .once("value")
+      .then((snapshot) => {
+
+        var cardsArray = []
+        // for each card
+        snapshot.forEach((childSnapShot) => {
+          //save card name, number, and type
+          cardsArray.push({
+                              name: childSnapShot.key,
+                              number: childSnapShot.val().number,
+                              type: 'card'
+                            })
+        });
+        console.log('cards array: ', cardsArray)
+        this.setState({cards: cardsArray})
+        })
+
+    //get users banks
+    firebase
+      .database()
+      .ref("payments/" + uid)
+      .child("banks")
+      .once("value")
+      .then((snapshot) => {
+
+        var banksArray = []
+        // for each bank
+        snapshot.forEach((childSnapShot) => {
+          //save bank name, number, and type
+          banksArray.push({
+                              name: childSnapShot.key,
+                              number: childSnapShot.val().number,
+                              type: 'bank'
+                            })
+        });
+        console.log('banks array: ', banksArray)
+        this.setState({banks: banksArray})
+        })
   }
 
   render() {
 
-    const { balance } = this.state
+    const { balance, cards, banks } = this.state
     return (
 
       <SafeAreaView style={styles.container}>
@@ -53,11 +99,25 @@ export default class PaymentMethods extends React.Component {
         <View style={{flex:1}}>
           <ScrollView>
 
-          <Text style={styles.text}>
-            ChargeMe Balance: ${balance}
-          </Text>
+            <View style={{flexDirection: 'row', padding: width/37.5, height: width/6.25}}>
+              <Icon
+                name='ios-wallet'
+                style={{color:'white', fontSize: width/11}}
+              />
 
-          <View style={styles.line}/>
+              <View style={{marginLeft: width/18.75}}>
+                <Text style={styles.itemTextTitle}>
+                  ChargeMe Balance
+                </Text>
+                <Text style={styles.itemText}>
+                  ${balance}
+                </Text>
+              </View>
+            </View>
+
+
+
+            <View style={styles.line}/>
 
 
             <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('Bank')}>
@@ -124,5 +184,14 @@ const styles = StyleSheet.create({
   imageContainer: {
       resizeMode:'cover',
       flex:1,
+  },
+  itemText: {
+    color: 'white',
+    fontSize:  width/23.44
+  },
+  itemTextTitle: {
+    color: 'white',
+    fontSize:  width/20.83,
+    fontWeight: 'bold'
   }
 });

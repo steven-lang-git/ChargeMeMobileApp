@@ -18,7 +18,8 @@ import {
   TouchableHighlight,
   Keyboard
 } from "react-native";
-import { Header, Left, Right, Icon, ListItem, List } from "native-base";
+import { Header, Left, Right, Icon, List } from "native-base";
+import { ListItem } from 'react-native-elements';
 const { width, height } = Dimensions.get("window");
 import * as firebase from "firebase";
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -203,29 +204,34 @@ export default class FriendsList extends React.Component {
           />
 
             <Text style={styles.title}> My Friends</Text>
-            <KeyboardAwareScrollView contentContainerStyle = {{width: width- (width/9.375),height: height/2}}>
+            <KeyboardAwareScrollView contentContainerStyle = {{width: width,height: height/2}}>
               <View style={styles.container}>
 
                 {currentFriends.map((friend, index) => (
-                  <ListItem style={styles.listContainer}>
-                    <Left>
-                      <Text style={[styles.btntext,{fontWeight: 'bold'}]} key={friend.username}>
-                        {" "}
-                        {`${friend.firstName + ' ' + friend.lastName}`}{" "}
-                      </Text>
-                    </Left>
-                    <Right>
-                      <View style={styles.removeBtn}>
-                        <TouchableOpacity
-                          style={styles.btntext}
-                          onPress={() => this.removeFriend(index)}
-                          key={friend.username}
-                        >
-                          <Text style={styles.btntext}>Remove</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </Right>
-                  </ListItem>
+                  <ListItem
+                  containerStyle={styles.listContainer}
+                  key={index}
+                  leftAvatar= {{
+                                size: width/7.5,
+                                source: require('../../assets/blue.jpg'),
+                                rounded: true
+                              }}
+                  title={friend.firstName + ' ' + friend.lastName}
+                  titleStyle = {styles.titleText}
+                  subtitle = {'@' + friend.username}
+                  subtitleStyle= {styles.subtitleText}
+                  rightElement = {
+                                    <View style={styles.removeBtn}>
+                                      <TouchableOpacity
+                                        onPress={() => this.removeFriend(index)}
+                                        key={friend.username}
+                                      >
+                                        <Text style={styles.btnText}>Remove</Text>
+                                      </TouchableOpacity>
+                                    </View>
+                                  }
+                    bottomDivider = {true}
+                  />
                 ))}
               </View>
             </KeyboardAwareScrollView>
@@ -252,23 +258,18 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(69,85,117,0.7)"
   },
   listContainer: {
-    position: "relative",
     justifyContent: "center",
     alignItems: "center",
-    width: width-(width/9.375)
+    width: width,
+    backgroundColor: 'transparent'
   },
   infoContainer: {
     flex: 1,
     width: width,
-    padding:width/18.75,
     paddingBottom: 0,
+    paddingTop: width/9.375,
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  buttonContainer: {
-    width: width/2,
-    flex: 1,
-    marginTop: width/75,
   },
   input: {
     height: width/9.375,
@@ -281,8 +282,18 @@ const styles = StyleSheet.create({
     right: width/37.5,
     height: width/25
   },
-  btntext: {
+  titleText: {
     color: 'white',
+    fontSize: width/18.75,
+    fontWeight : 'bold'
+  },
+  subtitleText: {
+    color: 'rgba(225,225,225,0.8)',
+    fontSize: width/23.4
+  },
+  btnText: {
+    color: 'white',
+    fontSize: width/28.8
   },
   title:{
     fontWeight: 'bold',

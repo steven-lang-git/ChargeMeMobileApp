@@ -76,7 +76,8 @@ export default class DebitCard extends React.Component {
   );
 
   onAddCard = () => {
-    let cardNumbers = this.cardNumField.getRawValue()
+    let cardNumbers = this.cardNumField.getRawValue
+    console.log(cardNumbers)
     let expDateRaw = this.state.expDate.replace(/\D/g,'')
 
     if( this.state.name == ''){
@@ -184,6 +185,28 @@ export default class DebitCard extends React.Component {
     this.forceUpdate()
   }
 
+  _onNameSubmitted = () => {
+    const el = this.cardNumField.getElement()
+    el.focus()
+  }
+
+  _onCardNumSubmitted = () => {
+    const el = this.expDateField.getElement()
+    el.focus()
+  }
+
+  _onExpDateSubmitted = () => {
+    const el = this.securityCodeField.getElement()
+    el.focus()
+  }
+
+  _onSecurityCodeSubmitted = () => {
+    const el = this.zipcodeField.getElement()
+    el.focus()
+  }
+
+
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -192,20 +215,19 @@ export default class DebitCard extends React.Component {
           <View style={styles.container}>
             <View style={styles.inputContainer}>
 
-            <Text style={styles.inputTitle}> Name </Text>
-            <TextInputComponent
-              empty = {nameEmpty}
-              style={styles.input}
-              placeholder="'Chase Personal'"
-              placeholderTextColor="rgba(1,1,1,0.6)"
-              onChangeText={(name) => this.updateName(name)}
-              returnKeyType='next'
-            />
+              <TextInputComponent
+                empty = {nameEmpty}
+                style={styles.input}
+                ref='nameInput'
+                placeholder="Card Name, ex. 'Chase Personal'"
+                placeholderTextColor="rgba(1,1,1,0.6)"
+                onChangeText={(name) => this.updateName(name)}
+                onSubmitEditing={() => { this._onNameSubmitted() }}
+                returnKeyType='next'
+              />
 
-
-            <Text style={styles.inputTitle}> Card Number </Text>
               <TextInputMask
-                style={[styles.input,{
+                style={[styles.input,{ marginTop: width/18.75,
                   borderColor: cardNumEmpty == true || cardNumErrorMessage != ''
                     ? 'red'
                     : '#35b0d2',
@@ -213,15 +235,15 @@ export default class DebitCard extends React.Component {
                 type={'credit-card'}
                 value={this.state.cardNum}
                 ref={(ref) => this.cardNumField = ref}
-                placeholder= '0000 0000 0000 0000'
+                placeholder= 'Card Number'
                 placeholderTextColor="rgba(1,1,1,0.6)"
                 onChangeText={(text) => this.updateCardNum(text)}
+                onSubmitEditing={() => { this._onCardNumSubmitted() }}
               />
               <Text style={styles.errorMessage}>{cardNumErrorMessage}</Text>
 
               <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View>
-                  <Text style={styles.inputTitle}> Expiration Date </Text>
                   <TextInputMask
                     style={[styles.input,{ width: width/2.4,
                       borderColor: expDateEmpty == true || expDateErrorMessage != ''
@@ -235,16 +257,15 @@ export default class DebitCard extends React.Component {
                     value={this.state.expDate}
                     ref={(ref) => this.expDateField = ref}
                     keyboardType='numeric'
-                    placeholder= 'MM/YY'
+                    placeholder= 'Exp. date, MM/YY'
                     placeholderTextColor="rgba(1,1,1,0.6)"
                     onChangeText={(text) => this.updateExpDate(text)}
+                    onSubmitEditing={() => { this._onExpDateSubmitted() }}
                   />
                   <Text style={styles.errorMessage}>{expDateErrorMessage}</Text>
                 </View>
 
-
                 <View>
-                  <Text style={styles.inputTitle}> Security Code </Text>
                   <TextInputMask
                     style={[styles.input,{ width: width/2.4,
                       borderColor: securityCodeEmpty == true || securityCodeErrorMessage != ''
@@ -256,16 +277,18 @@ export default class DebitCard extends React.Component {
                       mask: '999'
                     }}
                     value={this.state.securityCode}
+                    ref={(ref) => this.securityCodeField = ref}
                     keyboardType='numeric'
-                    placeholder= '000'
+                    placeholder= 'Security Code'
                     placeholderTextColor="rgba(1,1,1,0.6)"
                     onChangeText={(text) => this.updateSecurityCode(text)}
+                    onSubmitEditing={() => { this._onSecurityCodeSubmitted() }}
                   />
                   <Text style={styles.errorMessage}>{securityCodeErrorMessage}</Text>
                 </View>
               </View>
 
-              <Text style={styles.inputTitle}> Zip Code </Text>
+
               <TextInputMask
                 style={[styles.input,{ width: width/2.4,
                   borderColor: zipcodeEmpty == true || zipcodeErrorMessage != ''
@@ -277,12 +300,14 @@ export default class DebitCard extends React.Component {
                   mask: '99999'
                 }}
                 value={this.state.zipcode}
+                ref={(ref) => this.zipcodeField = ref}
                 keyboardType='numeric'
-                placeholder= '00000'
+                placeholder= 'Zip Code'
                 placeholderTextColor="rgba(1,1,1,0.6)"
                 onChangeText={(text) => this.updateZipcode(text)}
               />
               <Text style={styles.errorMessage}>{zipcodeErrorMessage}</Text>
+
               <View style={{marginTop: width/25, height: width/6.25}}>
               <ButtonComponent
                 text='ADD CARD'
@@ -310,11 +335,6 @@ export default class DebitCard extends React.Component {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-
-  },
-  btntext:{
-    color: '#fff',
-    fontWeight: 'bold',
   },
   overlay: {
       ...StyleSheet.absoluteFillObject,
@@ -330,18 +350,11 @@ const styles = StyleSheet.create({
   input: {
     height:width/9.375,
     backgroundColor: 'rgba(255,255,255,1)',
-    color:'rgba(1,1,1,0.6)',
-    marginBottom: width/75,
+    color:'rgba(1,1,1,0.8)',
+    marginTop: width/75,
     paddingHorizontal:width/37.5,
     borderWidth: 2,
     borderRadius: width/18.75,
-  },
-  inputTitle: {
-    color: "white",
-    fontSize: width/18.75,
-    fontWeight: 'bold',
-    marginBottom: width/75,
-    marginTop: width/37.5,
   },
   errorMessage:{
     color: 'red',

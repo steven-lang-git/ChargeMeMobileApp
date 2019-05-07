@@ -201,8 +201,11 @@ export default class Dashboard extends React.Component {
 
             <View style={styles.userContainer}>
               <Avatar
-                size = "xlarge"
-                rounded title = {this.state.initials}
+                size = {width/2.5}
+                source={require('../../assets/blue.jpg')}
+                showEditButton={true}
+                editButton={{size:width/11}}
+                rounded = {true}
                 containerStyle={{marginLeft: width/37.5, marginTop:width/37.5}}
               />
 

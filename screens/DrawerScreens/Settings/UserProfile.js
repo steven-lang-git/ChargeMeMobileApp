@@ -16,7 +16,7 @@ import {
   Keyboard,
   ScrollView
 } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, Avatar } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {TextInputMask} from 'react-native-masked-text';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -111,7 +111,7 @@ export default class UserProfile extends React.Component {
     });
   }
 
-  handleUsername(value){
+  handleUsername= (value) => {
     this.setState({disable: false});
     usernameMessage = ''
     if(value == ''){
@@ -128,7 +128,7 @@ export default class UserProfile extends React.Component {
     this.setState({username: value});
   }
 
-  handleFirstName(value){
+  handleFirstName= (value) => {
     if(value == ''){
       firstNameEmpty = true;
     }
@@ -143,7 +143,7 @@ export default class UserProfile extends React.Component {
     this.setState({firstname: value});
   }
 
-  handleLastName(value){
+  handleLastName = (value) => {
     if(value == ''){
       lastNameEmpty = true;
     }
@@ -158,7 +158,7 @@ export default class UserProfile extends React.Component {
     this.setState({lastname: value});
   }
 
-  handlePhone(){
+  handlePhone = () =>{
     //get raw value of phone field
     value = this.phoneNum.getRawValue();
 
@@ -181,7 +181,12 @@ export default class UserProfile extends React.Component {
     this.setState({phone: value});
   }
 
-  onUpdatePress(){
+  _onUsernameSubmitted = () => {
+    const el = this.phoneNum.getElement()
+    el.focus()
+  }
+
+  onUpdatePress = () =>{
 
     //check that all fields have been filled out
     if(this.state.username == ''){
@@ -212,7 +217,7 @@ export default class UserProfile extends React.Component {
   }
 
   //function to update user
-  updateUser(){
+  updateUser = () =>{
     //get user id
       var uid = firebase.auth().currentUser.uid;
 
@@ -242,7 +247,7 @@ export default class UserProfile extends React.Component {
     }
 
   //function to check if entered username already exists
-  makeUsernameUnique(){
+  makeUsernameUnique = () =>{
     //save the username entered
     var currentUsername = this.state.username;
 
@@ -279,8 +284,17 @@ export default class UserProfile extends React.Component {
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../../../assets/blue.jpg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
+          <KeyboardAwareScrollView>
 
           <View style = {styles.infoContainer}>
+          <Avatar
+            size = {width/3}
+            source={require('../../../assets/blue.jpg')}
+            showEditButton={true}
+            editButton={{size:width/12}}
+            rounded = {true}
+            containerStyle={{marginBottom:width/37.5, marginTop:width/37.5, marginLeft: width/3.4}}
+          />
 
             <View style={styles.nameContainer}>
               <View style={styles.nameInputContainer}>
@@ -327,6 +341,7 @@ export default class UserProfile extends React.Component {
               autoCapitalize = 'none'
               returnKeyType='next'
               onChangeText={(username) => this.handleUsername(username)}
+              onSubmitEditing={() => { this._onUsernameSubmitted() }}
             />
             <Text style = {styles.errorMessage}>{usernameMessage}</Text>
 
@@ -385,6 +400,7 @@ export default class UserProfile extends React.Component {
               closeOnTouchOutside={false}
               closeOnHardwareBackPress={false}
             />
+          </KeyboardAwareScrollView>
         </ImageBackground>
       </SafeAreaView>
     );
@@ -419,6 +435,7 @@ const styles = StyleSheet.create({
       width: width,
       padding:width/18.75,
       justifyContent: 'center',
+      alignContent: 'center'
     },
     nameContainer:{
       height: width/4.167,
@@ -442,7 +459,7 @@ const styles = StyleSheet.create({
     input: {
       height:width/9.375,
       backgroundColor: 'rgba(255,255,255,1)',
-      color:'rgba(1,1,1,0.6)',
+      color:'rgba(1,1,1,0.8)',
       marginBottom: width/75,
       paddingHorizontal:width/37.5,
       borderWidth: 2,

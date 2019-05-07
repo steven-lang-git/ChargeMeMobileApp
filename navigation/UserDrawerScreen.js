@@ -18,7 +18,7 @@ const AppDrawerNavigator = createDrawerNavigator({
     SettingsStackScreen: {screen: SettingsStackScreen},
   },
   {
-    initialRouteName: 'DashboardStack',
+    initialRouteName: 'FriendsStack',
     contentComponent: DrawerMenu,
     contentOptions: {
     activeTintColor: '#35b0d2'
