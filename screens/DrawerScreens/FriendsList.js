@@ -31,6 +31,10 @@ import ButtonComponent from '../../components/ButtonComponent'
 let currentFriends = []
 let possibleFriends = []
 let tempArray = []
+let userFirstName=''
+let userLastName=''
+let userUsername=''
+let userProfilePic=''
 
 export default class FriendsList extends React.Component {
   constructor(props) {
@@ -41,33 +45,35 @@ export default class FriendsList extends React.Component {
     tempArray = []
   }
 
-//function called to save changes when user navigates away from screen
-  componentWillUnmount() {
-    var uid = firebase.auth().currentUser.uid;
-
-    //clear out user's current friends
-    firebase
-      .database()
-      .ref("friendslist/" + uid + "/currentFriends")
-      .set(" ");
-
-    //write in each current friend
-    for (let i = 0; i < currentFriends.length; i++){
-      firebase
-        .database()
-        .ref("friendslist/" + uid + "/currentFriends/"+ currentFriends[i].key)
-        .set({
-                firstName: currentFriends[i].firstName,
-                lastName: currentFriends[i].lastName,
-                username: currentFriends[i].username
-              });
-    }
-  }
 
   //function to add friend to current friends
   addFriend = item => {
     index = eval(JSON.stringify(item.id))
     item.name = ""
+
+    var uid = firebase.auth().currentUser.uid;
+    //add new friend to current user's friendlist
+    firebase
+      .database()
+      .ref("friendslist/" + uid + "/currentFriends/" + possibleFriends[index].key)
+      .set({
+              firstName: possibleFriends[index].firstName,
+              lastName: possibleFriends[index].lastName,
+              username: possibleFriends[index].username,
+              profilePic: possibleFriends[index].profilePic
+      });
+
+    //add current user to new friend's friendlist
+    firebase
+      .database()
+      .ref("friendslist/" + possibleFriends[index].key + "/currentFriends/" + uid)
+      .set({
+              firstName: userFirstName,
+              lastName: userLastName,
+              username: userUsername,
+              profilePic: userProfilePic
+      });
+
     // And put friend in currentFriends
     currentFriends.push(possibleFriends[index]);
 
@@ -79,8 +85,22 @@ export default class FriendsList extends React.Component {
 
   //function to remove friend from current friends
   removeFriend = index => {
+    console.log(currentFriends)
     // And put friend in possibleFriends
     possibleFriends.push(currentFriends[index]);
+
+    var uid = firebase.auth().currentUser.uid;
+    //clear out removed friend from  current user's friendslist
+    firebase
+      .database()
+      .ref("friendslist/" + uid + "/currentFriends/" + currentFriends[index].key)
+      .remove();
+
+    //clear out current user friend from removed friend's friendslist
+    firebase
+      .database()
+      .ref("friendslist/" + currentFriends[index].key + "/currentFriends/" + uid)
+      .remove();
 
     // Pull friend out of currentFriends
     currentFriends.splice(index, 1);
@@ -92,6 +112,15 @@ export default class FriendsList extends React.Component {
   componentDidMount() {
     // get current user's uid
     var uid = firebase.auth().currentUser.uid;
+
+    // gets user data
+    firebase.database().ref('users/'+uid).once("value", snapshot => {
+      userFirstName = snapshot.val().firstName;
+      userLastName = snapshot.val().lastName;
+      userUsername = snapshot.val().username;
+      userProfilePic = snapshot.val().profilePic;
+
+    });
 
     // load their current friends
     firebase
@@ -109,8 +138,9 @@ export default class FriendsList extends React.Component {
                               firstName: childSnapShot.val().firstName,
                               lastName: childSnapShot.val().lastName,
                               username: childSnapShot.val().username,
+                              profilePic: childSnapShot.val().profilePic,
                             })
-
+                            console.log('curr: ', childSnapShot)
         });
 
       })
@@ -131,6 +161,7 @@ export default class FriendsList extends React.Component {
                                 firstName: childSnapShot.val().firstName,
                                 lastName: childSnapShot.val().lastName,
                                 username: childSnapShot.val().username,
+                                profilePic: childSnapShot.val().profilePic,
                               })
 
           });
@@ -155,6 +186,7 @@ export default class FriendsList extends React.Component {
       var name = possibleFriends[x].firstName + " " + possibleFriends[x].lastName
       tempArray[x] = { id: x, name: name };
     }
+
 
     return (
       <SafeAreaView style={styles.container}>
@@ -213,7 +245,7 @@ export default class FriendsList extends React.Component {
                     key={index}
                     leftAvatar= {{
                                   size: width/7.5,
-                                  source: require('../../assets/blue.jpg'),
+                                  source: {uri: friend.profilePic ? friend.profilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'},
                                   rounded: true
                                 }}
                     title={friend.firstName + ' ' + friend.lastName}

@@ -27,16 +27,18 @@ class MyItem extends React.Component {
 
 
   _renderMain = () =>{
-  let chargingName, payingName, chargingUsername, payingUsername;
+  let chargingName, payingName, chargingUsername, payingUsername, payingProfilePic, chargingProfilePic;
   this.tempArray = tempArray.map((item,key) =>{
 
     if(item.key==this.props.item.paying){
       payingName=item.first;
       payingUsername = item.username
+      payingProfilePic = item.profilePic
     }
     else if(item.key==this.props.item.charging){
       chargingName=item.first;
       chargingUsername = item.username
+      chargingProfilePic = item.profilePic
     }
   });
 
@@ -51,7 +53,7 @@ class MyItem extends React.Component {
         Component={TouchableOpacity}
         leftAvatar= {{
                       size: width/7.5,
-                      source: require('../../assets/blue.jpg'),
+                      source: {uri: chargingProfilePic ? chargingProfilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'},
                       rounded: true
                     }}
         title={'Paying'}
@@ -76,7 +78,7 @@ class MyItem extends React.Component {
           Component={TouchableOpacity}
           leftAvatar= {{
                         size: width/7.5,
-                        source: require('../../assets/blue.jpg'),
+                        source: {uri: payingProfilePic ? payingProfilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'},
                         rounded: true,
                       }}
           title='Charging'
@@ -104,7 +106,7 @@ class MyItem extends React.Component {
           Component={TouchableOpacity}
           leftAvatar= {{
                         size: width/7.5,
-                        source: require('../../assets/blue.jpg'),
+                        source: {uri: chargingProfilePic ? chargingProfilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'},
                         rounded: true
                       }}
           title={'Paying'}
@@ -136,7 +138,7 @@ class MyItem extends React.Component {
         Component={TouchableOpacity}
         leftAvatar= {{
                       size: width/7.5,
-                      source: require('../../assets/blue.jpg'),
+                      source: {uri: payingProfilePic ? payingProfilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'},
                       rounded: true,
                     }}
         title='Charging'
@@ -253,6 +255,7 @@ componentDidMount(){
             first: childSnapShot.val().firstName,
             last: childSnapShot.val().lastName,
             username: childSnapShot.val().username,
+            profilePic: childSnapShot.val().profilePic,
           })
           this.setState(
             {
@@ -266,21 +269,6 @@ componentDidMount(){
     this.forceUpdate();
 
 }
-// _renderButton = (text, onPress) => (
-//   <TouchableOpacity onPress={onPress}>
-//     <View style={styles.button}>
-//       <Text>{text}</Text>
-//     </View>
-//   </TouchableOpacity>
-// );
-//
-//
-// _renderModalContent = () => (
-//   <View style={styles.modalContent}>
-//     <Text>work?</Text>
-//     {this._renderButton('Close', this._toggleModal)}
-// </View>
-//   );
 
 keyExtractor = (item,index) =>index.toString()
 

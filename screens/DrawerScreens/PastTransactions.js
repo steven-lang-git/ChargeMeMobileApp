@@ -23,16 +23,18 @@ class MyItem extends React.Component {
 
 
   _renderMain = () =>{
-  let chargingName, payingName, chargingUsername, payingUsername;
+  let chargingName, payingName, chargingUsername, payingUsername, payingProfilePic, chargingProfilePic;
   this.tempArray = tempArray.map((item,key) =>{
 
     if(item.key==this.props.item.paying){
       payingName=item.first;
       payingUsername = item.username
+      payingProfilePic = item.profilePic
     }
     else if(item.key==this.props.item.charging){
       chargingName=item.first;
       chargingUsername = item.username
+      chargingProfilePic = item.profilePic
     }
   });
 
@@ -45,7 +47,7 @@ class MyItem extends React.Component {
         containerStyle= {styles.redButton}
         leftAvatar= {{
                       size: width/7.5,
-                      source: require('../../assets/blue.jpg'),
+                      source: {uri: chargingProfilePic ? chargingProfilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'},
                       rounded: true
                     }}
         title={'Paid'}
@@ -66,7 +68,7 @@ class MyItem extends React.Component {
           containerStyle= {styles.blueButton}
           leftAvatar= {{
                         size: width/7.5,
-                        source: require('../../assets/blue.jpg'),
+                        source: {uri: payingProfilePic ? payingProfilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'},
                         rounded: true,
                       }}
           title='Charged'
@@ -89,7 +91,7 @@ class MyItem extends React.Component {
           containerStyle= {styles.redButton}
           leftAvatar= {{
                         size: width/7.5,
-                        source: require('../../assets/blue.jpg'),
+                        source: {uri: chargingProfilePic ? chargingProfilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'},
                         rounded: true
                       }}
           title={'Paid'}
@@ -117,7 +119,7 @@ class MyItem extends React.Component {
         containerStyle= {styles.blueButton}
         leftAvatar= {{
                       size: width/7.5,
-                      source: require('../../assets/blue.jpg'),
+                      source: {uri: payingProfilePic ? payingProfilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'},
                       rounded: true,
                     }}
         title='Charged'
@@ -233,6 +235,7 @@ componentDidMount(){
           first: childSnapShot.val().firstName,
           last: childSnapShot.val().lastName,
           username: childSnapShot.val().username,
+          profilePic: childSnapShot.val().profilePic,
         })
         this.setState(
           {

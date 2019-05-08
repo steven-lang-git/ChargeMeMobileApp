@@ -92,7 +92,6 @@ export default class UserProfile extends React.Component {
       //grab user's info
       this.setState({
         email : user.email,
-        profilePic : user.photoUrl,
         uid: uid
       })
     }
@@ -107,6 +106,7 @@ export default class UserProfile extends React.Component {
          OGusername: snapshot.val().username,
          birthday : snapshot.val().birthday,
          email : snapshot.val().email,
+         profilePic: snapshot.val().profilePic
        })
     });
   }
@@ -275,11 +275,16 @@ export default class UserProfile extends React.Component {
       }
     });
   }
+  navigate=()=>{
+    console.log('edit pressed')
+    this.props.navigation.navigate('Gallery')
+  }
 
   render() {
     //const showAlert  = this.state.showAlert;
     const username = this.state.username;
     const isDisabled  = this.state.disable;
+    const profilePic  = this.state.profilePic
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../../../assets/blue.jpg')} style={styles.imageContainer}>
@@ -289,9 +294,10 @@ export default class UserProfile extends React.Component {
           <View style = {styles.infoContainer}>
           <Avatar
             size = {width/3}
-            source={require('../../../assets/blue.jpg')}
+            source={{uri: profilePic ? profilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'}}
             showEditButton={true}
             editButton={{size:width/12}}
+            onEditPress={this.navigate.bind(this)}
             rounded = {true}
             containerStyle={{marginBottom:width/37.5, marginTop:width/37.5, marginLeft: width/3.4}}
           />

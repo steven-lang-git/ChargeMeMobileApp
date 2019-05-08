@@ -93,6 +93,7 @@ export default class SplitEvenly extends React.Component {
           }
     }
   }
+  
   on15Toggle = (checked15) => {
     this.setState(() => ({checked15}));
     if(checked15==true){

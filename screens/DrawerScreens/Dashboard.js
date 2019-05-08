@@ -38,7 +38,7 @@ export default class Dashboard extends React.Component {
       firstName:'',
       lastName:'',
       username:'',
-      profilePic:''
+      userProfilePic:''
     }
     currentTransactions=[]
     pastTransactions=[]
@@ -101,6 +101,7 @@ export default class Dashboard extends React.Component {
                 first: childSnapShot.val().firstName,
                 last: childSnapShot.val().lastName,
                 username: childSnapShot.val().username,
+                profilePic: childSnapShot.val().profilePic,
               })
               this.setState(
                 {
@@ -123,7 +124,7 @@ export default class Dashboard extends React.Component {
           firstName: fName,
           initials: fName.charAt(0) + lName.charAt(0),
           username: user,
-          profilePic: profilePic
+          userProfilePic: profilePic
         })
 
       });
@@ -143,11 +144,12 @@ export default class Dashboard extends React.Component {
   const {selectedIndex}= this.state;
   var uid = firebase.auth().currentUser.uid;
   var username;
+  var profilePic;
     if(item.paying==uid){
       for(var x in currFriends){
         if(currFriends[x].key==item.charging){
         username=currFriends[x].username;
-
+        profilePic=currFriends[x].profilePic
         }
       };
       return (
@@ -155,7 +157,7 @@ export default class Dashboard extends React.Component {
           containerStyle= {styles.redButton}
           leftAvatar= {{
                         size: width/7.5,
-                        source: require('../../assets/blue.jpg'),
+                        source: {uri: profilePic ? profilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'},
                         rounded: true
                       }}
           title={'Paying' }
@@ -174,33 +176,41 @@ export default class Dashboard extends React.Component {
       for(var x in currFriends){
         if(currFriends[x].key==item.paying){
         username=currFriends[x].username;
+        profilePic=currFriends[x].profilePic
         }
-      };
-      return <ListItem
-      containerStyle= {styles.blueButton}
-      leftAvatar= {{
-                    size: width/7.5,
-                    source: require('../../assets/blue.jpg'),
-                    rounded: true
-                  }}
-      title={'Charging'}
-      titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
-      subtitle={'@' + username}
-      subtitleStyle={{color:'white', fontSize: width/27}}
-      rightTitle={item.name}
-      rightTitleStyle={{color:'white', fontWeight:'bold', fontSize: width/26, width: width/3.6}}
-      rightSubtitle={'$' + (item.amount).toFixed(2)}
-      rightSubtitleStyle={{color:'white', fontSize: width/27, width: width/3.6}}
-      />
+      }
+      return(
+        <ListItem
+          containerStyle= {styles.blueButton}
+          leftAvatar= {{
+                        size: width/7.5,
+                        source: {uri: profilePic ? profilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'},
+                        rounded: true
+                      }}
+          title={'Charging'}
+          titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
+          subtitle={'@' + username}
+          subtitleStyle={{color:'white', fontSize: width/27}}
+          rightTitle={item.name}
+          rightTitleStyle={{color:'white', fontWeight:'bold', fontSize: width/26, width: width/3.6}}
+          rightSubtitle={'$' + (item.amount).toFixed(2)}
+          rightSubtitleStyle={{color:'white', fontSize: width/27, width: width/3.6}}
+        />
+    );
     }
-};
+}
 
   renderItem = ({item})=> (
     this.renderMain(item)
     )
 
+  navigate=()=>{
+    console.log('edit pressed')
+    this.props.navigation.navigate('Gallery')
+  }
+
   render() {
-    const { profilePic } = this.state
+    const { userProfilePic } = this.state
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../../assets/blue.jpg')} style={styles.imageContainer}>
@@ -221,10 +231,11 @@ export default class Dashboard extends React.Component {
             <View style={styles.userContainer}>
               <Avatar
                 size = {width/2.5}
-                source={{uri: profilePic ? profilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'}}
+                source={{uri: userProfilePic ? userProfilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'}}
                 defaultSource = {require('../../assets/default-profile.png')}
                 showEditButton={true}
                 editButton={{size:width/11}}
+                onEditPress={this.navigate.bind(this)}
                 rounded = {true}
                 containerStyle={{marginLeft: width/37.5, marginTop:width/37.5}}
               />
