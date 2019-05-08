@@ -197,6 +197,26 @@ export default class MyModal extends React.Component {
     console.log('paying: ',item.paying)
     console.log('key: ',item.key)
 
+    let friendBalance = 0
+
+    //get friend's balance
+    firebase.database().ref('payments/' + item.charging + '/wallet')
+    .once("value", snapshot => {
+      friendBalance = snapshot.val().balance
+    });
+
+    console.log("their balance: ", friendBalance)
+
+    //update friend's balance
+    friendBalance = friendBalance + item.amount
+
+    console.log("their updated balance: ", friendBalance)
+
+    //write in friend's new balance
+    firebase.database().ref('payments/' + item.charging + '/wallet').set({
+      balance: friendBalance,
+    })
+
     //clear out on charging
     firebase
       .database()
@@ -232,6 +252,8 @@ export default class MyModal extends React.Component {
                   name: item.name,
                   date: item.date,
             });
+
+
 
     //render confirmation
     chargePaid = true
