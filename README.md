@@ -156,9 +156,9 @@ Go to:
 > Settings -> Security & Privacy -> Privacy -> Automation -> Privacy tab
 check the "System Events" checkbox
 
-##Installing native dependencies
+## Installing native dependencies
 
-Now that you have detached you have access to native dependencies. However this means there will be an extra step when downloading new NPM libraries. Two such libraries are `<rn-fetch-blob>` and `<react-native-camera-roll-picker>`. To install them run the following commands:
+Now that you have detached you have access to native dependencies. However this means there will be an extra step when downloading new NPM libraries. Two such libraries are `rn-fetch-blob` and `react-native-camera-roll-picker`. To install them run the following commands:
 
 ```
 $ npm install --save rn-fetch-blob
@@ -167,7 +167,7 @@ $ cd ios
 $ pod install
 ```
 
-At this point, it is advisable to clean your Xcode project build using `<Command-Option-Shift-K>`. If your build finishes without errors, continue with the following commands:
+At this point, it is advisable to clean your Xcode project build using `Command-Option-Shift-K`. If your build finishes without errors, continue with the following commands:
 ```
 $ npm install react-native-camera-roll-picker --save
 $ react-native link
@@ -175,4 +175,4 @@ $ cd ios
 $ pod install
 ```
 
-Once again, clean your Xcode project using `<Command-Option-Shift-K>` and ensure your project builds without error
+Once again, clean your Xcode project using `Command-Option-Shift-K` and ensure your project builds without error
