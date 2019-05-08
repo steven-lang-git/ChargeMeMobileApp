@@ -238,6 +238,7 @@ componentDidMount(){
                         })
 
     });
+  })
 
     firebase
     .database()
@@ -263,8 +264,6 @@ componentDidMount(){
 
 
     this.forceUpdate();
-
-  })
 
 }
 // _renderButton = (text, onPress) => (

@@ -233,8 +233,6 @@ export default class MyModal extends React.Component {
                   date: item.date,
             });
 
-
-
     //render confirmation
     chargePaid = true
     pressedPay = false
