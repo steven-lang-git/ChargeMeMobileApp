@@ -73,11 +73,12 @@ export default class ReceiptScanner extends React.Component {
       else if(!response.didCancel){
         const source = {uri:response.uri};
         this.setState({imageSource:source});
-        this.extractText(response.path);
+        // this.extractText(response.path);
       }
     });
   }
   handleChoosePhoto =() => {
+    const{data} =this.state;
     const options ={
       noData: true
     };
@@ -87,33 +88,31 @@ export default class ReceiptScanner extends React.Component {
         const source = {uri: response.uri};
         this.setState({
           imageSource:source,
-          path:response.uri});
-          this.extractText(response.path);
+          path:response.uri,
+          data:response,
+          imageProperties: {height: response.height, width: response.width},
+        });
       
       }
-      // if(response.uri){
-      //   this.setState({photo:response,
-      //   path:response.uri});
-      //   // this.extractText(response.path);
-      // }
+     
     });
   };
-  extractText(imgPath){
-    const tessOptions = {
-      whitelist: null, 
-      blacklist: '1234567890\'!"#$%&/()={}[]+*-_:;<>'
-    };
+  // extractText(imgPath){
+  //   const tessOptions = {
+  //     whitelist: null, 
+  //     blacklist: '1234567890\'!"#$%&/()={}[]+*-_:;<>'
+  //   };
 
-    RNTesseractOcr.recognize(imgPath, lang, tessOptions)
-    .then((result) => {
-      this.setState({ ocrResult: result });
-      console.log("OCR Result: ", result);
-    })
-    .catch((err) => {
-      console.log("OCR Error: ", err);
-    })
-    .done();
-  }
+  //   RNTesseractOcr.recognize(imgPath, lang, tessOptions)
+  //   .then((result) => {
+  //     this.setState({ ocrResult: result });
+  //     console.log("OCR Result: ", result);
+  //   })
+  //   .catch((err) => {
+  //     console.log("OCR Error: ", err);
+  //   })
+  //   .done();
+  // }
 
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -123,7 +122,6 @@ export default class ReceiptScanner extends React.Component {
   press = async () => {
     if (this.camera) {
       const data = await this.camera.takePictureAsync();
-      console.log(data);
       this.setState({
         path: data.uri,
         data: data,
@@ -132,15 +130,27 @@ export default class ReceiptScanner extends React.Component {
     }
   };
 
+  mapVisionRespToScreen = (visionResp, imageProperties) => {
+    const IMAGE_TO_SCREEN_Y = height / imageProperties.height;
+    const IMAGE_TO_SCREEN_X = width / imageProperties.width;
+
+    return visionResp.map(item => {
+      return {
+        ...item,
+        position: {
+          width: item.bounding.width * IMAGE_TO_SCREEN_X,
+          left: item.bounding.left * IMAGE_TO_SCREEN_X,
+          height: item.bounding.height * IMAGE_TO_SCREEN_Y,
+          top: item.bounding.top * IMAGE_TO_SCREEN_Y
+        }
+      };
+    });
+  };
+
   processImage =async() =>{
-    console.log("did we get here?");
-   const{data} =this.state;
-   console.log("1");
-   console.log(data);
-   console.log('uri',data.uri);
-   console.log('path?',data.path);
+    const{imageProperties} = this.state;
+    const{data} =this.state;   
     const visionResp = await RNTextDetector.detectFromUri(data.uri);
-    console.log("2");
     console.log('visionResp',visionResp);
     if(!(visionResp && visionResp.length >0)){
       throw "unmatched";
@@ -204,10 +214,10 @@ export default class ReceiptScanner extends React.Component {
               <View
                 style={{
                   position: "absolute",
-                  top: -width / 2 + (width/12.5),
-                  left: -width / 2 + (width/5),
-                  right: -width / 2 + (width/5),
-                  bottom: -width / 2 + (width/37.5),
+                  top: -width / 2 + (width/10),
+                  left: -width / 2 + (width/8),
+                  right: -width / 2 + (width/8),
+                  bottom: -width / 2 + (width/4),
 
                   borderWidth: width / 2,
                   borderColor: "rgb(32,53,70)",
