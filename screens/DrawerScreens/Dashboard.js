@@ -22,6 +22,7 @@ import { StackActions, NavigationActions } from 'react-navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Avatar, ListItem } from 'react-native-elements';
 import DashboardStatComponent from '../../components/DashboardStatComponent'
+import CameraRollPicker from 'react-native-camera-roll-picker';
 
 
 
@@ -36,7 +37,8 @@ export default class Dashboard extends React.Component {
     this.state = {
       firstName:'',
       lastName:'',
-      username:''
+      username:'',
+      profilePic:''
     }
     currentTransactions=[]
     pastTransactions=[]
@@ -116,10 +118,12 @@ export default class Dashboard extends React.Component {
         const fName = snapshot.val().firstName;
         const lName = snapshot.val().lastName;
         const user = snapshot.val().username;
+        const profilePic = snapshot.val().profilePic;
         this.setState({
           firstName: fName,
           initials: fName.charAt(0) + lName.charAt(0),
           username: user,
+          profilePic: profilePic
         })
 
       });
@@ -133,7 +137,6 @@ export default class Dashboard extends React.Component {
         balance = snapshot.val().balance
       })
     }
-
 
 
   renderMain(item){
@@ -197,7 +200,7 @@ export default class Dashboard extends React.Component {
     )
 
   render() {
-
+    const { profilePic } = this.state
     return (
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../../assets/blue.jpg')} style={styles.imageContainer}>
@@ -218,7 +221,8 @@ export default class Dashboard extends React.Component {
             <View style={styles.userContainer}>
               <Avatar
                 size = {width/2.5}
-                source={require('../../assets/blue.jpg')}
+                source={{uri: profilePic ? profilePic : 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'}}
+                defaultSource = {require('../../assets/default-profile.png')}
                 showEditButton={true}
                 editButton={{size:width/11}}
                 rounded = {true}
@@ -276,6 +280,7 @@ export default class Dashboard extends React.Component {
                 renderItem={this.renderItem}
               />
               </View>
+
 
             </KeyboardAwareScrollView>
           </View>

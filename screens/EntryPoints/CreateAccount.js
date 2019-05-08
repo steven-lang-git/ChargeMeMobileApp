@@ -174,6 +174,7 @@ export default class CreateAccount extends React.Component {
               email: this.state.email,
               phone: unMask,
               birthday: day,
+              profilePic: 'https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-2.png'
             });
 
             //create user wallet
