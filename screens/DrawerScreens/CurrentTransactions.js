@@ -27,71 +27,97 @@ class MyItem extends React.Component {
 
 
   _renderMain = () =>{
-  let chargingName, payingName;
+  let chargingName, payingName, chargingUsername, payingUsername;
   this.tempArray = tempArray.map((item,key) =>{
 
-
     if(item.key==this.props.item.paying){
-      chargingName=item.first;
+      payingName=item.first;
+      payingUsername = item.username
     }
     else if(item.key==this.props.item.charging){
-      payingName=item.first;
+      chargingName=item.first;
+      chargingUsername = item.username
     }
   });
 
     // return this.props.renderPay(this.props.item);
   if(this.props.selectedIdx==0){
     if(this.props.item.paying==uid){
-        return <ListItem
-        {...this.props}
-        onPress={this._onPress}
-        containerStyle= {styles.blueButton}
-        title={this.props.item.name}
-        titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
-        subtitle={this.props.item.date }
-        subtitleStyle={{color:'white', fontSize: width/27}}
-        rightElement={<Text style = {{color: 'white'}}> $ {(this.props.item.amount).toFixed(2)}</Text>}
-        rightTitle={<Text style = {{fontSize: width/24,color:'white'}}>Paying{"\n"}{payingName}</Text>}
-        rightTitleStyle={{width: width/4}}
-        chevronColor="white"
-        chevron
-        />
-      }
-
-        if(this.props.item.charging==uid){
-        return <ListItem
+        return(
+        <ListItem
         {...this.props}
         onPress={this._onPress}
         containerStyle= {styles.redButton}
-        title={this.props.item.name}
-          titleStyle={{color:'white', fontWeight:'bold',fontSize: width/26}}
-          subtitle={this.props.item.date }
-          subtitleStyle={{color:'white',fontSize: width/27}}
-          rightElement={<Text style = {{color: 'white'}}> $ {(this.props.item.amount).toFixed(2)}</Text>}
-          rightTitle={<Text style = {{fontSize: width/24,color:'white'}}>Charging{"\n"}{chargingName}</Text>}
-          rightTitleStyle={{ width: width/4}}
+        Component={TouchableOpacity}
+        leftAvatar= {{
+                      size: width/7.5,
+                      source: require('../../assets/blue.jpg'),
+                      rounded: true
+                    }}
+        title={'Paying'}
+        titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
+        subtitle={'@' + chargingUsername}
+        subtitleStyle={{color:'white', fontSize: width/27}}
+        rightTitle={this.props.item.name}
+        rightTitleStyle={{color:'white', fontWeight:'bold', fontSize: width/26, width: width/3.6}}
+        rightSubtitle={'$' + (this.props.item.amount).toFixed(2)}
+        rightSubtitleStyle={{color:'white', fontSize: width/27, width: width/3.6}}
+        chevronColor="white"
+        chevron
+        />)
+      }
+
+        if(this.props.item.charging==uid){
+        return(
+        <ListItem
+          {...this.props}
+          onPress={this._onPress.bind(this)}
+          containerStyle= {styles.blueButton}
+          Component={TouchableOpacity}
+          leftAvatar= {{
+                        size: width/7.5,
+                        source: require('../../assets/blue.jpg'),
+                        rounded: true,
+                      }}
+          title='Charging'
+          titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
+          subtitle={'@' + payingUsername}
+          subtitleStyle={{color:'white', fontSize: width/27}}
+          rightTitle={this.props.item.name}
+          rightTitleStyle={{color:'white', fontWeight:'bold', fontSize: width/26, width: width/3.6}}
+          rightSubtitle={'$' + (this.props.item.amount).toFixed(2)}
+          rightSubtitleStyle={{color:'white', fontSize: width/27, width: width/3.6}}
           chevronColor="white"
           chevron
-          />
+          />)
         }
   }
     if(this.props.selectedIdx==1){
         // console.log(this.props.selectedIdx);
       if(this.props.item.paying==uid){
-        return <ListItem
+        return(
+        <ListItem
+          {...this.props}
           {...this.props}
           onPress={this._onPress}
-          containerStyle= {styles.blueButton}
-          title={this.props.item.name}
-          titleStyle={{color:'white', fontWeight:'bold',fontSize: width/26}}
-          subtitle={this.props.item.date }
-          subtitleStyle={{color:'white',fontSize: width/27}}
-          rightElement={<Text style = {{color: 'white'}}> $ {(this.props.item.amount).toFixed(2)}</Text>}
-          rightTitle={<Text style = {{fontSize: width/24,color:'white'}}>Paying{"\n"}{payingName}</Text>}
-          rightTitleStyle={{ width: width/4}}
+          containerStyle= {styles.redButton}
+          Component={TouchableOpacity}
+          leftAvatar= {{
+                        size: width/7.5,
+                        source: require('../../assets/blue.jpg'),
+                        rounded: true
+                      }}
+          title={'Paying'}
+          titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
+          subtitle={'@' + chargingUsername}
+          subtitleStyle={{color:'white', fontSize: width/27}}
+          rightTitle={this.props.item.name}
+          rightTitleStyle={{color:'white', fontWeight:'bold', fontSize: width/26, width: width/3.6}}
+          rightSubtitle={'$' + (this.props.item.amount).toFixed(2)}
+          rightSubtitleStyle={{color:'white', fontSize: width/27, width: width/3.6}}
           chevronColor="white"
           chevron
-          />
+          />)
         }
         else{
           return(
@@ -102,21 +128,28 @@ class MyItem extends React.Component {
     if(this.props.selectedIdx==2){
       // console.log(this.props.selectedIdx);
       if(this.props.item.charging==uid){
-        return <ListItem
+        return(
+        <ListItem
         {...this.props}
         onPress={this._onPress}
-        containerStyle= {styles.redButton}
-        title={this.props.item.name}
-          titleStyle={{color:'white', fontWeight:'bold',fontSize: width/26}}
-          subtitle={this.props.item.date }
-          subtitleStyle={{color:'white',fontSize: width/27}}
-          rightElement={<Text style = {{color: 'white'}}> $ {(this.props.item.amount).toFixed(2)}</Text>}
-          rightTitle={<Text style = {{fontSize: width/24,color:'white'}}>Charging{"\n"}{chargingName}</Text>}
-          rightTitleStyle={{ width: width/4}}
-          chevronColor="white"
-          chevron
-
-          />
+        containerStyle= {styles.blueButton}
+        Component={TouchableOpacity}
+        leftAvatar= {{
+                      size: width/7.5,
+                      source: require('../../assets/blue.jpg'),
+                      rounded: true,
+                    }}
+        title='Charging'
+        titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
+        subtitle={'@' + payingUsername}
+        subtitleStyle={{color:'white', fontSize: width/27}}
+        rightTitle={this.props.item.name}
+        rightTitleStyle={{color:'white', fontWeight:'bold', fontSize: width/26, width: width/3.6}}
+        rightSubtitle={'$' + (this.props.item.amount).toFixed(2)}
+        rightSubtitleStyle={{color:'white', fontSize: width/27, width: width/3.6}}
+        chevronColor="white"
+        chevron
+        />)
         }
         else{
           return(
@@ -191,9 +224,9 @@ componentDidMount(){
   .once("value")
   .then((snapshot) => {
 
-    // for each friend
+    // for each current transaction
     snapshot.forEach((childSnapShot) => {
-      //save their transaction information
+      //save transaction information
       transactionData.push({
                           key: childSnapShot.key,
                           amount: childSnapShot.val().amount,
@@ -208,16 +241,17 @@ componentDidMount(){
 
     firebase
     .database()
-    .ref()
-    .child("users")
+    .ref("friendslist/" + uid)
+    .child('currentFriends')
     .once("value")
     .then ((snapshot) => {
-      // for each user
+      // for each friend
       snapshot.forEach((childSnapShot) => {
-
           tempArray.push({
             key: childSnapShot.key,
             first: childSnapShot.val().firstName,
+            last: childSnapShot.val().lastName,
+            username: childSnapShot.val().username,
           })
           this.setState(
             {
@@ -295,7 +329,7 @@ renderItem = ({item})=> (
                 buttons={buttons}
                 containerStyle={{ height: width/12.5 }}
               />
-                 <View style={styles.infoContainer}>
+            <View style={styles.infoContainer}>
 
             <FlatList style={{flex:1}}
               keyExtractor={this.keyExtractor}
@@ -303,7 +337,7 @@ renderItem = ({item})=> (
               renderItem={this.renderItem}
             />
 
-        { this.state.isModalVisible && <MyModal selectedItem={this.state.selectedItem} modalVisible={this.state.isModalVisible} hideModal={this._toggleModal} /> }
+        { this.state.isModalVisible && <MyModal selectedItem={this.state.selectedItem} modalVisible={this.state.isModalVisible} hideModal={this._toggleModal} navigation={this.props.navigation}/> }
 
             </View>
           </View>
@@ -338,32 +372,26 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flex: 2,
-    padding: width/18.75,
+    padding: width/37.5,
     justifyContent: "flex-end",
     width:width,
-    marginTop:width/18.75,
-
-
+    marginTop:width/37.5
   },
-  blueButton: {
-  	padding:width/25,
-  	backgroundColor: '#202646',
-    borderRadius:width/37.5,
-    borderWidth: 1,
-    borderColor: '#35b0d2',
+  blueButton:{
+    padding:width/37.5,
     backgroundColor: '#35b0d2',
     marginTop:width/37.5,
-    marginBottom: width/37.5,
+    borderRadius:width/37.5,
+    borderColor: '#35b0d2',
+    borderWidth: 1,
   },
   redButton: {
-    padding:width/25,
-  	backgroundColor: '#202646',
-    borderRadius:width/37.5,
-    borderWidth: 1,
-    borderColor: 'coral',
+    padding:width/37.5,
     backgroundColor: 'coral',
     marginTop:width/37.5,
-    marginBottom: width/37.5,
+    borderRadius:width/37.5,
+    borderColor: 'coral',
+    borderWidth: 1,
   },
   modalContent: {
     backgroundColor: 'white',

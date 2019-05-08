@@ -76,8 +76,7 @@ export default class DebitCard extends React.Component {
   );
 
   onAddCard = () => {
-    let cardNumbers = this.cardNumField.getRawValue
-    console.log(cardNumbers)
+    let cardNumbers = this.cardNumField.getRawValue()
     let expDateRaw = this.state.expDate.replace(/\D/g,'')
 
     if( this.state.name == ''){

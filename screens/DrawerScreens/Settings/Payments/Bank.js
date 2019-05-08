@@ -256,7 +256,7 @@ constructor(props){
 
             <View style={{marginTop: width/25, height: width/6.25}}>
             <ButtonComponent
-              text='ADD CARD'
+              text='ADD BANK'
               onPress ={() => this.onAddBank()}
               disabled = {false}
               primary={true}

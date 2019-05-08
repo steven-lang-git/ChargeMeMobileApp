@@ -176,6 +176,7 @@ export default class CreateAccount extends React.Component {
               birthday: day,
             });
 
+            //create user wallet
             firebase.database().ref('payments/' + userId + '/wallet').set({
               balance: 0,
             })

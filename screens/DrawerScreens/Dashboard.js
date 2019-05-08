@@ -31,7 +31,6 @@ let activity=''
 let balance = 0
 
 export default class Dashboard extends React.Component {
-  static navigationOptions = {header: null}
   constructor(props) {
     super(props)
     this.state = {
@@ -44,6 +43,8 @@ export default class Dashboard extends React.Component {
     tempArray=[]
     currFriends=[]
     currTransCount = 0
+    activity = ''
+    balance = 0
 
   }
 
@@ -96,6 +97,8 @@ export default class Dashboard extends React.Component {
               currFriends.push({
                 key: childSnapShot.key,
                 first: childSnapShot.val().firstName,
+                last: childSnapShot.val().lastName,
+                username: childSnapShot.val().username,
               })
               this.setState(
                 {
@@ -136,42 +139,55 @@ export default class Dashboard extends React.Component {
   renderMain(item){
   const {selectedIndex}= this.state;
   var uid = firebase.auth().currentUser.uid;
-  var name;
+  var username;
     if(item.paying==uid){
       for(var x in currFriends){
         if(currFriends[x].key==item.charging){
-        name=currFriends[x].first;
+        username=currFriends[x].username;
+
         }
       };
-      return <ListItem
-      containerStyle= {styles.blueButton}
-      title={item.name}
-      titleStyle={{color:'white', fontWeight:'bold'}}
-      subtitle={item.date }
-      subtitleStyle={{color:'white'}}
-      rightElement={<Text style = {{color: 'white'}}> $ {(item.amount).toFixed(2)}</Text>}
-      rightTitle={<Text style = {{fontSize: width/24,color:'white'}}>Paying{"\n"}{name}</Text>}
-      rightTitleStyle={{ width: width/4.6875}}
-
-
-      />;  }
+      return (
+        <ListItem
+          containerStyle= {styles.redButton}
+          leftAvatar= {{
+                        size: width/7.5,
+                        source: require('../../assets/blue.jpg'),
+                        rounded: true
+                      }}
+          title={'Paying' }
+          titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
+          subtitle={'@' + username}
+          subtitleStyle={{color:'white', fontSize: width/27}}
+          rightTitle={item.name}
+          rightTitleStyle={{color:'white', fontWeight:'bold', fontSize: width/26, width: width/3.6}}
+          rightSubtitle={'$' + (item.amount).toFixed(2)}
+          rightSubtitleStyle={{color:'white', fontSize: width/27, width: width/3.6}}
+        />
+      );
+    }
     else if(item.charging==uid)
     {
       for(var x in currFriends){
         if(currFriends[x].key==item.paying){
-        name=currFriends[x].first;
+        username=currFriends[x].username;
         }
       };
       return <ListItem
-      containerStyle= {styles.redButton}
-      title={item.name}
-      titleStyle={{color:'white', fontWeight:'bold'}}
-      subtitle={item.date }
-      subtitleStyle={{color:'white'}}
-      rightElement={<Text style = {{color: 'white'}}> $ {(item.amount).toFixed(2)}</Text>}
-      rightTitle={<Text style = {{fontSize: width/24,color:'white'}}>Charging{"\n"}{name}</Text>}
-      rightTitleStyle={{width: width/4.6875}}
-
+      containerStyle= {styles.blueButton}
+      leftAvatar= {{
+                    size: width/7.5,
+                    source: require('../../assets/blue.jpg'),
+                    rounded: true
+                  }}
+      title={'Charging'}
+      titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
+      subtitle={'@' + username}
+      subtitleStyle={{color:'white', fontSize: width/27}}
+      rightTitle={item.name}
+      rightTitleStyle={{color:'white', fontWeight:'bold', fontSize: width/26, width: width/3.6}}
+      rightSubtitle={'$' + (item.amount).toFixed(2)}
+      rightSubtitleStyle={{color:'white', fontSize: width/27, width: width/3.6}}
       />
     }
 };
@@ -215,11 +231,7 @@ export default class Dashboard extends React.Component {
               </View>
             </View>
 
-            <View style={styles.line}/>
-              <View style = {{margin: width/37.5}}>
-                <Text style={{color: 'white', fontSize: width/20.83}}>Balance: ${balance.toFixed(2)}</Text>
-              </View>
-            <View style={styles.line}/>
+
 
             <View style={styles.statsContainer}>
 
@@ -246,17 +258,25 @@ export default class Dashboard extends React.Component {
 
             </View>
 
+            <View style={styles.line}/>
+              <View style = {{margin: width/37.5}}>
+                <Text style={{color: 'white', fontSize: width/20.83}}>Balance: ${balance.toFixed(2)}</Text>
+              </View>
+            <View style={styles.line}/>
+
 
 
             <View style={styles.infoContainer}>
               <Text style={styles.text}>Your Recent Activity:</Text>
+
               <Text style ={{marginTop: width/25, color:'white', textAlign: 'center', fontSize: width/20.833}}>{activity}</Text>
               <FlatList style={{flex:1}}
                 keyExtractor={this.keyExtractor}
                 data={currentTransactions}
                 renderItem={this.renderItem}
               />
-            </View>
+              </View>
+
             </KeyboardAwareScrollView>
           </View>
 
@@ -312,6 +332,7 @@ const styles = StyleSheet.create({
     paddingTop: width/37.5,
     alignItems: 'flex-end',
     justifyContent: 'space-evenly',
+    marginBottom: width/25
   },
   infoContainer:{
     flex: 2,
@@ -328,22 +349,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   blueButton:{
-    padding:width/25,
-    backgroundColor: '#202646',
-    borderRadius:width/37.5,
-    borderWidth: 1,
-    borderColor: '#35b0d2',
+    padding:width/37.5,
     backgroundColor: '#35b0d2',
     marginTop:width/37.5,
+    borderRadius:width/37.5,
+    borderColor: '#35b0d2',
+    borderWidth: 1,
   },
   redButton: {
-    padding:width/25,
-    backgroundColor: '#202646',
-    borderRadius:width/37.5,
-    borderWidth: 1,
-    borderColor: 'coral',
+    padding:width/37.5,
     backgroundColor: 'coral',
     marginTop:width/37.5,
+    borderRadius:width/37.5,
+    borderColor: 'coral',
+    borderWidth: 1,
   },
   overlay:{
       ...StyleSheet.absoluteFillObject,

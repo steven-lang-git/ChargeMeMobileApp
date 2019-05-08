@@ -11,8 +11,8 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native';
-import {Icon} from 'native-base'
 import * as firebase from 'firebase';
+import { ListItem, Icon } from 'react-native-elements';
 
 const{width} = Dimensions.get('window')
 
@@ -21,10 +21,48 @@ export default class PaymentMethods extends React.Component {
     super(props);
     this.state= {
       balance: 0,
-      cards: '',
-      banks: '',
+      cards: [],
+      banks: [],
     };
   }
+
+  // //function called to save changes when user navigates away from screen
+  //   componentWillUnmount() {
+  //     var uid = firebase.auth().currentUser.uid;
+  //     const { cards, banks } = this.state;
+  //
+  //     //clear out user's current cards
+  //     firebase
+  //       .database()
+  //       .ref("payments/" + uid + "/cards")
+  //       .set(" ");
+  //
+  //     //write in each card
+  //     for (let i = 0; i < cards.length; i++){
+  //       firebase
+  //         .database()
+  //         .ref("payments/" + uid + "/cards/"+ cards[i].name)
+  //         .set({
+  //                 number: cards[i].number,
+  //               });
+  //     }
+  //
+  //     //clear out user's current banks
+  //     firebase
+  //       .database()
+  //       .ref("payments/" + uid + "/banks")
+  //       .set(" ");
+  //
+  //     //write in each bank
+  //     for (let i = 0; i < banks.length; i++){
+  //       firebase
+  //         .database()
+  //         .ref("payments/" + uid + "/banks/"+ banks[i].name)
+  //         .set({
+  //                 number: banks[i].number,
+  //               });
+  //     }
+  //   }
 
   componentDidMount(){
 
@@ -46,8 +84,7 @@ export default class PaymentMethods extends React.Component {
       .database()
       .ref("payments/" + uid)
       .child("cards")
-      .once("value")
-      .then((snapshot) => {
+      .once("value", snapshot => {
 
         var cardsArray = []
         // for each card
@@ -56,7 +93,6 @@ export default class PaymentMethods extends React.Component {
           cardsArray.push({
                               name: childSnapShot.key,
                               number: childSnapShot.val().number,
-                              type: 'card'
                             })
         });
         console.log('cards array: ', cardsArray)
@@ -68,8 +104,7 @@ export default class PaymentMethods extends React.Component {
       .database()
       .ref("payments/" + uid)
       .child("banks")
-      .once("value")
-      .then((snapshot) => {
+      .once("value", snapshot => {
 
         var banksArray = []
         // for each bank
@@ -78,13 +113,44 @@ export default class PaymentMethods extends React.Component {
           banksArray.push({
                               name: childSnapShot.key,
                               number: childSnapShot.val().number,
-                              type: 'bank'
                             })
         });
         console.log('banks array: ', banksArray)
         this.setState({banks: banksArray})
         })
   }
+
+  //function to remove card
+  removeCard = (index) => {
+    const { cards } = this.state;
+
+    var uid = firebase.auth().currentUser.uid;
+    //clear out removed card
+    firebase
+      .database()
+      .ref("payments/" + uid + "/cards/" + cards[index].name)
+      .remove();
+
+    // Pull card out
+    this.state.cards.splice(index, 1);
+    this.forceUpdate();
+  };
+
+  //function to remove bank
+  removeBank = (index) => {
+    const { banks } = this.state;
+
+    var uid = firebase.auth().currentUser.uid;
+    //clear out removed bank
+    firebase
+      .database()
+      .ref("payments/" + uid + "/banks/" + banks[index].name)
+      .remove();
+
+    // Pull card out
+    this.state.banks.splice(index, 1);
+    this.forceUpdate();
+  };
 
   render() {
 
@@ -99,35 +165,83 @@ export default class PaymentMethods extends React.Component {
         <View style={{flex:1}}>
           <ScrollView>
 
-            <View style={{flexDirection: 'row', padding: width/37.5, height: width/6.25}}>
+            <View style={{flexDirection: 'row', padding: width/25, height: width/5}}>
               <Icon
                 name='ios-wallet'
-                style={{color:'white', fontSize: width/11}}
+                type='ionicon'
+                color='#35b0d2'
+                size= {width/10}
               />
 
               <View style={{marginLeft: width/18.75}}>
-                <Text style={styles.itemTextTitle}>
+                <Text style={styles.titleText}>
                   ChargeMe Balance
                 </Text>
-                <Text style={styles.itemText}>
+                <Text style={styles.subtitleText}>
                   ${balance}
                 </Text>
               </View>
             </View>
 
+            <View style={styles.container}>
+              {cards.map((card, index) => (
+                <ListItem
+                  containerStyle={styles.listContainer}
+                  key={index}
+                  leftIcon={{name: 'ios-card', type: 'ionicon', color: 'white', size: width/11, containerStyle: {marginLeft: width/75}}}
+                  title={card.name}
+                  titleStyle = {[styles.titleText, {marginLeft: width/75}]}
+                  subtitle = {card.number}
+                  subtitleStyle= {styles.subtitleText}
+                  bottomDivider = {true}
+                  topDivider = {true}
+                  rightElement = {
+                                    <View style={styles.removeBtn}>
+                                      <TouchableOpacity
+                                      onPress={() => this.removeCard(index)}
+                                      >
+                                        <Text style={styles.btnText}>Remove</Text>
+                                      </TouchableOpacity>
+                                    </View>
+                                  }
+                />
+              ))}
+            </View>
 
-
-            <View style={styles.line}/>
+            <View style={styles.container}>
+              {banks.map((bank, index) => (
+                <ListItem
+                  containerStyle={styles.listContainer}
+                  key={index}
+                  leftIcon={{name: 'university', type: 'font-awesome', color: 'white', size: width/11}}
+                  title={bank.name}
+                  titleStyle = {styles.titleText}
+                  subtitle = {bank.number}
+                  subtitleStyle= {styles.subtitleText}
+                  bottomDivider = {true}
+                  topDivider = {true}
+                  rightElement = {
+                                    <View style={styles.removeBtn}>
+                                      <TouchableOpacity
+                                        onPress={() => this.removeBank(index)}
+                                      >
+                                        <Text style={styles.btnText}>Remove</Text>
+                                      </TouchableOpacity>
+                                    </View>
+                                  }
+                />
+              ))}
+            </View>
 
 
             <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('Bank')}>
                 <Text style={styles.btntext}>ADD BANK </Text>
-                <Icon name="angle-right" type="FontAwesome" style={styles.icon}/>
+                <Icon name="angle-right" type="font-awesome" iconStyle={styles.icon}/>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('DebitCard')}>
                 <Text style={styles.btntext}>ADD DEBIT CARD </Text>
-                <Icon name="angle-right" type="FontAwesome" style={styles.icon}/>
+                <Icon name="angle-right" type="font-awesome" iconStyle={styles.icon}/>
             </TouchableOpacity>
 
           </ScrollView>
@@ -176,11 +290,6 @@ const styles = StyleSheet.create({
       ...StyleSheet.absoluteFillObject,
       backgroundColor: 'rgba(69,85,117,0.7)',
   },
-  line:{
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    height: 1,
-    width: width
-  },
   imageContainer: {
       resizeMode:'cover',
       flex:1,
@@ -193,5 +302,28 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize:  width/20.83,
     fontWeight: 'bold'
-  }
+  },
+  listContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: width,
+    backgroundColor: 'transparent'
+  },
+  titleText: {
+    color: 'white',
+    fontSize: width/18.75,
+    fontWeight : 'bold'
+  },
+  subtitleText: {
+    color: 'rgba(225,225,225,0.8)',
+    fontSize: width/23.4
+  },
+  removeBtn: {
+    right: width/37.5,
+    height: width/25
+  },
+  btnText: {
+    color: 'white',
+    fontSize: width/28.8
+  },
 });

@@ -41,7 +41,7 @@ export default class FriendsList extends React.Component {
     tempArray = []
   }
 
-//function called to save changes when use navigates away from screen
+//function called to save changes when user navigates away from screen
   componentWillUnmount() {
     var uid = firebase.auth().currentUser.uid;
 
@@ -209,28 +209,28 @@ export default class FriendsList extends React.Component {
 
                 {currentFriends.map((friend, index) => (
                   <ListItem
-                  containerStyle={styles.listContainer}
-                  key={index}
-                  leftAvatar= {{
-                                size: width/7.5,
-                                source: require('../../assets/blue.jpg'),
-                                rounded: true
-                              }}
-                  title={friend.firstName + ' ' + friend.lastName}
-                  titleStyle = {styles.titleText}
-                  subtitle = {'@' + friend.username}
-                  subtitleStyle= {styles.subtitleText}
-                  rightElement = {
-                                    <View style={styles.removeBtn}>
-                                      <TouchableOpacity
-                                        onPress={() => this.removeFriend(index)}
-                                        key={friend.username}
-                                      >
-                                        <Text style={styles.btnText}>Remove</Text>
-                                      </TouchableOpacity>
-                                    </View>
-                                  }
+                    containerStyle={styles.listContainer}
+                    key={index}
+                    leftAvatar= {{
+                                  size: width/7.5,
+                                  source: require('../../assets/blue.jpg'),
+                                  rounded: true
+                                }}
+                    title={friend.firstName + ' ' + friend.lastName}
+                    titleStyle = {styles.titleText}
+                    subtitle = {'@' + friend.username}
+                    subtitleStyle= {styles.subtitleText}
+                    rightElement = {
+                                      <View style={styles.removeBtn}>
+                                        <TouchableOpacity
+                                          onPress={() => this.removeFriend(index)}
+                                        >
+                                          <Text style={styles.btnText}>Remove</Text>
+                                        </TouchableOpacity>
+                                      </View>
+                                    }
                     bottomDivider = {true}
+                    topDivider = {true}
                   />
                 ))}
               </View>
