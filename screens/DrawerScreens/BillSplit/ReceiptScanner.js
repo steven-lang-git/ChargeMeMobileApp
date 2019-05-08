@@ -17,7 +17,7 @@ import {
 import { Header, Left, Right, Icon } from "native-base";
 import { Camera, Permissions } from "expo";
 import ImagePicker from 'react-native-image-picker';
-import Ocr from 'react-native-tesseract-ocr';
+import RNTesseractOcr from 'react-native-tesseract-ocr';
 
 import RNTextDetector from "react-native-text-detector";
 import ButtonComponent from "../../../components/ButtonComponent";
@@ -83,15 +83,36 @@ export default class ReceiptScanner extends React.Component {
     };
     ImagePicker.launchImageLibrary(options,response=>{
       console.log("response",response);
-      if(response.uri){
-        this.setState({photo:response});
-        this.extractText(response.path);
+      if(!response.didcCancel){
+        const source = {uri: response.uri};
+        this.setState({
+          imageSource:source,
+          path:response.uri});
+          this.extractText(response.path);
+      
       }
+      // if(response.uri){
+      //   this.setState({photo:response,
+      //   path:response.uri});
+      //   // this.extractText(response.path);
+      // }
     });
   };
   extractText(imgPath){
-    Ocr.recognize(imgPath, 'LANG_ENGLISH', tessOptions)
-    .then((res)=> this.setState({text:res}));
+    const tessOptions = {
+      whitelist: null, 
+      blacklist: '1234567890\'!"#$%&/()={}[]+*-_:;<>'
+    };
+
+    RNTesseractOcr.recognize(imgPath, lang, tessOptions)
+    .then((result) => {
+      this.setState({ ocrResult: result });
+      console.log("OCR Result: ", result);
+    })
+    .catch((err) => {
+      console.log("OCR Error: ", err);
+    })
+    .done();
   }
 
   async componentDidMount() {
@@ -151,22 +172,12 @@ export default class ReceiptScanner extends React.Component {
       </View>
     );
   }
-  renderImagePick(){
-    return (
-      <View style ={{position:'absolute', flex:1, alignItems: "center", justifyContent:"center", marginTop:20}}>
-      {photo&&(<Image
-        source={{uri:photo.uri}}
-        style={{width:300,height:300}}
-        
-      />)}
-      <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
-     </View>
-    );
+  renderNothing(){
+    
   }
 
   renderCamera() {
     const { hasCameraPermission } = this.state;
-    const {photo} =this.state;
 
     if (hasCameraPermission === null) {
       return <View />;
@@ -204,11 +215,13 @@ export default class ReceiptScanner extends React.Component {
                 }}
               />
               <View style ={{position:'absolute', flex:1, alignItems: "center", justifyContent:"center"}}>
-      {photo&&(<Image
+      {/* {photo&&(<Image
         source={{uri:photo.uri}}
         style={{width:300,height:300}}
         
-      />)}
+      />)} */}
+                      {this.state.path ? this.renderImage(): this.renderNothing() }
+
       <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
      </View>
 
