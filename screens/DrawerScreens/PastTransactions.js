@@ -48,7 +48,7 @@ class MyItem extends React.Component {
                       source: require('../../assets/blue.jpg'),
                       rounded: true
                     }}
-        title={'Paying'}
+        title={'Paid'}
         titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
         subtitle={'@' + chargingUsername}
         subtitleStyle={{color:'white', fontSize: width/27}}
@@ -69,7 +69,7 @@ class MyItem extends React.Component {
                         source: require('../../assets/blue.jpg'),
                         rounded: true,
                       }}
-          title='Charging'
+          title='Charged'
           titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
           subtitle={'@' + payingUsername}
           subtitleStyle={{color:'white', fontSize: width/27}}
@@ -92,7 +92,7 @@ class MyItem extends React.Component {
                         source: require('../../assets/blue.jpg'),
                         rounded: true
                       }}
-          title={'Paying'}
+          title={'Paid'}
           titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
           subtitle={'@' + chargingUsername}
           subtitleStyle={{color:'white', fontSize: width/27}}
@@ -120,7 +120,7 @@ class MyItem extends React.Component {
                       source: require('../../assets/blue.jpg'),
                       rounded: true,
                     }}
-        title='Charging'
+        title='Charged'
         titleStyle={{color:'white', fontWeight:'bold', fontSize: width/26}}
         subtitle={'@' + payingUsername}
         subtitleStyle={{color:'white', fontSize: width/27}}
