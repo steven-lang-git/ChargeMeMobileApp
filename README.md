@@ -163,7 +163,7 @@ Now that you have detached you have access to native dependencies. However this 
 ```
 $ npm install --save rn-fetch-blob
 ```
-Go into your ios directory and add the following lines you your podfile
+Go into your ios directory and add the following lines to your podfile
 ```
 pod 'rn-fetch-blob',
     :path => '../node_modules/rn-fetch-blob'
