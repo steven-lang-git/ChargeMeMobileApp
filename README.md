@@ -34,8 +34,7 @@ $ npm install --save react-native-material-dropdown
 $ npm i react-native-ui-stepper
 $ npm install react-native-datepicker --save
 $ npm install --save react-native-modal
-$ npm install react-native-text-detector —save
-$ npm i react-native-image-picker
+
 
 ```
 5. Fix errors within react-native-vector-icons
@@ -43,7 +42,12 @@ $ npm i react-native-image-picker
 $ npm uninstall react-native-vector-icons --save
 $ npm install react-native-vector-icons --save
 ```
-6. Install expo on your iOS/Android device or use an Android emulator like GenyMotion or iOS Simulator in Xcode
+6. Link depndencies to React-Native
+```
+$ react-native link 
+```
+
+7. Install expo on your iOS/Android device or use an Android emulator like GenyMotion or iOS Simulator in Xcode
 
 #### Emulate in Xcode iOS simulator
 i.
@@ -176,5 +180,49 @@ $ react-native link
 $ cd ios
 $ pod install
 ```
+
+For React Native Image Picker and Text Detector: 
+1. Download the NPM libraries 
+```
+$ npm install react-native-text-detector —save
+$ npm i react-native-image-picker
+$ react-native link
+```
+
+2. We need to update the podfile, add these lines into the file: 
+```
+pod 'RNTextDetector', path: '../node_modules/react-native-text-detector/ios'
+
+
+pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+```
+then run the follow command:
+```
+$ cd ios
+$ pod install 
+```
+
+## In order to get React Text Detector to work...
+1. Install tessdata zip folder from https://github.com/tesseract-ocr/tessdata_best and rename the folder to 'tessdata'
+2. Drag and drop the folder into your project directory
+
+
+If XCode fails to compile.... you may need to either:
+1. drag and drop all of the following files into your frameworks folder & 'Link Binary with Libraries' under 'Build Phases':
+```
+RNImagePicker.xcodeproj
+RCTText.xcodeproj
+libz.tbd 
+RCTActionSheet.xcodeproj
+RCTWebSocket.xcodeproj
+RCTTest.xcodeproj
+RCTNetwork.xcodeproj
+RCTImage.xcodeproj
+RCTLinking.xcodeproj
+React-xcodeproj
+```
+
+
+
 
 Once again, clean your Xcode project using `Command-Option-Shift-K` and ensure your project builds without error
