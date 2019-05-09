@@ -101,11 +101,11 @@ Congrats, you now have a native project with ExpoKit! Follow the directions unde
 ou can do whatever you want in the Xcode and Android Studio projects.
 To add third-party native modules for React Native, non-Expo-specific instructions such as `react-native link` should be supported.
 
-## Installing CocoaPods 
+## Installing CocoaPods
 ### What is CocoaPods?
 CocoaPods is a dependency manager for Swift and Objective-C Cocoa projects. It has over 61 thousand libraries and is used in over 3 million apps. CocoaPods can help you scale your projects elegantly
 CocoaPods is built with Ruby and is installable with the default Ruby available on macOS. We recommend you use the default ruby.
-Using the default Ruby install can require you to use `sudo` when installing gems. 
+Using the default Ruby install can require you to use `sudo` when installing gems.
 
 1. First open your terminal and type
 `sudo gem install cocoapods -v 1.5.3`
@@ -155,3 +155,24 @@ $ expo start
 Go to:
 > Settings -> Security & Privacy -> Privacy -> Automation -> Privacy tab
 check the "System Events" checkbox
+
+## Installing native dependencies
+
+Now that you have detached you have access to native dependencies. However this means there will be an extra step when downloading new NPM libraries. Two such libraries are `rn-fetch-blob` and `react-native-camera-roll-picker`. To install them run the following commands:
+
+```
+$ npm install --save rn-fetch-blob
+$ react-native link
+$ cd ios
+$ pod install
+```
+
+At this point, it is advisable to clean your Xcode project build using `Command-Option-Shift-K`. If your build finishes without errors, continue with the following commands:
+```
+$ npm install react-native-camera-roll-picker --save
+$ react-native link
+$ cd ios
+$ pod install
+```
+
+Once again, clean your Xcode project using `Command-Option-Shift-K` and ensure your project builds without error
