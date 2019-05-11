@@ -205,6 +205,16 @@ $ pod install
 ## In order to get React Text Detector to work...
 1. Install tessdata zip folder from https://github.com/tesseract-ocr/tessdata_best and rename the folder to 'tessdata'
 2. Drag and drop the folder into your project directory
+3. Type the following in your command :
+```
+$ cd /usr/local/share
+$ export TESSDATA_PREFIX="<folder location of your tessdata folder>"
+```
+For an example:
+```
+
+export TESSDATA_PREFIX="/users/bob/downloads/tessdata"
+```
 
 
 If XCode fails to compile.... you may need to either:
@@ -221,6 +231,8 @@ RCTImage.xcodeproj
 RCTLinking.xcodeproj
 React-xcodeproj
 ```
+These files are located in your node_modules folder.
+
 
 
 
