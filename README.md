@@ -216,6 +216,12 @@ For an example:
 export TESSDATA_PREFIX="/users/bob/downloads/tessdata"
 ```
 
+Enter the following to check if your folder location is correct:
+
+```
+echo $TESSDATA_PREFIX
+```
+
 
 If XCode fails to compile.... you may need to either:
 1. drag and drop all of the following files into your frameworks folder & 'Link Binary with Libraries' under 'Build Phases':
