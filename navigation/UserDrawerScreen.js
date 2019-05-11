@@ -3,7 +3,6 @@ import {createDrawerNavigator} from 'react-navigation';
 import * as firebase from 'firebase';
 import PastTransactionsStack from './PastTransactionsStack';
 import MyModal from '../screens/DrawerScreens/MyModal';
-import Gallery from '../screens/DrawerScreens/Gallery';
 import CurrentTransactionsStack from './CurrentTransactionsStack';
 import BillSplitStackScreen from './BillSplitStackScreen';
 import FriendsStack from './FriendsStack';
@@ -19,7 +18,6 @@ const AppDrawerNavigator = createDrawerNavigator({
     CurrentTransactionsStack: {screen: CurrentTransactionsStack},
     SettingsStackScreen: {screen: SettingsStackScreen},
     MyModal: {screen: MyModal},
-    Gallery: {screen: Gallery},
   },
   {
     initialRouteName: 'DashboardStack',

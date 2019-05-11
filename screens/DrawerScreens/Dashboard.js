@@ -45,6 +45,7 @@ export default class Dashboard extends React.Component {
     tempArray=[]
     currFriends=[]
     currTransCount = 0
+    pastTransCount = 0
     activity = ''
     balance = 0
 
@@ -84,6 +85,15 @@ export default class Dashboard extends React.Component {
             activity = '... no recent activity :('
             this.forceUpdate();
           }
+        })
+
+        //get past transaction count
+        firebase
+        .database()
+        .ref("pastTransactions/" + uid)
+        .once("value")
+        .then((snapshot) => {
+          pastTransCount = snapshot.numChildren()
         })
 
         // gets all current friends
@@ -205,7 +215,6 @@ export default class Dashboard extends React.Component {
     )
 
   navigate=()=>{
-    console.log('edit pressed')
     this.props.navigation.navigate('Gallery')
   }
 
@@ -261,7 +270,7 @@ export default class Dashboard extends React.Component {
                 <DashboardStatComponent
                   onPress={() => this.props.navigation.navigate('PastTransactions')}
                   text={"Past" + "\n" + "Transactions:"  }
-                  secondText={String(pastTransactions.length)}
+                  secondText={String(pastTransCount)}
                 />
 
                 <DashboardStatComponent
