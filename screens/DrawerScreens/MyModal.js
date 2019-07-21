@@ -1,5 +1,6 @@
 import React from 'react';
-import {StyleSheet,
+import {
+    StyleSheet,
     Text,
     View,
     TextInput,
@@ -15,6 +16,7 @@ import Modal from "react-native-modal";
 import ButtonComponent from '../../components/ButtonComponent'
 import * as firebase from "firebase";
 import { ListItem, Icon } from 'react-native-elements';
+import { Constants, Notifications, Permissions } from 'expo';
 
 const { width, height } = Dimensions.get("window");
 
@@ -101,12 +103,6 @@ export default class MyModal extends React.Component {
 
           })
     }
-    console.log('pressedPay: ',pressedPay)
-    console.log('chargePaid: ',chargePaid)
-  }
-
-  _onRemind=()=>{
-    console.log('remind')
   }
 
   _onPay=()=>{
@@ -132,8 +128,6 @@ export default class MyModal extends React.Component {
 
   _pressBank=(index)=>{
 
-    console.log('PRESSED ', index)
-
     for (i = 0; i < banks.length; i++ ){
       if(i == index){
         banks[i].checked = true
@@ -150,8 +144,6 @@ export default class MyModal extends React.Component {
   }
 
   _payCharge=()=>{
-
-    console.log('enough balance? ', enoughBalance)
     //if wallet covers charge
     if(enoughBalance){
       let { balance } = this.state
@@ -190,12 +182,8 @@ export default class MyModal extends React.Component {
   confirm=()=>{
 
     let item  = this.props.selectedItem
-    console.log('confirming')
 
     //upgrade current transaction to past transaction
-    console.log('charging: ',item.charging)
-    console.log('paying: ',item.paying)
-    console.log('key: ',item.key)
 
     let friendBalance = 0
 
@@ -205,12 +193,8 @@ export default class MyModal extends React.Component {
       friendBalance = snapshot.val().balance
     });
 
-    console.log("their balance: ", friendBalance)
-
     //update friend's balance
     friendBalance = friendBalance + item.amount
-
-    console.log("their updated balance: ", friendBalance)
 
     //write in friend's new balance
     firebase.database().ref('payments/' + item.charging + '/wallet').set({
@@ -268,6 +252,24 @@ export default class MyModal extends React.Component {
 
   }
 
+  sendPushNotification = () => {
+    console.log('remind')
+    // var push_token = firebase.auth().charging.key
+    // let response = fetch('https://exp.host/--/api/v2/push/send',{
+    //   method:'POST',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body:{
+    //     to: push_token, //push_token of user,
+    //     sound:'default',
+    //     title:'ChargeMe',
+    //     body: 'A friendly reminder that you have an outstanding charge'
+    //   }
+    // })
+  }
+
     render() {
       var uid = firebase.auth().currentUser.uid
       if(uid == this.props.selectedItem.paying){
@@ -314,7 +316,7 @@ export default class MyModal extends React.Component {
 
                         {!paying && <TouchableHighlight
                             style={styles.blueButton}
-                            onPress={() => this._onRemind()}
+                            onPress={() => this.sendPushNotification()}
                             >
                         <Text style={styles.buttonText}>Remind</Text>
                         </TouchableHighlight>}
@@ -442,7 +444,7 @@ export default class MyModal extends React.Component {
         innerContainer: {
             borderRadius: width/37.5,
             backgroundColor: '#ecf0f1',
-            height: height/2.5
+            height: height/2
         },
         title: {
             color: '#35b0d2',
@@ -477,6 +479,7 @@ export default class MyModal extends React.Component {
             borderRadius: width/37.5,
             marginTop: width/37.5,
             marginBottom: width/18.75,
+            height: width/7.5
         },
         buttonText: {
           textAlign: 'center',
@@ -492,6 +495,7 @@ export default class MyModal extends React.Component {
           backgroundColor: '#35b0d2',
           marginTop:width/75,
           width: width/2,
+          height: width/7.5
         },
         titleText: {
           color: 'rgba(1,1,1,0.8)',

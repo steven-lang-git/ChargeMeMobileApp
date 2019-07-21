@@ -70,27 +70,31 @@ export default class SplitByAmount extends React.Component {
         // console.log('got users name')
       });
 
-    //get users friends
-    firebase
+      // gets user's friends
+      firebase
       .database()
-      .ref("friendslist/" + uid)
-      .child("currentFriends")
+      .ref("friendslist")
+      .child(uid)
       .once("value")
-      .then((snapshot) => {
-
-        var friendsArray = []
+      .then ((snapshot) => {
         // for each friend
+        var friendsArray = []
         snapshot.forEach((childSnapShot) => {
-          //save their first name, last name, user id, and username
-          friendsArray.push({
-                              key: childSnapShot.key,
-                              firstName: childSnapShot.val().firstName,
-                              lastName: childSnapShot.val().lastName,
-                              username: childSnapShot.val().username,
-                            })
 
+          // gets friend's data
+          firebase.database().ref('users/'+childSnapShot.key).once("value", snapShot => {
+            friendsArray.push({
+                                key: childSnapShot.key,
+                                firstName: snapShot.val().firstName,
+                                lastName: snapShot.val().lastName,
+                                username: snapShot.val().username,
+                                profilePic: snapShot.val().profilePic,
+                              })
+            this.setState({
+                friends:friendsArray
+            })
+          });
         });
-        this.setState({friends: friendsArray})
       })
   }
 
@@ -254,6 +258,7 @@ export default class SplitByAmount extends React.Component {
       tempArray[x] = { id: x, name: name1 };
     }
     console.log('temp array: ', tempArray)
+    console.log('this.state.friends: ', this.state.friends)
     var y;
     for (y in selectedFriends) {
       var name = selectedFriends[y].firstName + " " + selectedFriends[y].lastName

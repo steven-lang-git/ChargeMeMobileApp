@@ -242,32 +242,32 @@ componentDidMount(){
     });
   })
 
+    // gets all current friends
     firebase
     .database()
-    .ref("friendslist/" + uid)
-    .child('currentFriends')
+    .ref("friendslist")
+    .child(uid)
     .once("value")
     .then ((snapshot) => {
-      // for each friend
+      // for each user
       snapshot.forEach((childSnapShot) => {
+
+        // gets friend's data
+        firebase.database().ref('users/'+childSnapShot.key).once("value", snapShot => {
           tempArray.push({
-            key: childSnapShot.key,
-            first: childSnapShot.val().firstName,
-            last: childSnapShot.val().lastName,
-            username: childSnapShot.val().username,
-            profilePic: childSnapShot.val().profilePic,
-          })
-          this.setState(
-            {
+                              key: childSnapShot.key,
+                              firstName: snapShot.val().firstName,
+                              lastName: snapShot.val().lastName,
+                              username: snapShot.val().username,
+                              profilePic: snapShot.val().profilePic,
+                            })
+          this.setState({
               tempArray:tempArray
-            }
-          )
+          })
         });
-        });
-
-
+      });
+    })
     this.forceUpdate();
-
 }
 
 keyExtractor = (item,index) =>index.toString()

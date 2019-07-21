@@ -29,6 +29,9 @@ let itemNameEmpty = false
 let itemPriceEmpty = false
 let noFriends = '';
 let noItems= '';
+let friends = [];
+let selectedFriends=[]
+let selectedFlat = []
 let tempArray = [];
 let tempItemArray = [];
 let itemTotal = 0;
@@ -41,9 +44,6 @@ export default class SplitByItem extends React.Component {
     this.state = {
       name: '',
       items: [],
-      friends: [],
-      selectedFriends: [],
-      selectedFlat: [],
       first:'',
       disable: true,
       itemName: '',
@@ -61,12 +61,14 @@ export default class SplitByItem extends React.Component {
     noFriends = '';
     noItems = '';
     tempArray = [];
+    friends = []
+    selectedFriends=[]
+    selectedFlat = []
     itemTotal = 0;
 
     this.generateTempItemArray()
-    const { selectedFriends } = this.state;
     this.generateSelectedFlat(selectedFriends)
-    // console.log('getting data from database')
+
     //get current logged in user
     var uid = firebase.auth().currentUser.uid;
     firebase
@@ -80,28 +82,34 @@ export default class SplitByItem extends React.Component {
         // console.log('got users name')
       });
 
-    //get users friends
-    firebase
+      // gets user's friends
+      firebase
       .database()
-      .ref("friendslist/" + uid)
-      .child("currentFriends")
+      .ref("friendslist")
+      .child(uid)
       .once("value")
-      .then((snapshot) => {
-
-        var friendsArray = []
+      .then ((snapshot) => {
         // for each friend
         snapshot.forEach((childSnapShot) => {
-          //save their first name, last name, user id, and username
-          friendsArray.push({
-                              key: childSnapShot.key,
-                              firstName: childSnapShot.val().firstName,
-                              lastName: childSnapShot.val().lastName,
-                              username: childSnapShot.val().username,
-                            })
 
+          // gets friend's data
+          firebase.database().ref('users/'+childSnapShot.key).once("value", snapShot => {
+            friends.push({
+                                key: childSnapShot.key,
+                                firstName: snapShot.val().firstName,
+                                lastName: snapShot.val().lastName,
+                                username: snapShot.val().username,
+                                profilePic: snapShot.val().profilePic,
+                              })
+
+                console.log('friend: ', friends)
+                this.forceUpdate()
+          });
         });
-        this.setState({friends: friendsArray})
+
+
       })
+
   }
 
   generateTempItemArray = () => {
@@ -118,7 +126,7 @@ export default class SplitByItem extends React.Component {
   }
 
   generateSelectedFlat = (selectedFriends) => {
-    let selectedFlat = this.state;
+    console.log('generate seklected: ', selectedFriends)
 
     selectedFlat = []
     var y;
@@ -126,35 +134,34 @@ export default class SplitByItem extends React.Component {
       var name = selectedFriends[y].firstName + " " + selectedFriends[y].lastName
       selectedFlat[y] = { id: y, name: name };
     }
-    this.setState({selectedFlat: selectedFlat});
+    console.log("flat: ",selectedFlat)
     this.forceUpdate();
 
   }
 
   addFriend = item => {
+    console.log('item: ',item)
     index = eval(JSON.stringify(item.id))
     item.name = "",
     noFriends = ''
-    this.forceUpdate();
-    const { selectedFriends, friends } = this.state;
+
 
     // And put friend in selectedFriends
     selectedFriends.push(friends[index]);
 
     // Pull friend out of friends
     friends.splice(index, 1);
+
+    console.log('unselected friends: ', friends)
+    console.log('selected friends: ', selectedFriends)
     tempArray.splice(index, 1);
 
     // Finally, update our app state
     this.generateSelectedFlat(selectedFriends)
-    this.setState({
-      friends: friends,
-      selectedFriends: selectedFriends
-    });
+    this.forceUpdate()
   };
 
   removeFriend = index => {
-    const { friends, selectedFriends } = this.state;
 
     // And put friend in friends
     friends.push(selectedFriends[index]);
@@ -164,10 +171,6 @@ export default class SplitByItem extends React.Component {
 
     // Finally, update our app state
     this.generateSelectedFlat(selectedFriends)
-    this.setState({
-      friends: friends,
-      selectedFriends: selectedFriends
-    });
   };
 
   //function to handle pressing remove item button
@@ -247,10 +250,10 @@ export default class SplitByItem extends React.Component {
     if(this.state.name == ''){
       nameEmpty = true;
     }
-    if(this.state.selectedFriends.length == 0){
+    if(selectedFriends.length == 0){
       noFriends = 'Add Some Friends!';
     }
-    if(this.state.selectedFriends.length > 0){
+    if(selectedFriends.length > 0){
       noFriends = '';
     }
     if(this.state.items.length == 0){
@@ -269,11 +272,11 @@ export default class SplitByItem extends React.Component {
       }
       console.log('SUBMITTING')
       console.log("item total", itemTotal)
-      console.log('submitting selected friends: ', this.state.selectedFriends)
+      console.log('submitting selected friends: ', selectedFriends)
       console.log('submitting items: ', this.state.items)
       this.props.navigation.navigate('SplitByItemAssociate', {
                                                             name: this.state.name,
-                                                            selectedFriends: this.state.selectedFriends,
+                                                            selectedFriends: selectedFriends,
                                                             items: this.state.items,
                                                             itemTotal: itemTotal
                                                           })
@@ -281,17 +284,27 @@ export default class SplitByItem extends React.Component {
   }
 
   render() {
-    const { disable, selectedFriends, selectedFlat, items } = this.state;
+    const { disable, items } = this.state;
+    console.log('friends: ', friends)
+
+    console.log('num of unselected friends: ', friends)
+    console.log('selected friends: ', selectedFriends)
+
+    var filtered = friends.filter(Boolean);
+    console.log('fil.tered: ', filtered)
     var x;
-    for (x in this.state.friends) {
-      var name1 = this.state.friends[x].firstName + " " + this.state.friends[x].lastName
+    for (x in filtered ){
+      console.log('friends name: ', friends[x].firstName)
+      var name1 = filtered[x].firstName + " " + filtered[x].lastName
       tempArray[x] = { id: x, name: name1};
     }
-    // console.log('temp array: ', tempArray)
+     console.log('temp array: ', tempArray)
+
     var y;
+    //console.log('selected friends: ',selectedFriends)
     for (y in selectedFriends) {
       var name = selectedFriends[y].firstName + " " + selectedFriends[y].lastName
-      this.state.selectedFlat[y] = { id: y, name: name };
+      selectedFlat[y] = { id: y, name: name };
     }
     return (
       <SafeAreaView style={styles.container}>
@@ -360,35 +373,36 @@ export default class SplitByItem extends React.Component {
             <Text style={[styles.inputTitle,{marginBottom: 0}]}>Friends</Text>
 
             <View>
-              <FlatList
-                data={this.state.selectedFlat}
-                extraData={this.state}
-                renderItem={({item}) =>
-                  <View style={styles.searchboxContainer}>
-                  <Text style={{marginLeft: width/15,marginTop: width/41.66,color: 'rgba(0,0,0,0.6)', fontWeight: 'bold',fontSize: width/25, textAlign: 'center'}}>{item.name}</Text>
-                  <CheckBox
-                    right={true}
-                    iconRight
-                    iconType='material'
-                    containerStyle={{
-                                      paddingTop: width/53.57,
-                                      backgroundColor: 'transparent',
-                                      height: width/9.375,
-                                      margin: 0,
-                                      borderColor: 'transparent'}}
-                    textStyle={{color: 'rgba(0,0,0,0.6)', fontWeight: 'normal', fontSize: width/31.25}}
-                    uncheckedIcon='clear'
-                    size= {width/17}
-                    uncheckedColor='coral'
-                    checked={false}
-                    onIconPress={() => this.removeFriend(eval(JSON.stringify(item.id)))}
-                  />
+            <FlatList
+              data={selectedFlat}
+              extraData={this.state}
+              renderItem={({item}) =>
+                <View style={styles.searchboxContainer}>
+                <Text style={{marginLeft: width/15,marginTop: width/41.67,color: 'rgba(0,0,0,0.6)', fontWeight: 'bold',fontSize: width/25, textAlign: 'center'}}>{item.name}</Text>
+                <CheckBox
+                  right={true}
+                  title='Remove'
+                  iconRight
+                  iconType='material'
+                  containerStyle={{
+                                    paddingTop: width/53.5714,
+                                    backgroundColor: 'transparent',
+                                    height: width/9.375,
+                                    margin: 0,
+                                    borderColor: 'transparent'}}
+                  textStyle={{color: 'rgba(0,0,0,0.6)', fontWeight: 'normal', fontSize: width/31.25}}
+                  uncheckedIcon='clear'
+                  size= {width/17}
+                  uncheckedColor='coral'
+                  checked={false}
+                  onIconPress={() => this.removeFriend(eval(JSON.stringify(item.id)))}
+                />
 
-                  </View>
-                }
-                keyExtractor={item => item.id}
-              />
-            </View>
+                </View>
+              }
+              keyExtractor={item => item.id}
+            />
+          </View>
 
             <SearchableDropdown
               // onTextChange={(value) => this.searchFriends(value)}
@@ -590,8 +604,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignContent: 'center',
     justifyContent: 'space-between',
-    width: width/1.15,
-    height: width/9.375,
+    height: width/7.5,
     borderColor: 'transparent',
     backgroundColor: 'rgba(255,255,255, 1)',
     borderWidth: 1,

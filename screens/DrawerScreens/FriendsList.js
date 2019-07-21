@@ -35,6 +35,8 @@ let userFirstName=''
 let userLastName=''
 let userUsername=''
 let userProfilePic=''
+let showAlert = false
+let removeFriendIndex = ''
 
 export default class FriendsList extends React.Component {
   constructor(props) {
@@ -43,8 +45,86 @@ export default class FriendsList extends React.Component {
     possibleFriends = []
     currentFriends = []
     tempArray = []
+    showAlert = false
+    removeFriendIndex = ''
   }
 
+//function to remove all transactions between themselves and a removed friend
+  removeTransactions =(removeID)=>{
+    var uid = firebase.auth().currentUser.uid;
+
+    // remove user's current transactions involving removed friend
+    firebase
+      .database()
+      .ref("currentTransactions")
+      .child(uid)
+      .once("value")
+      .then((snapshot) => {
+        // for each friend
+        snapshot.forEach((childSnapShot) => {
+          if (childSnapShot.val().charging == removeID || childSnapShot.val().paying == removeID){
+            firebase
+              .database()
+              .ref("currentTransactions/" + uid + "/" +  childSnapShot.key)
+              .remove();
+          }
+        });
+      })
+
+      // remove user's past transactions involving removed friend
+      firebase
+        .database()
+        .ref("pastTransactions")
+        .child(uid)
+        .once("value")
+        .then((snapshot) => {
+          // for each friend
+          snapshot.forEach((childSnapShot) => {
+            if (childSnapShot.val().charging == removeID || childSnapShot.val().paying == removeID){
+              firebase
+                .database()
+                .ref("pastTransactions/" + uid + "/" +  childSnapShot.key)
+                .remove();
+            }
+          });
+        })
+
+        // remove friend's current transactions involving user
+        firebase
+          .database()
+          .ref("currentTransactions")
+          .child(removeID)
+          .once("value")
+          .then((snapshot) => {
+            // for each friend
+            snapshot.forEach((childSnapShot) => {
+              if (childSnapShot.val().charging == uid || childSnapShot.val().paying == uid){
+                firebase
+                  .database()
+                  .ref("currentTransactions/" + removeID + "/" +  childSnapShot.key)
+                  .remove();
+              }
+            });
+          })
+
+        // remove friend's past transactions involving user
+        firebase
+          .database()
+          .ref("pastTransactions")
+          .child(removeID)
+          .once("value")
+          .then((snapshot) => {
+            // for each friend
+            snapshot.forEach((childSnapShot) => {
+              if (childSnapShot.val().charging == uid || childSnapShot.val().paying == uid){
+                firebase
+                  .database()
+                  .ref("pastTransactions/" + removeID + "/" +  childSnapShot.key)
+                  .remove();
+              }
+            });
+          })
+  }
 
   //function to add friend to current friends
   addFriend = item => {
@@ -55,24 +135,14 @@ export default class FriendsList extends React.Component {
     //add new friend to current user's friendlist
     firebase
       .database()
-      .ref("friendslist/" + uid + "/currentFriends/" + possibleFriends[index].key)
-      .set({
-              firstName: possibleFriends[index].firstName,
-              lastName: possibleFriends[index].lastName,
-              username: possibleFriends[index].username,
-              profilePic: possibleFriends[index].profilePic
-      });
+      .ref("friendslist/" + uid + "/" + possibleFriends[index].key)
+      .set('');
 
     //add current user to new friend's friendlist
     firebase
       .database()
-      .ref("friendslist/" + possibleFriends[index].key + "/currentFriends/" + uid)
-      .set({
-              firstName: userFirstName,
-              lastName: userLastName,
-              username: userUsername,
-              profilePic: userProfilePic
-      });
+      .ref("friendslist/" + possibleFriends[index].key + "/" + uid)
+      .set('');
 
     // And put friend in currentFriends
     currentFriends.push(possibleFriends[index]);
@@ -84,29 +154,45 @@ export default class FriendsList extends React.Component {
   };
 
   //function to remove friend from current friends
-  removeFriend = index => {
-    console.log(currentFriends)
+  removeFriend = () => {
+    showAlert = false;
+
     // And put friend in possibleFriends
-    possibleFriends.push(currentFriends[index]);
+    possibleFriends.push(currentFriends[removeFriendIndex]);
 
     var uid = firebase.auth().currentUser.uid;
     //clear out removed friend from  current user's friendslist
     firebase
       .database()
-      .ref("friendslist/" + uid + "/currentFriends/" + currentFriends[index].key)
+      .ref("friendslist/" + uid + "/" + currentFriends[removeFriendIndex].key)
       .remove();
 
     //clear out current user friend from removed friend's friendslist
     firebase
       .database()
-      .ref("friendslist/" + currentFriends[index].key + "/currentFriends/" + uid)
+      .ref("friendslist/" + currentFriends[removeFriendIndex].key + "/" + uid)
       .remove();
 
+    this.removeTransactions(currentFriends[removeFriendIndex].key)
+
     // Pull friend out of currentFriends
-    currentFriends.splice(index, 1);
+    currentFriends.splice(removeFriendIndex, 1);
     this.forceUpdate();
 
   };
+
+  //function to hide alert
+  hideAlert = () => {
+      showAlert= false;
+      this.forceUpdate();
+  }
+
+  //function to show alert
+  showAlert = (index) => {
+      showAlert= true;
+      removeFriendIndex = index
+      this.forceUpdate();
+  }
 
   //function that is called everytime page mounts
   componentDidMount() {
@@ -125,24 +211,27 @@ export default class FriendsList extends React.Component {
     // load their current friends
     firebase
       .database()
-      .ref("friendslist/" + uid)
-      .child("currentFriends")
+      .ref("friendslist")
+      .child(uid)
       .once("value")
       .then((snapshot) => {
 
         // for each friend
         snapshot.forEach((childSnapShot) => {
           //save their first name, last name, user id, and username
-          currentFriends.push({
-                              key: childSnapShot.key,
-                              firstName: childSnapShot.val().firstName,
-                              lastName: childSnapShot.val().lastName,
-                              username: childSnapShot.val().username,
-                              profilePic: childSnapShot.val().profilePic,
-                            })
-                            console.log('curr: ', childSnapShot)
-        });
+          console.log('friend: ', childSnapShot.val())
 
+          // gets friend's data
+          firebase.database().ref('users/'+childSnapShot.key).once("value", snapShot => {
+            currentFriends.push({
+                                key: childSnapShot.key,
+                                firstName: snapShot.val().firstName,
+                                lastName: snapShot.val().lastName,
+                                username: snapShot.val().username,
+                                profilePic: snapShot.val().profilePic,
+                              })
+          });
+        });
       })
 
       //load possible friends
@@ -255,7 +344,7 @@ export default class FriendsList extends React.Component {
                     rightElement = {
                                       <View style={styles.removeBtn}>
                                         <TouchableOpacity
-                                          onPress={() => this.removeFriend(index)}
+                                          onPress={() => this.showAlert(index)}
                                         >
                                           <Text style={styles.btnText}>Remove</Text>
                                         </TouchableOpacity>
@@ -267,7 +356,29 @@ export default class FriendsList extends React.Component {
                 ))}
               </View>
             </KeyboardAwareScrollView>
-
+            <AwesomeAlert
+                show={showAlert}
+                showProgress={false}
+                title="Removing friend will remove all transactions between you. Are you sure?"
+                titleStyle={{textAlign: 'center'}}
+                closeOnTouchOutside={false}
+                closeOnHardwareBackPress={false}
+                showCancelButton={true}
+                cancelButtonStyle={{width: width/7, alignItems: 'center'}}
+                showConfirmButton={true}
+                confirmButtonStyle={{width: width/7, alignItems: 'center'}}
+                cancelText="NO"
+                cancelButtonTextStyle= {{fontWeight: 'bold', fontSize: width/31.25}}
+                confirmText="YES"
+                confirmButtonTextStyle= {{fontWeight: 'bold', fontSize: width/31.25}}
+                confirmButtonColor='#35b0d2'
+                onCancelPressed={() => {
+                  this.hideAlert();
+                }}
+                onConfirmPressed={() => {
+                  this.removeFriend();
+                }}
+              />
           </View>
         </ImageBackground>
       </SafeAreaView>
