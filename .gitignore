@@ -10,3 +10,5 @@ npm-debug.*
 *.mobileprovision
 *.DS_Store
 /package-lock.json
+tessdata
+.DS_Store

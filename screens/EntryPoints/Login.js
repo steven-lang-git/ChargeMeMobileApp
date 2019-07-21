@@ -141,8 +141,11 @@ export default class Login extends React.Component {
 
             <View style={styles.container}>
               <Text
-              style={styles.title}
-              onPress={this.onCreateAccountPress.bind(this)}> Create an Account </Text>
+                style={styles.title}
+                onPress={this.onCreateAccountPress.bind(this)}
+              >
+                Create an Account
+              </Text>
             </View>
         </View>
       )

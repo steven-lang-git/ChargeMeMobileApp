@@ -7,29 +7,47 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ImageBackground,
-  Switch
+  Switch,
+  AsyncStorage
 } from 'react-native';
 import {Icon} from 'native-base'
+import { Constants, Notifications, Permissions } from 'expo';
+
+const PUSH_ENDPOINT = 'https://your-server.com/users/push-token';
 
 export default class TextNotifications extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      notification: null,
+      isSwitchOnT: false,
+    }
+    this._handleToggleSwitch = this._handleToggleSwitch.bind(this);
+  }
   static navigationOptions ={
     drawerIcon: (tintColor) =>(
       <Icon name="sitemap" type="FontAwesome" style={{fontSize:24, color:tintColor }}/>
     )
   }
-  //Initial state false for the switch. You can change it to true just to see.
-  state = { switchValue: false };
 
-  toggleSwitch = value => {
+  componentDidMount(){
+    AsyncStorage.getItem('isSwitchOnT').then((value) =>
+      this.setState({isSwitchOnT: JSON.parse(value)}));
+    console.log(this.state.isSwitchOnT);
+    //this.registerForPushNotifications();
+    //Notifications.addListener(this.handleNotification);
+
+  }
+
+  _handleToggleSwitch = (value) => {
     //onValueChange of the switch this function will be called
-    this.setState({ switchValue: value });
-    //state changes according to switch
-    //which will result in re-render the text
-  };
+    AsyncStorage.setItem('isSwitchOnT', JSON.stringify(value));
+    this.setState({ isSwitchOnT: value });
+  }
 
   render() {
+    console.log(this.state.isSwitchOnT);
     return (
-
       <SafeAreaView style={styles.container}>
         <ImageBackground source={require('../../../../assets/blue.jpg')} style={styles.imageContainer}>
           <View style={styles.overlay} />
@@ -40,9 +58,9 @@ export default class TextNotifications extends React.Component {
           </Text>
           <View style={styles.switchContainer}>
             <Switch
-              //style={{ marginTop: 30 }}
-              onValueChange={this.toggleSwitch}
-              value={this.state.switchValue}
+              value={this.state.isSwitchOnT}
+              onValueChange = {this._handleToggleSwitch}
+
             />
           </View>
           </View>
@@ -51,7 +69,6 @@ export default class TextNotifications extends React.Component {
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   container:{

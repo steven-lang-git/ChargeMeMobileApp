@@ -172,31 +172,6 @@ updateIndex(selectedIndex) {
   this.setState({ selectedIndex });
 }
 
-// getUserName = (userUID) =>{
-//   var name;
-//
-//   firebase
-//         .database()
-//         .ref()
-//         .child("users")
-//         .once("value")
-//         .then ((snapshot) => {
-//           // for each user
-//           snapshot.forEach((childSnapShot) => {
-//             // console.log("comparing...",childSnapShot.key);
-//             // console.log("and...",userUID);
-//             if(childSnapShot.key==userUID){
-//
-//               console.log("found name!!",childSnapShot.val().firstName);
-//               name= childSnapShot.val().firstName;
-//
-//             }
-//           // console.log(name);
-//            return (name);
-//           });
-// });
-// }
-
 //function that is called everytime page mounts
 componentDidMount(){
   var uid = firebase.auth().currentUser.uid;
@@ -222,32 +197,32 @@ componentDidMount(){
     });
   })
 
+  // gets all current friends
   firebase
   .database()
-  .ref("friendslist/" + uid)
-  .child('currentFriends')
+  .ref("friendslist")
+  .child(uid)
   .once("value")
   .then ((snapshot) => {
-    // for each friend
+    // for each user
     snapshot.forEach((childSnapShot) => {
+
+      // gets friend's data
+      firebase.database().ref('users/'+childSnapShot.key).once("value", snapShot => {
         tempArray.push({
-          key: childSnapShot.key,
-          first: childSnapShot.val().firstName,
-          last: childSnapShot.val().lastName,
-          username: childSnapShot.val().username,
-          profilePic: childSnapShot.val().profilePic,
-        })
-        this.setState(
-          {
+                            key: childSnapShot.key,
+                            firstName: snapShot.val().firstName,
+                            lastName: snapShot.val().lastName,
+                            username: snapShot.val().username,
+                            profilePic: snapShot.val().profilePic,
+                          })
+        this.setState({
             tempArray:tempArray
-          }
-        )
+        })
       });
-      });
+    });
+  })
   this.forceUpdate();
-
-
-
 }
 
 keyExtractor = (item,index) =>index.toString()

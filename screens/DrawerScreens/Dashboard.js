@@ -45,10 +45,36 @@ export default class Dashboard extends React.Component {
     tempArray=[]
     currFriends=[]
     currTransCount = 0
+    pastTransCount = 0
     activity = ''
     balance = 0
-
   }
+
+  registerForPushNotificationsAsync = async() => {
+    const { status: existingStatus } = Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    );
+    let finalStatus = existingStatus;
+
+    // only ask if permissions have not already been determined, because
+    // iOS won't necessarily prompt the user a second time.
+    if (existingStatus !== 'granted') {
+      // Android remote notification permissions are granted during the app
+      // install, so this will only ask on iOS
+      const { status } = Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+
+    // Stop here if the user did not grant permissions
+    if (finalStatus !== 'granted') {
+      return;
+    }
+
+    // Get the token that uniquely identifies this device
+    let token = Notifications.getExpoPushTokenAsync();
+    firebase.database().ref('users/'+this.currentUser.uid+'push_token')
+    .set(token)
+  };
 
    componentDidMount() {
       var uid = firebase.auth().currentUser.uid;
@@ -71,48 +97,42 @@ export default class Dashboard extends React.Component {
                               paying: childSnapShot.val().paying,
                             })
         });
+      })
 
-        //get current transaction count
+        //get past transaction count
         firebase
         .database()
-        .ref("currentTransactions/" + uid)
+        .ref("pastTransactions/" + uid)
         .once("value")
         .then((snapshot) => {
-          currTransCount = snapshot.numChildren()
-          if(currTransCount == 0){
-
-            activity = '... no recent activity :('
-            this.forceUpdate();
-          }
+          pastTransCount = snapshot.numChildren()
         })
 
         // gets all current friends
         firebase
         .database()
-        .ref("friendslist/" + uid)
-        .child("currentFriends")
+        .ref("friendslist")
+        .child(uid)
         .once("value")
         .then ((snapshot) => {
           // for each user
           snapshot.forEach((childSnapShot) => {
 
+            // gets friend's data
+            firebase.database().ref('users/'+childSnapShot.key).once("value", snapShot => {
               currFriends.push({
-                key: childSnapShot.key,
-                first: childSnapShot.val().firstName,
-                last: childSnapShot.val().lastName,
-                username: childSnapShot.val().username,
-                profilePic: childSnapShot.val().profilePic,
-              })
-              this.setState(
-                {
+                                  key: childSnapShot.key,
+                                  firstName: snapShot.val().firstName,
+                                  lastName: snapShot.val().lastName,
+                                  username: snapShot.val().username,
+                                  profilePic: snapShot.val().profilePic,
+                                })
+              this.setState({
                   currFriends:currFriends
-                }
-              )
+              })
             });
-            });
-
-        this.forceUpdate();
-      })
+          });
+        })
 
       // gets user data
       firebase.database().ref('users/'+uid).once("value", snapshot => {
@@ -205,7 +225,6 @@ export default class Dashboard extends React.Component {
     )
 
   navigate=()=>{
-    console.log('edit pressed')
     this.props.navigation.navigate('Gallery')
   }
 
@@ -261,13 +280,13 @@ export default class Dashboard extends React.Component {
                 <DashboardStatComponent
                   onPress={() => this.props.navigation.navigate('PastTransactions')}
                   text={"Past" + "\n" + "Transactions:"  }
-                  secondText={String(pastTransactions.length)}
+                  secondText={String(pastTransCount)}
                 />
 
                 <DashboardStatComponent
                   onPress={() => this.props.navigation.navigate('CurrentTransactions')}
                   text={"Current" + "\n" + "Transactions:" }
-                  secondText={String(currTransCount)}
+                  secondText={String(currentTransactions.length)}
                 />
 
 
